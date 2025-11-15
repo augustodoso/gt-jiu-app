@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>GT Jiu • Aurevix</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #050509;
+      --bg-card: #11111a;
+      --bg-light: #161623;
+      --primary: #e53935;
+      --primary-soft: #ff6f60;
+      --text: #f5f5f5;
+      --muted: #a0a0b8;
+      --border: #282838;
+      --radius-lg: 16px;
+      --radius-pill: 999px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #1e1b4b 0, #000 55%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .app-shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 16px 16px 32px;
+      width: 100%;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 18px;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, rgba(17,17,26,0.95), rgba(8,8,16,0.95));
+      border: 1px solid rgba(255,255,255,0.04);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.6);
+      backdrop-filter: blur(18px);
+      margin-bottom: 18px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 20%, #fff, #e53935 45%, #1e1b4b 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+      color: #000;
+      box-shadow: 0 0 25px rgba(229,57,53,0.7);
+    }
+
+    .logo-text-title {
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      font-size: 18px;
+    }
+
+    .logo-text-sub {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .nav-btn {
+      border: 0;
+      padding: 8px 14px;
+      border-radius: var(--radius-pill);
+      background: rgba(255,255,255,0.04);
+      color: var(--muted);
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.18s ease;
+    }
+
+    .nav-btn span {
+      font-size: 11px;
+      opacity: 0.7;
+    }
+
+    .nav-btn.active {
+      background: linear-gradient(135deg, var(--primary), var(--primary-soft));
+      color: #fff;
+      box-shadow: 0 0 18px rgba(229,57,53,0.6);
+    }
+
+    .nav-btn:hover {
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.08);
+    }
+
+    main {
+      margin-top: 10px;
+    }
+
+    .section {
+      display: none;
+      animation: fadeIn 0.22s ease-out;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .section-header {
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-kicker {
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+
+    .badge-aurevix {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: linear-gradient(135deg, rgba(229,57,53,0.12), rgba(255,255,255,0.02));
+      color: var(--primary-soft);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 14px;
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, #1c1b2f, #090913);
+      border-radius: var(--radius-lg);
+      padding: 14px 14px 16px;
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.7);
+    }
+
+    .card h3 {
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg-light);
+      color: var(--text);
+      font-size: 13px;
+      outline: none;
+      transition: border 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: #6b6b85;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary-soft);
+      box-shadow: 0 0 0 1px rgba(229,57,53,0.35);
+      background: #1b1b2c;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .btn {
+      border: 0;
+      padding: 8px 14px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 6px;
+      transition: 0.16s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-soft));
+      color: #fff;
+      box-shadow: 0 12px 26px rgba(229,57,53,0.55);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px) translateZ(0);
+      box-shadow: 0 16px 30px rgba(229,57,53,0.7);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.18);
+      color: var(--muted);
+    }
+
+    .btn-outline:hover {
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+    }
+
+    .result-box {
+      margin-top: 8px;
+      padding: 10px;
+      border-radius: 10px;
+      background: rgba(15,15,25,0.95);
+      border: 1px solid rgba(255,255,255,0.04);
+      font-size: 13px;
+      white-space: pre-wrap;
+    }
+
+    .result-highlight {
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .list {
+      margin-top: 8px;
+      max-height: 260px;
+      overflow-y: auto;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.06);
+      background: radial-gradient(circle at top left, #19182a, #07070e);
+    }
+
+    .list-item {
+      padding: 10px 11px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 13px;
+    }
+
+    .list-item:last-child {
+      border-bottom: 0;
+    }
+
+    .list-item-title {
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .list-item-sub {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .tag {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.16);
+      color: #c5c5ff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    th, td {
+      padding: 7px 6px;
+      text-align: left;
+    }
+
+    th {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+    }
+
+    tbody tr:nth-child(even) {
+      background: rgba(255,255,255,0.02);
+    }
+
+    .text-muted {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .text-small {
+      font-size: 12px;
+    }
+
+    .rules-block {
+      margin-bottom: 10px;
+    }
+
+    .rules-block h4 {
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .rules-block p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .rules-list {
+      margin-top: 4px;
+      padding-left: 16px;
+    }
+
+    .rules-list li {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+
+    footer {
+      margin-top: 22px;
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      opacity: 0.85;
+    }
+
+    footer span strong {
+      color: var(--primary-soft);
+    }
+
+    .auth-status {
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .auth-status span {
+      opacity: 0.9;
+    }
+
+    .auth-status .pill-status {
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.18);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+
+    .auth-status .pill-status.logged {
+      border-color: rgba(76, 175, 80, 0.7);
+      color: #b2ffb2;
+    }
+
+    .auth-status .pill-status.logged-out {
+      border-color: rgba(229,57,53,0.7);
+      color: #ffb2b2;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      nav {
+        width: 100%;
+      }
+
+      .grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header>
+      <div class="logo">
+        <div class="logo-mark">G</div>
+        <div>
+          <div class="logo-text-title">GT Jiu</div>
+          <div class="logo-text-sub">Aurevix • Jiu-Jitsu Companion</div>
+        </div>
+      </div>
+      <nav>
+        <button class="nav-btn active" data-section="home">Início <span>Categoria</span></button>
+        <button class="nav-btn" data-section="academias">Academias</button>
+        <button class="nav-btn" data-section="medalhas">Medalhas</button>
+        <button class="nav-btn" data-section="ranking">Ranking</button>
+        <button class="nav-btn" data-section="regras">Regras</button>
+        <button class="nav-btn" data-section="faixas">Faixas & Hierarquia</button>
+      </nav>
+    </header>
+
+    <main>
+      <!-- HOME / CATEGORIA -->
+      <section id="home" class="section active">
+        <div class="section-header">
+          <div class="section-kicker">Painel do atleta</div>
+          <div class="section-title">
+            Acesso Aurevix & categoria
+            <span class="badge-aurevix">Aurevix creation</span>
+          </div>
+        </div>
+
+        <!-- CARD DE LOGIN / REGISTRO -->
+        <div class="grid" style="margin-bottom: 12px;">
+          <div class="card">
+            <h3>Criar conta</h3>
+            <p class="text-muted text-small" style="margin-bottom:8px;">
+              Para cadastrar <strong>academias</strong> e <strong>medalhas</strong>, é necessário ter uma conta Aurevix.
+            </p>
+            <form id="form-register">
+              <div class="form-row">
+                <div>
+                  <label>Nome</label>
+                  <input type="text" id="reg-nome" required placeholder="Seu nome" />
+                </div>
+                <div>
+                  <label>E-mail</label>
+                  <input type="email" id="reg-email" required placeholder="voce@email.com" />
+                </div>
+              </div>
+              <div class="form-row">
+                <div>
+                  <label>Senha</label>
+                  <input type="password" id="reg-senha" required placeholder="Crie uma senha" />
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary">Registrar conta</button>
+            </form>
+          </div>
+
+          <div class="card">
+            <h3>Entrar</h3>
+            <p class="text-muted text-small" style="margin-bottom:8px;">
+              Já tem cadastro? Faça login para administrar academias e quadros de medalhas.
+            </p>
+            <form id="form-login">
+              <div class="form-row">
+                <div>
+                  <label>E-mail</label>
+                  <input type="email" id="login-email" required placeholder="E-mail cadastrado" />
+                </div>
+                <div>
+                  <label>Senha</label>
+                  <input type="password" id="login-senha" required placeholder="Sua senha" />
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary">Entrar</button>
+              <button type="button" id="btn-logout" class="btn btn-outline" style="margin-left:4px;">Sair</button>
+            </form>
+
+            <div class="auth-status" id="auth-status">
+              <span>Status:</span>
+              <span class="pill-status logged-out" id="auth-pill">Deslogado</span>
+              <span id="auth-user-label"></span>
+            </div>
+            <div id="auth-message" class="text-small" style="margin-top:4px;"></div>
+          </div>
+        </div>
+
+        <div class="section-header">
+          <div class="section-kicker">Categoria</div>
+          <div class="section-title">
+            Categoria por idade e peso
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card">
+            <h3>Calcular categoria</h3>
+            <p class="text-muted text-small" style="margin-bottom: 8px;">
+              Informe idade, peso e sexo. O sistema retorna uma sugestão de faixa etária e categoria de peso
+              com base em uma lógica próxima à tabela CBJJ/IBJJF. Use sempre como apoio e confira o regulamento do evento.
+            </p>
+
+            <form id="form-categoria">
+              <div class="form-row">
+                <div>
+                  <label>Idade</label>
+                  <input type="number" id="cat-idade" min="4" max="80" required placeholder="Ex: 27" />
+                </div>
+                <div>
+                  <label>Peso (kg)</label>
+                  <input type="number" id="cat-peso" step="0.1" min="20" max="200" required placeholder="Ex: 76.5" />
+                </div>
+                <div>
+                  <label>Sexo</label>
+                  <select id="cat-sexo">
+                    <option value="M">Masculino</option>
+                    <option value="F">Feminino</option>
+                  </select>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary">Calcular categoria</button>
+            </form>
+
+            <div id="cat-resultado" class="result-box" style="display:none;"></div>
+          </div>
+
+          <div class="card">
+            <h3>Sobre esta ferramenta</h3>
+            <p class="text-muted text-small">
+              Este módulo ajuda atletas e professores a terem uma visão rápida de
+              onde o praticante se encaixa em termos de <strong>faixa etária</strong> e
+              <strong>categoria de peso</strong>. É um apoio, não substitui o regulamento oficial.
+            </p>
+            <div class="rules-block" style="margin-top:8px;">
+              <h4>Boas práticas:</h4>
+              <ul class="rules-list">
+                <li>Conferir sempre com a tabela oficial da organização do evento.</li>
+                <li>Manter os dados atualizados conforme evolução do atleta.</li>
+                <li>Em caso de dúvida, decidir junto ao mestre responsável.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ACADEMIAS -->
+      <section id="academias" class="section">
+        <div class="section-header">
+          <div class="section-kicker">Mapa do Jiu</div>
+          <div class="section-title">
+            Academias e mestres
+            <span class="badge-aurevix">Aurevix creation</span>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card">
+            <h3>Cadastrar academia</h3>
+            <p class="text-muted text-small" style="margin-bottom: 8px;">
+              Apenas usuários logados podem cadastrar. Todos os campos são preenchidos pelas próprias academias.
+            </p>
+            <form id="form-academia">
+              <div class="form-row">
+                <div>
+                  <label>Academia</label>
+                  <input type="text" id="acad-nome" required placeholder="Nome da academia" />
+                </div>
+                <div>
+                  <label>Mestre</label>
+                  <input type="text" id="acad-mestre" required placeholder="Nome do mestre responsável" />
+                </div>
+              </div>
+              <div class="form-row">
+                <div>
+                  <label>Cidade</label>
+                  <input type="text" id="acad-cidade" required placeholder="Ex: Nova Serrana" />
+                </div>
+                <div>
+                  <label>Bairro</label>
+                  <input type="text" id="acad-bairro" required placeholder="Bairro" />
+                </div>
+              </div>
+              <div class="form-row">
+                <div>
+                  <label>Telefone / WhatsApp</label>
+                  <input type="text" id="acad-telefone" required placeholder="(31) 99999-8888" />
+                </div>
+                <div>
+                  <label>Endereço</label>
+                  <input type="text" id="acad-endereco" required placeholder="Rua, nº, complemento" />
+                </div>
+              </div>
+              <div class="form-row">
+                <div>
+                  <label>E-mail de contato</label>
+                  <input type="email" id="acad-email" required placeholder="contato@academia.com" />
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary">Salvar academia</button>
+              <button type="button" id="acad-limpar" class="btn btn-outline">Limpar campos</button>
+            </form>
+          </div>
+
+          <div class="card">
+            <h3>Buscar academias</h3>
+            <p class="text-muted text-small">
+              Pesquise academias por cidade e/ou bairro para que atletas encontrem onde treinar.
+            </p>
+            <div class="form-row" style="margin-top:8px;">
+              <div>
+                <label>Cidade</label>
+                <input type="text" id="filtro-cidade" placeholder="Filtrar por cidade" />
+              </div>
+              <div>
+                <label>Bairro</label>
+                <input type="text" id="filtro-bairro" placeholder="Filtrar por bairro" />
+              </div>
+            </div>
+            <button id="btn-buscar-acad" class="btn btn-primary" style="margin-top:8px;">Buscar</button>
+
+            <div id="lista-academias" class="list" style="margin-top:10px;"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MEDALHAS -->
+      <section id="medalhas" class="section">
+        <div class="section-header">
+          <div class="section-kicker">Quadro de conquistas</div>
+          <div class="section-title">
+            Registrar medalhas com comprovante
+            <span class="badge-aurevix">Aurevix creation</span>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card">
+            <h3>Adicionar medalha</h3>
+            <p class="text-muted text-small" style="margin-bottom:8px;">
+              Somente usuários logados podem registrar. Os dados devem bater com o comprovante oficial
+              (ata, resultado assinado ou documento equivalente).
+            </p>
+
+            <form id="form-medalha">
+              <div class="form-row">
+                <div>
+                  <label>Academia</label>
+                  <select id="med-academia" required>
+                    <option value="">Selecione uma academia</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Faixa</label>
+                  <input type="text" id="med-faixa" required placeholder="Ex: Azul, Roxa..." />
+                </div>
+                <div>
+                  <label>Sexo</label>
+                  <select id="med-sexo" required>
+                    <option value="M">Masculino</option>
+                    <option value="F">Feminino</option>
+                    <option value="Outro">Outro</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div>
+                  <label>Categoria de peso</label>
+                  <input type="text" id="med-categoria" required placeholder="Ex: Leve, Médio..." />
+                </div>
+                <div>
+                  <label>Tipo de medalha</label>
+                  <select id="med-tipo" required>
+                    <option value="">Selecione</option>
+                    <option value="ouro">Ouro</option>
+                    <option value="prata">Prata</option>
+                    <option value="bronze">Bronze</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Data do evento</label>
+                  <input type="date" id="med-data" required />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div>
+                  <label>Nome do campeonato</label>
+                  <input type="text" id="med-campeonato" required placeholder="Nome oficial do evento" />
+                </div>
+                <div>
+                  <label>Cidade do evento</label>
+                  <input type="text" id="med-cidade-evento" required placeholder="Cidade" />
+                </div>
+              </div>
+
+              <div>
+                <label>Comprovante (descrição/link)</label>
+                <textarea id="med-comprovante" placeholder="Ex: link do PDF, ata digitalizada ou referência interna."></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary">Registrar medalha</button>
+            </form>
+          </div>
+
+          <div class="card">
+            <h3>Medalhas registradas (por academia)</h3>
+            <p class="text-muted text-small">
+              Esta listagem mostra as medalhas registradas. No futuro pode haver aprovação manual ou automática.
+            </p>
+            <div class="form-row" style="margin-top:8px;">
+              <div>
+                <label>Filtrar por academia</label>
+                <select id="med-filtro-academia">
+                  <option value="">Todas</option>
+                </select>
+              </div>
+            </div>
+            <button id="btn-buscar-medalhas" class="btn btn-primary" style="margin-top:8px;">Atualizar lista</button>
+
+            <div id="lista-medalhas" class="list" style="margin-top:10px;"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RANKING -->
+      <section id="ranking" class="section">
+        <div class="section-header">
+          <div class="section-kicker">Olimpíada do Jiu</div>
+          <div class="section-title">
+            Ranking por academia
+            <span class="badge-aurevix">Aurevix creation</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Quadro de medalhas por academia</h3>
+          <p class="text-muted text-small" style="margin-bottom:8px;">
+            Cada medalha registrada aumenta a pontuação da academia. Use isso como um “quadro olímpico” local.
+          </p>
+          <button id="btn-atualizar-ranking" class="btn btn-primary">Atualizar ranking</button>
+          <div id="ranking-tabela" style="margin-top:10px;" class="text-small"></div>
+        </div>
+      </section>
+
+      <!-- REGRAS -->
+      <section id="regras" class="section">
+        <div class="section-header">
+          <div class="section-kicker">Guia educativo</div>
+          <div class="section-title">
+            Regras, pontuação e pesquisa
+            <span class="badge-aurevix">Aurevix creation</span>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:12px;">
+          <h3>Buscar nas regras</h3>
+          <label for="rules-search">Pesquise por termos das regras</label>
+          <input
+            type="text"
+            id="rules-search"
+            placeholder="Ex.: queda, raspagem, passagem de guarda, montada, vantagens..."
+          />
+          <p class="text-muted text-small" style="margin-top:6px;">
+            Digite uma palavra e veja apenas os blocos relacionados. Ajuda o aluno a tirar dúvidas
+            rápidas antes de competir ou treinar.
+          </p>
+        </div>
+
+        <div id="rules-list" class="grid">
+          <div class="card rule-item">
+            <h3>Formas de encerrar uma luta</h3>
+            <ul class="rules-list">
+              <li><strong>Finalização (desistência):</strong> o atleta bate com a mão, com os pés ou
+                verbalmente, indicando que não consegue mais se defender.</li>
+              <li><strong>Interrupção:</strong> o árbitro ou o médico param a luta por risco de lesão,
+                sangramento que não para, câimbras fortes etc.</li>
+              <li><strong>Desclassificação:</strong> quando o atleta comete faltas graves ou repetidas.</li>
+              <li><strong>Perda dos sentidos:</strong> o atleta apaga por um estrangulamento ou
+                situação de luta.</li>
+              <li><strong>Pontuação:</strong> vence quem tiver mais pontos ao final do tempo.</li>
+              <li><strong>Decisão do árbitro:</strong> se a luta estiver empatada em pontos,
+                vantagens e punições.</li>
+            </ul>
+          </div>
+
+          <div class="card rule-item">
+            <h3>Pontuações principais</h3>
+            <ul class="rules-list">
+              <li><strong>4 pontos:</strong> montada, pegada de costas (back control).</li>
+              <li><strong>3 pontos:</strong> passagem de guarda.</li>
+              <li><strong>2 pontos:</strong> queda, raspagem, joelho na barriga.</li>
+            </ul>
+            <p class="text-small text-muted" style="margin-top:4px;">
+              Para valer a pontuação, a posição precisa ser estabilizada por aproximadamente
+              <strong>3 segundos</strong>. Se não estabilizar, normalmente gera vantagem, não pontos.
+            </p>
+          </div>
+
+          <div class="card rule-item">
+            <h3>Queda (2 pontos)</h3>
+            <p class="text-muted">
+              Acontece quando você derruba o adversário e mantém o controle por alguns segundos.
+              É a forma clássica de trazer a luta para o chão com domínio.
+            </p>
+          </div>
+
+          <div class="card rule-item">
+            <h3>Raspagem (2 pontos)</h3>
+            <p class="text-muted">
+              Só existe raspagem se você estiver na <strong>guarda ou meia-guarda</strong>. Você inverte
+              a posição e passa a ficar por cima, com controle. Se a inversão não vier de guarda,
+              normalmente não gera pontos de raspagem.
+            </p>
+          </div>
+
+          <div class="card rule-item">
+            <h3>Joelho na barriga (2 pontos)</h3>
+            <p class="text-muted">
+              Você controla o adversário com o joelho apoiado na barriga, o outro joelho fora do chão
+              e o corpo voltado para a cabeça do oponente.
+            </p>
+          </div>
+
+          <div class="card rule-item">
+            <h3>Passagem de guarda (3 pontos)</h3>
+            <p class="text-muted">
+              Quando você está dentro da guarda/meia-guarda do oponente e consegue sair,
+              chegando em uma posição de domínio sem ele conseguir usar as pernas para se defender.
+            </p>
+          </div>
+
+          <div class="card rule-item">
+            <h3>Montada (4 pontos)</h3>
+            <p class="text-muted">
+              Você sentado em cima do tronco do adversário, com as pernas de cada lado do corpo.
+              É uma das posições mais dominantes do Jiu-Jitsu.
+            </p>
+          </div>
+
+          <div class="card rule-item">
+            <h3>Pegada de costas (4 pontos)</h3>
+            <p class="text-muted">
+              Você controla as costas do adversário com ganchos ou triângulo de corpo. Grande risco de finalização.
+            </p>
+          </div>
+
+          <div class="card rule-item">
+            <h3>Vantagens e punições (resumo)</h3>
+            <p class="text-muted">
+              <strong>Vantagens</strong> são quase-pontos: ataques que quase chegaram à posição de pontuar
+              ou finalizar. Contam como critério de desempate.
+            </p>
+            <p class="text-muted">
+              <strong>Punições</strong> vêm de faltas (falta de combatividade, atitudes antidesportivas,
+              técnicas proibidas etc.). Punições acumuladas podem dar pontos para o adversário ou desclassificação.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAIXAS & HIERARQUIA -->
+      <section id="faixas" class="section">
+        <div class="section-header">
+          <div class="section-kicker">Caminho do tatame</div>
+          <div class="section-title">
+            Faixas, graduações e hierarquia
+            <span class="badge-aurevix">Aurevix creation</span>
+          </div>
+        </div>
+
+        <div class="grid">
+          <!-- Coluna 1: Hierarquia e respeito -->
+          <div class="card">
+            <h3>Hierarquia e respeito</h3>
+
+            <div class="rules-block">
+              <h4>Postura no tatame</h4>
+              <ul class="rules-list">
+                <li>Cumprimentar o tatame, o mestre e os colegas ao entrar e sair.</li>
+                <li>Evitar caminhar calçado pelo tatame.</li>
+                <li>Ouvir o professor: durante a explicação, foco total.</li>
+                <li>Guardar celular, conversa paralela e brincadeiras fora da hora do treino.</li>
+              </ul>
+            </div>
+
+            <div class="rules-block">
+              <h4>Respeito às graduações</h4>
+              <p class="text-muted">
+                Cada faixa representa tempo de treino, estudo e confiança do mestre.
+                Faixas mais altas servem de referência para os demais alunos, tanto tecnicamente
+                quanto em postura: pontualidade, disciplina, humildade e cuidado com os iniciantes.
+              </p>
+            </div>
+
+            <div class="rules-block">
+              <h4>Decisão sempre do professor</h4>
+              <p class="text-muted">
+                O app é apenas um apoio educativo. Quem define promoções, graus e prazos é
+                o professor / mestre responsável, de acordo com o regulamento da equipe
+                e da federação onde o atleta está filiado.
+              </p>
+            </div>
+          </div>
+
+          <!-- Coluna 2: Faixas e sistemas (padrão + Minas) -->
+          <div class="card">
+            <h3>Sistema de faixas (adulto)</h3>
+
+            <div class="rules-block">
+              <h4>Sequência comum (adultos)</h4>
+              <ul class="rules-list">
+                <li><strong>Branca:</strong> início da jornada, foco em base, defesa e consciência corporal.</li>
+                <li><strong>Azul:</strong> consolidação dos fundamentos, entendimento de guarda, quedas e finalizações básicas.</li>
+                <li><strong>Roxa:</strong> refinamento técnico, encadeamento de ataques, estilo de jogo mais definido.</li>
+                <li><strong>Marrom:</strong> alto nível técnico, atenção máxima aos detalhes finos.</li>
+                <li><strong>Preta:</strong> maturidade no Jiu-Jitsu, liderança e responsabilidade dentro do tatame.</li>
+              </ul>
+            </div>
+
+            <div class="rules-block">
+              <h4>Variação com faixa amarela (Federação Mineira)</h4>
+              <p class="text-muted">
+                Algumas federações regionais adotam <strong>faixa amarela também para adultos</strong>
+                como parte do sistema de graduações. Em Minas Gerais, por exemplo, há sistema em que
+                a sequência adulta inclui essa faixa de acordo com o regulamento da federação.
+              </p>
+              <ul class="rules-list">
+                <li>Branca → <strong>Amarela</strong> → Azul → Roxa → Marrom → Preta (exemplo de variação).</li>
+                <li>Os critérios de tempo mínimo e requisitos técnicos podem mudar de federação para federação.</li>
+              </ul>
+              <p class="text-muted text-small">
+                Sempre consulte o professor ou o regulamento oficial da sua federação para saber
+                exatamente quais faixas e prazos se aplicam ao seu caso.
+              </p>
+            </div>
+
+            <div class="rules-block">
+              <h4>Graus na faixa</h4>
+              <p class="text-muted">
+                Dentro de cada faixa, os <strong>graus</strong> indicam evolução e constância:
+                presença em treinos, participação em eventos, postura no tatame e entendimento técnico.
+                O critério também é definido pelo professor e pela equipe, não pelo app.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>Projeto focado em educação, organização e respeito dentro do Jiu-Jitsu.</span>
+      <span><strong>Aurevix</strong> • criação e conceito</span>
+    </footer>
+  </div>
+
+  <script>
+  var API_BASE = "http://127.0.0.1:8000";
+  var TOKEN_KEY = "gtjiu_token";
+  var USER_NAME_KEY = "gtjiu_user_name";
+
+  function getToken() {
+    return localStorage.getItem(TOKEN_KEY);
+  }
+
+  function setToken(token) {
+    if (token) {
+      localStorage.setItem(TOKEN_KEY, token);
+    } else {
+      localStorage.removeItem(TOKEN_KEY);
+    }
+  }
+
+  function getUserName() {
+    return localStorage.getItem(USER_NAME_KEY);
+  }
+
+  function setUserName(nome) {
+    if (nome) {
+      localStorage.setItem(USER_NAME_KEY, nome);
+    } else {
+      localStorage.removeItem(USER_NAME_KEY);
+    }
+  }
+
+  function getAuthHeaders(jsonBody) {
+    var headers = {};
+    if (jsonBody) {
+      headers["Content-Type"] = "application/json";
+    }
+    var token = getToken();
+    if (token) {
+      headers["Authorization"] = "Bearer " + token;
+    }
+    return headers;
+  }
+
+  function atualizarAuthUI() {
+    var pill = document.getElementById("auth-pill");
+    var label = document.getElementById("auth-user-label");
+    var msg = document.getElementById("auth-message");
+
+    var token = getToken();
+    var nome = getUserName();
+
+    if (!pill || !label) return;
+
+    if (token) {
+      pill.classList.remove("logged-out");
+      pill.classList.add("logged");
+      pill.textContent = "Logado";
+      label.textContent = nome ? (" • " + nome) : "";
+      if (msg) msg.textContent = "Você pode cadastrar academias e medalhas.";
+    } else {
+      pill.classList.remove("logged");
+      pill.classList.add("logged-out");
+      pill.textContent = "Deslogado";
+      label.textContent = "";
+      if (msg) msg.textContent = "Crie uma conta ou faça login para cadastrar dados.";
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    // ---------- NAVEGAÇÃO ENTRE ABAS ----------
+    var navButtons = document.querySelectorAll(".nav-btn");
+    var sections = document.querySelectorAll(".section");
+
+    function mostrarSecao(id) {
+      for (var i = 0; i < sections.length; i++) {
+        sections[i].classList.remove("active");
+      }
+      var sec = document.getElementById(id);
+      if (sec) {
+        sec.classList.add("active");
+      }
+    }
+
+    for (var i = 0; i < navButtons.length; i++) {
+      navButtons[i].addEventListener("click", (function (btn) {
+        return function () {
+          var target = btn.getAttribute("data-section");
+
+          for (var j = 0; j < navButtons.length; j++) {
+            navButtons[j].classList.remove("active");
+          }
+          btn.classList.add("active");
+          mostrarSecao(target);
+
+          if (target === "academias") {
+            carregarAcademias();
+          } else if (target === "medalhas") {
+            carregarAcademiasNosSelects();
+            carregarMedalhas();
+          } else if (target === "ranking") {
+            carregarRanking();
+          }
+        };
+      })(navButtons[i]));
+    }
+
+    // ---------- AUTENTICAÇÃO ----------
+    var formRegister = document.getElementById("form-register");
+    var formLogin = document.getElementById("form-login");
+    var btnLogout = document.getElementById("btn-logout");
+    var authMessage = document.getElementById("auth-message");
+
+    if (formRegister) {
+      formRegister.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var nome = document.getElementById("reg-nome").value.trim();
+        var email = document.getElementById("reg-email").value.trim();
+        var senha = document.getElementById("reg-senha").value.trim();
+
+        fetch(API_BASE + "/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nome: nome, email: email, senha: senha })
+        })
+          .then(function (resp) {
+            if (!resp.ok) {
+              return resp.json().then(function (d) { throw d; });
+            }
+            return resp.json();
+          })
+          .then(function (data) {
+            setToken(data.token);
+            setUserName(data.nome);
+            formRegister.reset();
+            if (authMessage) {
+              authMessage.textContent = "Cadastro realizado com sucesso. Você já está logado.";
+            }
+            atualizarAuthUI();
+            carregarAcademiasNosSelects();
+          })
+          .catch(function (err) {
+            if (authMessage) {
+              authMessage.textContent = (err && err.detail)
+                ? "Erro no cadastro: " + err.detail
+                : "Erro ao registrar.";
+            }
+          });
+      });
+    }
+
+    if (formLogin) {
+      formLogin.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var email = document.getElementById("login-email").value.trim();
+        var senha = document.getElementById("login-senha").value.trim();
+
+        fetch(API_BASE + "/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: email, senha: senha })
+        })
+          .then(function (resp) {
+            if (!resp.ok) {
+              return resp.json().then(function (d) { throw d; });
+            }
+            return resp.json();
+          })
+          .then(function (data) {
+            setToken(data.token);
+            setUserName(data.nome);
+            if (authMessage) {
+              authMessage.textContent = "Login efetuado com sucesso.";
+            }
+            atualizarAuthUI();
+            carregarAcademiasNosSelects();
+          })
+          .catch(function (err) {
+            if (authMessage) {
+              authMessage.textContent = (err && err.detail)
+                ? "Erro no login: " + err.detail
+                : "Erro ao efetuar login.";
+            }
+          });
+      });
+    }
+
+    if (btnLogout) {
+      btnLogout.addEventListener("click", function () {
+        setToken(null);
+        setUserName(null);
+        if (authMessage) {
+          authMessage.textContent = "Você saiu da sua conta.";
+        }
+        atualizarAuthUI();
+      });
+    }
+
+    atualizarAuthUI();
+
+    // ---------- CATEGORIA ----------
+    var formCategoria = document.getElementById("form-categoria");
+    var catResultado = document.getElementById("cat-resultado");
+
+    if (formCategoria && catResultado) {
+      formCategoria.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        var idade = parseInt(document.getElementById("cat-idade").value, 10);
+        var peso = parseFloat(document.getElementById("cat-peso").value);
+        var sexo = document.getElementById("cat-sexo").value;
+
+        fetch(API_BASE + "/categoria", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ idade: idade, peso: peso, sexo: sexo })
+        })
+          .then(function (resp) { return resp.json(); })
+          .then(function (data) {
+            catResultado.style.display = "block";
+            catResultado.innerHTML =
+              '<div class="result-highlight">' +
+              'Faixa etária sugerida: <strong>' + data.faixa_etaria + '</strong><br />' +
+              'Categoria de peso sugerida: <strong>' + data.categoria_peso + '</strong>' +
+              '</div>' +
+              '<div class="text-muted text-small">' + (data.observacao || "") + '</div>';
+          })
+          .catch(function () {
+            catResultado.style.display = "block";
+            catResultado.textContent = "Erro ao calcular categoria. Verifique se o backend está em execução.";
+          });
+      });
+    }
+
+    // ---------- ACADEMIAS ----------
+    var formAcademia = document.getElementById("form-academia");
+    var listaAcademias = document.getElementById("lista-academias");
+    var filtroCidade = document.getElementById("filtro-cidade");
+    var filtroBairro = document.getElementById("filtro-bairro");
+    var btnBuscarAcad = document.getElementById("btn-buscar-acad");
+    var btnAcadLimpar = document.getElementById("acad-limpar");
+
+    if (formAcademia) {
+      formAcademia.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        if (!getToken()) {
+          alert("Você precisa estar logado para cadastrar uma academia.");
+          return;
+        }
+
+        var payload = {
+          nome: document.getElementById("acad-nome").value.trim(),
+          mestre: document.getElementById("acad-mestre").value.trim(),
+          cidade: document.getElementById("acad-cidade").value.trim(),
+          bairro: document.getElementById("acad-bairro").value.trim(),
+          telefone: document.getElementById("acad-telefone").value.trim(),
+          endereco: document.getElementById("acad-endereco").value.trim(),
+          email: document.getElementById("acad-email").value.trim()
+        };
+
+        fetch(API_BASE + "/academias", {
+          method: "POST",
+          headers: getAuthHeaders(true),
+          body: JSON.stringify(payload)
+        })
+          .then(function (resp) {
+            if (!resp.ok) {
+              return resp.json().then(function (d) { throw d; });
+            }
+            return resp.json();
+          })
+          .then(function () {
+            formAcademia.reset();
+            carregarAcademias();
+            carregarAcademiasNosSelects();
+          })
+          .catch(function (err) {
+            var msg = (err && err.detail) ? err.detail : "Erro ao cadastrar academia. Verifique o backend.";
+            alert(msg);
+          });
+      });
+    }
+
+    if (btnAcadLimpar && formAcademia) {
+      btnAcadLimpar.addEventListener("click", function () {
+        formAcademia.reset();
+      });
+    }
+
+    if (btnBuscarAcad) {
+      btnBuscarAcad.addEventListener("click", function () {
+        carregarAcademias();
+      });
+    }
+
+    function carregarAcademias() {
+      if (!listaAcademias) return;
+
+      var url = API_BASE + "/academias";
+      var params = [];
+      if (filtroCidade && filtroCidade.value.trim()) {
+        params.push("cidade=" + encodeURIComponent(filtroCidade.value.trim()));
+      }
+      if (filtroBairro && filtroBairro.value.trim()) {
+        params.push("bairro=" + encodeURIComponent(filtroBairro.value.trim()));
+      }
+      if (params.length > 0) {
+        url += "?" + params.join("&");
+      }
+
+      fetch(url)
+        .then(function (resp) { return resp.json(); })
+        .then(function (data) {
+          if (!data || !data.length) {
+            listaAcademias.innerHTML = '<div class="list-item text-muted">Nenhuma academia encontrada.</div>';
+            return;
+          }
+          var html = "";
+          for (var i = 0; i < data.length; i++) {
+            var a = data[i];
+            html +=
+              '<div class="list-item">' +
+              '<div class="list-item-title">' + a.nome + '</div>' +
+              '<div class="list-item-sub">Mestre: ' + (a.mestre || "-") +
+              ' • ' + (a.bairro || "") + ' - ' + (a.cidade || "") + '</div>' +
+              '<div class="tag-row">' +
+              (a.telefone ? '<span class="tag">Contato: ' + a.telefone + '</span>' : "") +
+              (a.endereco ? '<span class="tag">Endereço: ' + a.endereco + '</span>' : "") +
+              (a.email ? '<span class="tag">E-mail: ' + a.email + '</span>' : "") +
+              '</div></div>';
+          }
+          listaAcademias.innerHTML = html;
+        })
+        .catch(function () {
+          listaAcademias.innerHTML = '<div class="list-item text-muted">Erro ao carregar academias.</div>';
+        });
+    }
+
+    // ---------- MEDALHAS ----------
+    var medAcademiaSelect = document.getElementById("med-academia");
+    var medFiltroAcademia = document.getElementById("med-filtro-academia");
+    var listaMedalhas = document.getElementById("lista-medalhas");
+    var btnBuscarMedalhas = document.getElementById("btn-buscar-medalhas");
+    var formMedalha = document.getElementById("form-medalha");
+
+    function carregarAcademiasNosSelects() {
+      if (!medAcademiaSelect || !medFiltroAcademia) return;
+
+      fetch(API_BASE + "/academias")
+        .then(function (resp) { return resp.json(); })
+        .then(function (data) {
+          medAcademiaSelect.innerHTML = '<option value="">Selecione uma academia</option>';
+          medFiltroAcademia.innerHTML = '<option value="">Todas</option>';
+          for (var i = 0; i < data.length; i++) {
+            var a = data[i];
+            var opt1 = document.createElement("option");
+            opt1.value = a.id;
+            opt1.textContent = a.nome;
+            medAcademiaSelect.appendChild(opt1);
+
+            var opt2 = document.createElement("option");
+            opt2.value = a.id;
+            opt2.textContent = a.nome;
+            medFiltroAcademia.appendChild(opt2);
+          }
+        })
+        .catch(function () { /* silencioso */ });
+    }
+
+    if (formMedalha) {
+      formMedalha.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        if (!getToken()) {
+          alert("Você precisa estar logado para registrar medalhas.");
+          return;
+        }
+
+        if (!medAcademiaSelect || !medAcademiaSelect.value) {
+          alert("Selecione uma academia.");
+          return;
+        }
+
+        var payload = {
+          academia_id: parseInt(medAcademiaSelect.value, 10),
+          faixa: document.getElementById("med-faixa").value.trim(),
+          sexo: document.getElementById("med-sexo").value,
+          categoria_peso: document.getElementById("med-categoria").value.trim(),
+          tipo_medalha: document.getElementById("med-tipo").value,
+          campeonato: document.getElementById("med-campeonato").value.trim(),
+          cidade_evento: document.getElementById("med-cidade-evento").value.trim(),
+          data_evento: document.getElementById("med-data").value,
+          comprovante_descricao: document.getElementById("med-comprovante").value.trim()
+        };
+
+        fetch(API_BASE + "/medalhas", {
+          method: "POST",
+          headers: getAuthHeaders(true),
+          body: JSON.stringify(payload)
+        })
+          .then(function (resp) {
+            if (!resp.ok) {
+              return resp.json().then(function (d) { throw d; });
+            }
+            return resp.json();
+          })
+          .then(function () {
+            formMedalha.reset();
+            carregarMedalhas();
+            carregarRanking();
+          })
+          .catch(function (err) {
+            var msg = (err && err.detail) ? err.detail : "Erro ao registrar medalha. Verifique o backend.";
+            alert(msg);
+          });
+      });
+    }
+
+    if (btnBuscarMedalhas) {
+      btnBuscarMedalhas.addEventListener("click", function () {
+        carregarMedalhas();
+      });
+    }
+
+    function carregarMedalhas() {
+      if (!listaMedalhas) return;
+
+      var url = API_BASE + "/medalhas";
+      if (medFiltroAcademia && medFiltroAcademia.value) {
+        url += "?academia_id=" + encodeURIComponent(medFiltroAcademia.value);
+      }
+
+      fetch(url)
+        .then(function (resp) { return resp.json(); })
+        .then(function (data) {
+          if (!data || !data.length) {
+            listaMedalhas.innerHTML = '<div class="list-item text-muted">Nenhuma medalha registrada.</div>';
+            return;
+          }
+
+          fetch(API_BASE + "/academias")
+            .then(function (respAcad) { return respAcad.json(); })
+            .then(function (academias) {
+              var mapaAcad = {};
+              for (var i = 0; i < academias.length; i++) {
+                mapaAcad[academias[i].id] = academias[i].nome;
+              }
+
+              var html = "";
+              for (var j = 0; j < data.length; j++) {
+                var m = data[j];
+                html +=
+                  '<div class="list-item">' +
+                  '<div class="list-item-title">' +
+                  (mapaAcad[m.academia_id] || "Academia") +
+                  ' • ' + m.tipo_medalha.toUpperCase() +
+                  '</div>' +
+                  '<div class="list-item-sub">Faixa: ' + m.faixa +
+                  ' • Categoria: ' + m.categoria_peso +
+                  ' • Sexo: ' + m.sexo + '</div>' +
+                  '<div class="tag-row">' +
+                  '<span class="tag">' + m.campeonato + '</span>' +
+                  '<span class="tag">' + m.cidade_evento + '</span>' +
+                  '<span class="tag">Data: ' + m.data_evento + '</span>' +
+                  '</div>' +
+                  (m.comprovante_descricao
+                    ? '<div class="text-small" style="margin-top:4px;">Comprovante: ' +
+                      m.comprovante_descricao + '</div>'
+                    : '') +
+                  '</div>';
+              }
+              listaMedalhas.innerHTML = html;
+            });
+        })
+        .catch(function () {
+          listaMedalhas.innerHTML = '<div class="list-item text-muted">Erro ao carregar medalhas.</div>';
+        });
+    }
+
+    // ---------- RANKING ----------
+    var btnAtualizarRanking = document.getElementById("btn-atualizar-ranking");
+    var rankingTabela = document.getElementById("ranking-tabela");
+
+    if (btnAtualizarRanking) {
+      btnAtualizarRanking.addEventListener("click", function () {
+        carregarRanking();
+      });
+    }
+
+    function carregarRanking() {
+      if (!rankingTabela) return;
+
+      fetch(API_BASE + "/ranking/academias")
+        .then(function (resp) { return resp.json(); })
+        .then(function (data) {
+          if (!data || !data.length) {
+            rankingTabela.innerHTML = '<div class="text-muted">Nenhum dado de ranking disponível ainda.</div>';
+            return;
+          }
+
+          var html = '<table><thead><tr>' +
+            '<th>#</th><th>Academia</th><th>Ouro</th><th>Prata</th><th>Bronze</th><th>Total</th>' +
+            '</tr></thead><tbody>';
+
+          for (var i = 0; i < data.length; i++) {
+            var r = data[i];
+            html +=
+              '<tr>' +
+              '<td>' + (i + 1) + '</td>' +
+              '<td>' + r.nome_academia + '</td>' +
+              '<td>' + r.ouro + '</td>' +
+              '<td>' + r.prata + '</td>' +
+              '<td>' + r.bronze + '</td>' +
+              '<td>' + r.total + '</td>' +
+              '</tr>';
+          }
+          html += '</tbody></table>';
+          rankingTabela.innerHTML = html;
+        })
+        .catch(function () {
+          rankingTabela.innerHTML = '<div class="text-muted">Erro ao carregar ranking.</div>';
+        });
+    }
+
+    // ---------- BUSCA NAS REGRAS ----------
+    var rulesSearchInput = document.getElementById("rules-search");
+    var rulesListContainer = document.getElementById("rules-list");
+    if (rulesSearchInput && rulesListContainer) {
+      var ruleItems = rulesListContainer.querySelectorAll(".rule-item");
+      rulesSearchInput.addEventListener("input", function () {
+        var term = rulesSearchInput.value.toLowerCase();
+        for (var i = 0; i < ruleItems.length; i++) {
+          var item = ruleItems[i];
+          var text = item.innerText.toLowerCase();
+          if (!term || text.indexOf(term) !== -1) {
+            item.style.display = "";
+          } else {
+            item.style.display = "none";
+          }
+        }
+      });
+    }
+
+    // Carregamento inicial
+    carregarAcademias();
+    carregarAcademiasNosSelects();
+  });
+</script>
