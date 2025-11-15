@@ -137,7 +137,7 @@ Acesse:
 ### 6. Rode o frontend
 Abra o arquivo:
 ```
-frontend/index.html
+index.html
 ```
 
 ---
@@ -179,8 +179,7 @@ Um sistema desenvolvido com foco em:
 
 ---
 
-## 🥋 OSS — Open Source Spirit  
-Sinta-se livre para estudar, melhorar e até adaptar para sua cidade.
+## 🥋 OSS 
 
 ---
 
