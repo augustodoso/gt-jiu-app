@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Cadastrar Academia</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/apis.js"></script>
+
+  <style>
+    body {
+      background:#02030a;
+      color:white;
+      font-family:system-ui, sans-serif;
+      padding:40px;
+    }
+    .card {
+      max-width:500px;
+      margin:auto;
+      background:#111;
+      padding:20px;
+      border-radius:12px;
+    }
+    input {
+      width:100%;
+      padding:10px;
+      margin:10px 0;
+      border-radius:8px;
+      border:none;
+    }
+    button {
+      width:100%;
+      padding:12px;
+      background:#ff3b3b;
+      color:white;
+      border:none;
+      font-size:16px;
+      border-radius:10px;
+      cursor:pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <h2>Cadastrar nova academia</h2>
+
+    <input id="nome" placeholder="Nome da academia">
+    <input id="mestre" placeholder="Mestre / Professor responsável">
+    <input id="cidade" placeholder="Cidade">
+    <input id="bairro" placeholder="Bairro">
+    <input id="endereco" placeholder="Endereço completo">
+    <input id="telefone" placeholder="Telefone / WhatsApp">
+    <input id="email" placeholder="E-mail de contato">
+
+    <button onclick="salvarAcademia()">Salvar</button>
+  </div>
+
+  <script>
+    async function salvarAcademia() {
+      const token = localStorage.getItem("gtjiu_token_prof");
+      if (!token) {
+        alert("Você precisa estar logado!");
+        window.location.href = "./login.html";
+        return;
+      }
+
+      const data = {
+        nome: document.getElementById("nome").value,
+        mestre: document.getElementById("mestre").value,
+        cidade: document.getElementById("cidade").value,
+        bairro: document.getElementById("bairro").value,
+        endereco: document.getElementById("endereco").value,
+        telefone: document.getElementById("telefone").value,
+        email: document.getElementById("email").value,
+      };
+
+      try {
+        const resp = await fetch("https://gt-jiu-app.onrender.com/academias", {
+          method: "POST",
+          headers: {
+            "Content-Type":"application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify(data)
+        });
+
+        if (!resp.ok) {
+          const erro = await resp.text();
+          alert("Erro ao cadastrar: " + erro);
+          return;
+        }
+
+        alert("Academia cadastrada com sucesso!");
+        window.location.href = "./dashboard.html";
+
+      } catch (err) {
+        alert("Erro ao conectar ao servidor");
+      }
+    }
+  </script>
+</body>
+</html>
