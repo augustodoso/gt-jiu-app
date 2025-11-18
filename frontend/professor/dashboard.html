@@ -2,457 +2,518 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Painel do Professor - GT JIU</title>
+  <title>Painel do Professor - GT Jiu</title>
   <link rel="stylesheet" href="../css/style.css">
-
   <style>
     body {
-      margin: 0;
-      background: #050505;
-      color: #f5f5ff;
+      background: #000;
+      color: #f5f5f5;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
     }
 
     .container {
       max-width: 1100px;
       margin: 0 auto;
-      padding: 40px 16px 60px;
+      padding: 40px 15px 60px;
+      text-align: center;
     }
 
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
+    h1 {
+      font-size: 36px;
+      margin-bottom: 10px;
     }
 
-    .btn {
-      border-radius: 999px;
-      padding: 8px 16px;
+    .sub {
+      font-size: 14px;
+      color: #ccc;
+      margin-bottom: 30px;
+    }
+
+    .btn-sair-topo {
+      position: fixed;
+      top: 20px;
+      right: 30px;
+      background: #ff5252;
       border: none;
+      color: #fff;
+      padding: 10px 25px;
+      border-radius: 8px;
       cursor: pointer;
-      font-size: 0.9rem;
-      font-weight: 500;
+      font-weight: 600;
     }
 
-    .btn-sec { background: #333; color: #fff; }
-    .btn-danger { background: #b71c1c; color: #fff; }
-    .btn-light { background: #eee; color: #111; }
-
-    .cards {
-      margin-top: 25px;
+    .cards-linha {
       display: flex;
-      flex-direction: column;
-      gap: 15px;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
     }
 
     .card {
-      background: #181818;
-      padding: 18px;
+      background: #161616;
+      padding: 25px 20px;
       border-radius: 12px;
-      text-align: left;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-    }
-
-    .card h3 { margin: 0 0 6px; font-size: 18px; }
-    .card p { margin: 0; opacity: 0.9; }
-
-    /* cards clicáveis */
-    .card-link {
+      width: 230px;
       cursor: pointer;
-      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
-    }
-    .card-link:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 18px 40px rgba(0,0,0,0.85);
-      background: #202020;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s;
+      text-align: left;
     }
 
-    @media (min-width: 768px) {
-      .cards { flex-direction: row; }
-      .card { flex: 1; }
+    .card h2 {
+      margin: 0 0 10px;
+      font-size: 20px;
     }
 
-    /* --- AVISOS & CRONÔMETRO --- */
-    .painel-extra {
-      margin-top: 30px;
+    .card p {
+      margin: 0;
+      font-size: 14px;
+      color: #ddd;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 0 1px #ff5252;
+      background: #1f1f1f;
+    }
+
+    .grid-inferior {
       display: flex;
-      flex-direction: column;
-      gap: 18px;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 20px;
     }
 
-    @media (min-width: 900px) {
-      .painel-extra { flex-direction: row; }
-      .box { flex: 1; }
-    }
-
-    .box {
-      background: #181818;
-      padding: 16px;
+    .bloco {
+      background: #151515;
       border-radius: 12px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+      padding: 25px 20px 20px;
+      flex: 1;
+      min-width: 320px;
+      text-align: left;
     }
 
-    .input-text, .textarea {
+    .bloco h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+
+    .bloco small {
+      color: #bbb;
+      font-size: 12px;
+    }
+
+    .campo {
       width: 100%;
+      background: #111;
       border-radius: 8px;
       border: 1px solid #333;
-      background: #101010;
-      color: #fff;
-      padding: 8px;
-      margin-bottom: 8px;
-      outline: none;
+      padding: 10px 12px;
+      color: #f5f5f5;
+      margin-top: 10px;
+      font-size: 14px;
+      box-sizing: border-box;
     }
 
-    .textarea { resize: vertical; min-height: 60px; }
+    textarea.campo {
+      min-height: 90px;
+      resize: vertical;
+    }
 
-    .avisos-lista {
-      margin-top: 10px;
-      max-height: 220px;
+    .btn {
+      display: inline-block;
+      margin-top: 15px;
+      background: #ff5252;
+      border: none;
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .btn.secundario {
+      background: #444;
+    }
+
+    .lista-avisos {
+      margin-top: 15px;
+      font-size: 13px;
+      color: #ccc;
+      border-top: 1px solid #333;
+      padding-top: 10px;
+      max-height: 160px;
       overflow-y: auto;
     }
 
     .aviso-item {
-      border-top: 1px solid #333;
-      padding: 6px 0;
+      margin-bottom: 8px;
+      line-height: 1.35;
     }
 
-    .aviso-titulo { font-weight: 600; }
-    .aviso-data { opacity: 0.7; font-size: 0.8rem; }
-    .btn-mini {
-      font-size: 0.75rem;
-      padding: 3px 8px;
-      border-radius: 999px;
-      background: #333;
-      border: none;
-      cursor: pointer;
-      margin-top: 4px;
-    }
-
-    /* --- CRONÔMETRO --- */
-    .timer-display-wrapper {
-      background: radial-gradient(circle at top, #202838 0, #101010 55%, #050505 100%);
-      border-radius: 16px;
-      padding: 18px;
-      border: 1px solid #ffffff1a;
-      text-align: center;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+    .aviso-item strong {
+      color: #ffb74d;
     }
 
     .timer-display {
-      font-size: 3.4rem;
+      background: #000;
+      border-radius: 16px;
+      padding: 25px 10px;
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .timer-display span {
+      font-size: 54px;
       font-weight: 700;
-      background: #050505;
-      border-radius: 12px;
-      padding: 6px 18px;
-      border: 2px solid #ffffff33;
-      min-width: 230px;
-      margin: 10px auto;
-      transition: 0.2s;
+      letter-spacing: 4px;
     }
 
-    .timer-rodando { color: #00e676; border-color: #00e676; }
-    .timer-alerta { color: #ffeb3b; border-color: #ffeb3b; }
-    .timer-encerrado { color: #ff5252; border-color: #ff5252; }
+    .timer-status {
+      margin-top: 8px;
+      font-size: 13px;
+      color: #ccc;
+    }
 
-    .timer-buttons, .timer-presets {
+    .timer-controles,
+    .timer-presets {
       display: flex;
-      gap: 8px;
       justify-content: center;
+      gap: 10px;
+      margin-top: 12px;
       flex-wrap: wrap;
-      margin-top: 10px;
     }
 
-    .badge {
-      font-size: 0.75rem;
-      padding: 2px 8px;
+    .btn-round {
       border-radius: 999px;
-      background: #ffffff10;
-      border: 1px solid #ffffff30;
-      display: inline-block;
-      margin-top: 6px;
+      padding: 8px 18px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      color: #fff;
+    }
+
+    .btn-green { background: #2e7d32; }
+    .btn-yellow { background: #f9a825; }
+    .btn-red { background: #d32f2f; }
+    .btn-gray { background: #424242; }
+
+    .timer-inputs {
+      margin-top: 12px;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      font-size: 13px;
+      align-items: center;
+    }
+
+    .timer-inputs input {
+      width: 40px;
+      text-align: center;
+      border-radius: 6px;
+      border: 1px solid #444;
+      background: #111;
+      color: #f5f5f5;
+      padding: 4px 0;
+    }
+
+    footer {
+      margin-top: 35px;
+      text-align: center;
+      font-size: 11px;
+      color: #777;
+    }
+
+    @media (max-width: 768px) {
+      .btn-sair-topo {
+        position: static;
+        margin-bottom: 10px;
+      }
+      .container {
+        padding-top: 20px;
+      }
     }
   </style>
 </head>
 <body>
 
-<!-- 🔊 SOM — GONGO REAL -->
-<audio id="gongoSound" preload="auto">
-  <source src="data:audio/mp3;base64,//uQxAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAACcQCAhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISMP/AABEIAKgBKwMBIgACEQEDEQH/xAAYAAADAQEAAAAAAAAAAAAAAAAABQcEAv/EAB0QAQEBAQACAwAAAAAAAAAAAAABAgMEBREhEzH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAZEQEBAAMBAAAAAAAAAAAAAAAAAHECEUH/2gAMAwEAAhEDEQA/APpwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM8v7q95FbOYf/Z" type="audio/mp3">
-</audio>
+<button class="btn-sair-topo" onclick="sairProfessor()">Sair</button>
 
 <div class="container">
+  <h1>Painel do Professor</h1>
+  <p class="sub" id="infoProfessor"></p>
 
-  <div class="topbar">
-    <div>
-      <h1>Painel do Professor</h1>
-      <p id="subtituloProf" style="opacity:0.8;"></p>
-    </div>
-    <button class="btn btn-sec" onclick="sairProfessor()">Sair</button>
-  </div>
-
-  <!-- CARDS PRINCIPAIS -->
-  <div class="cards">
-    <div class="card card-link" onclick="irParaAlunos()">
-      <h3>Alunos</h3>
+  <!-- CARDS DO TOPO -->
+  <div class="cards-linha">
+    <div class="card" onclick="irAlunos()">
+      <h2>Alunos</h2>
       <p>Cadastro de alunos, planos e mensalidades.</p>
     </div>
-    <div class="card card-link" onclick="irParaMedalhas()">
-      <h3>Medalhas</h3>
+
+    <div class="card" onclick="irMedalhas()">
+      <h2>Medalhas</h2>
       <p>Valide medalhas enviadas e acompanhe o desempenho.</p>
     </div>
-    <div class="card card-link" onclick="irParaRanking()">
-      <h3>Ranking</h3>
+
+    <div class="card" onclick="irRanking()">
+      <h2>Ranking</h2>
       <p>Ranking interno de medalhas da sua academia.</p>
+    </div>
+
+    <div class="card" onclick="irAcademias()">
+      <h2>Academias</h2>
+      <p>Cadastre sua academia e atualize dados públicos.</p>
     </div>
   </div>
 
   <!-- AVISOS + CRONÔMETRO -->
-  <div class="painel-extra">
+  <div class="grid-inferior">
 
-    <!-- AVISOS -->
-    <section class="box">
-      <h2>Avisos para os alunos</h2>
-      <input id="avisoTitulo" class="input-text" placeholder="Título do aviso">
-      <textarea id="avisoTexto" class="textarea" placeholder="Digite seu aviso..."></textarea>
-      <button class="btn btn-sec" onclick="publicarAviso()">Publicar aviso</button>
+    <!-- BLOCO AVISOS -->
+    <div class="bloco">
+      <h3>Avisos para os alunos</h3>
+      <small>Os avisos aparecem no painel dos alunos vinculados ao seu e-mail.</small>
 
-      <div id="listaAvisos" class="avisos-lista"></div>
-    </section>
+      <input id="tituloAviso" class="campo" placeholder="Título do aviso (opcional)">
 
-    <!-- CRONÔMETRO -->
-    <section class="box">
-      <h2>Cronômetro de Luta</h2>
+      <textarea id="textoAviso" class="campo" placeholder="Digite seu aviso..."></textarea>
 
-      <div class="timer-display-wrapper">
-        <div id="timerDisplay" class="timer-display">05:00</div>
-        <div id="timerStatus" style="opacity:0.8;">Pronto para iniciar</div>
+      <button class="btn" onclick="publicarAviso()">Publicar aviso</button>
+
+      <div class="lista-avisos" id="listaAvisos">
+        Nenhum aviso publicado.
+      </div>
+    </div>
+
+    <!-- BLOCO CRONÔMETRO -->
+    <div class="bloco">
+      <h3>Cronômetro de Luta</h3>
+      <small>Estilo placar de campeonato. Ideal para rounds de rola e treinos específicos.</small>
+
+      <div class="timer-display">
+        <span id="timerDisplay">05:00</span>
+        <div class="timer-status" id="timerStatus">Pronto para iniciar</div>
       </div>
 
-      <div style="margin-top:10px;text-align:center;">
-        <input id="timerMinutos" type="number" min="0" value="5"
-               style="width:60px;background:#101010;color:#fff;border:1px solid #444;padding:4px;border-radius:8px;">
-        :
-        <input id="timerSegundos" type="number" min="0" max="59" value="0"
-               style="width:60px;background:#101010;color:#fff;border:1px solid #444;padding:4px;border-radius:8px;">
+      <div class="timer-inputs">
+        <span>Min</span>
+        <input type="number" id="minInput" min="0" value="5">
+        <span>Seg</span>
+        <input type="number" id="segInput" min="0" value="0">
       </div>
 
-      <div class="timer-buttons">
-        <button class="btn btn-light" onclick="iniciarTimer()">Iniciar</button>
-        <button class="btn btn-sec" onclick="pausarTimer()">Pausar</button>
-        <button class="btn btn-danger" onclick="resetarTimer()">Zerar</button>
+      <div class="timer-controles">
+        <button class="btn-round btn-green" onclick="iniciarTimer()">Iniciar</button>
+        <button class="btn-round btn-yellow" onclick="pausarTimer()">Pausar</button>
+        <button class="btn-round btn-red" onclick="zerarTimer()">Zerar</button>
       </div>
 
       <div class="timer-presets">
-        <button class="btn-mini" onclick="setPreset(5,0)">5:00</button>
-        <button class="btn-mini" onclick="setPreset(6,0)">6:00</button>
-        <button class="btn-mini" onclick="setPreset(8,0)">8:00</button>
-        <button class="btn-mini" onclick="setPreset(10,0)">10:00</button>
+        <button class="btn-round btn-gray" onclick="presetTimer(5)">5:00</button>
+        <button class="btn-round btn-gray" onclick="presetTimer(6)">6:00</button>
+        <button class="btn-round btn-gray" onclick="presetTimer(8)">8:00</button>
+        <button class="btn-round btn-gray" onclick="presetTimer(10)">10:00</button>
       </div>
-
-      <span class="badge">Gongo forte no início e 3 gongos no final</span>
-    </section>
-
+    </div>
   </div>
+
+  <footer>
+    GT Jiu &bull; Projeto educacional e organização dentro do Jiu-Jitsu.
+  </footer>
 </div>
 
 <script>
-/* ====================== LOGIN ======================= */
-const profStr = localStorage.getItem('gtjiu_professor_logado');
-if (!profStr) {
-  alert("Você precisa estar logado como professor.");
-  window.location.href = "login.html";
-}
-const prof = JSON.parse(profStr);
-document.getElementById("subtituloProf").textContent = `${prof.nome} (${prof.email})`;
-
-function sairProfessor() {
-  localStorage.removeItem('gtjiu_professor_logado');
-  window.location.href = "login.html";
-}
-
-/* ====== NAVEGAÇÃO ====== */
-function irParaAlunos()   { window.location.href = "alunos.html"; }
-function irParaMedalhas() { window.location.href = "medalhas.html"; }
-function irParaRanking()  { window.location.href = "medalhas.html#ranking"; }
-
-/* ====================== AVISOS ======================= */
-function getAvisos() {
-  return JSON.parse(localStorage.getItem('gtjiu_avisos') || '[]');
-}
-function salvarAvisos(lista) {
-  localStorage.setItem('gtjiu_avisos', JSON.stringify(lista));
-}
-
-function publicarAviso() {
-  const titulo = document.getElementById('avisoTitulo').value.trim();
-  const texto  = document.getElementById('avisoTexto').value.trim();
-
-  if (!texto) {
-    alert("Escreva algo para publicar.");
-    return;
+  // ============================
+  // PROTEÇÃO / DADOS DO PROFESSOR
+  // ============================
+  const profStr = localStorage.getItem('gtjiu_professor_logado');
+  if (!profStr) {
+    alert('Você precisa fazer login como professor.');
+    window.location.href = './login.html';
   }
 
-  const avisos = getAvisos();
-  avisos.push({
-    id: Date.now(),
-    professorEmail: prof.email,
-    titulo: titulo || "Aviso",
-    texto,
-    criadoEm: new Date().toISOString()
-  });
-  salvarAvisos(avisos);
-
-  document.getElementById('avisoTitulo').value = "";
-  document.getElementById('avisoTexto').value = "";
-
-  renderAvisos();
-}
-
-function removerAviso(id) {
-  let avisos = getAvisos();
-  avisos = avisos.filter(a => a.id !== id);
-  salvarAvisos(avisos);
-  renderAvisos();
-}
-window.removerAviso = removerAviso;
-
-function renderAvisos() {
-  const container = document.getElementById('listaAvisos');
-  container.innerHTML = "";
-
-  const avisos = getAvisos()
-    .filter(a => a.professorEmail === prof.email)
-    .sort((a,b) => b.id - a.id);
-
-  if (avisos.length === 0) {
-    container.innerHTML = '<p style="opacity:0.7">Nenhum aviso publicado.</p>';
-    return;
+  const professor = profStr ? JSON.parse(profStr) : null;
+  if (professor) {
+    const infoEl = document.getElementById('infoProfessor');
+    infoEl.textContent = `${professor.nome} (${professor.email})`;
   }
 
-  avisos.forEach(a => {
-    const div = document.createElement('div');
-    div.className = 'aviso-item';
-    div.innerHTML = `
-      <div class="aviso-titulo">${a.titulo}</div>
-      <div class="aviso-data">${new Date(a.criadoEm).toLocaleString("pt-BR")}</div>
-      <div class="aviso-texto">${a.texto}</div>
-      <button class="btn-mini" onclick="removerAviso(${a.id})">Remover</button>
-    `;
-    container.appendChild(div);
-  });
-}
-renderAvisos();
-
-/* ====================== CRONÔMETRO ======================= */
-let timerInterval = null;
-let timerSegundosRestantes = 5 * 60;
-
-const display = document.getElementById("timerDisplay");
-const statusLabel = document.getElementById("timerStatus");
-const minInput = document.getElementById("timerMinutos");
-const segInput = document.getElementById("timerSegundos");
-
-/* --- SOM DE GONGO REAL --- */
-function tocarGongo(qtd = 1) {
-  const audio = document.getElementById("gongoSound");
-  let count = 0;
-
-  function tocar() {
-    audio.currentTime = 0;
-    audio.volume = 1.0;
-    audio.play();
-    count++;
-    if (count < qtd) setTimeout(tocar, 900);
-  }
-  tocar();
-}
-
-/* --- TIMER --- */
-function atualizarDisplay() {
-  const m = String(Math.floor(timerSegundosRestantes / 60)).padStart(2,'0');
-  const s = String(timerSegundosRestantes % 60).padStart(2,'0');
-  display.textContent = `${m}:${s}`;
-
-  display.classList.remove("timer-rodando","timer-alerta","timer-encerrado");
-
-  if (timerSegundosRestantes === 0) {
-    display.classList.add("timer-encerrado");
-    statusLabel.textContent = "Tempo encerrado";
-  } else if (timerSegundosRestantes <= 10) {
-    display.classList.add("timer-alerta");
-    statusLabel.textContent = "Últimos segundos!";
-  } else if (timerInterval) {
-    display.classList.add("timer-rodando");
-    statusLabel.textContent = "Luta em andamento";
-  } else {
-    statusLabel.textContent = "Pronto para iniciar";
-  }
-}
-
-function setPreset(min,sec){
-  minInput.value=min;
-  segInput.value=sec;
-  timerSegundosRestantes=min*60+sec;
-  atualizarDisplay();
-}
-window.setPreset=setPreset;
-
-function iniciarTimer() {
-  const min = parseInt(minInput.value)||0;
-  const seg = parseInt(segInput.value)||0;
-
-  const total = min*60 + seg;
-  if (total <= 0) {
-    alert("Defina um tempo válido.");
-    return;
+  function sairProfessor() {
+    localStorage.removeItem('gtjiu_professor_logado');
+    window.location.href = '../index.html';
   }
 
-  timerSegundosRestantes = total;
-  atualizarDisplay();
+  // ============================
+  // NAVEGAÇÃO DOS CARDS
+  // ============================
+  function irAlunos() {
+    window.location.href = './alunos.html';
+  }
 
-  if (timerInterval) clearInterval(timerInterval);
+  function irMedalhas() {
+    window.location.href = './medalhas.html';
+  }
 
-  /* Gongo de início */
-  tocarGongo(1);
+  function irRanking() {
+    // usa a mesma tela de ranking completo dos alunos
+    window.location.href = '../aluno/ranking.html';
+  }
 
-  timerInterval = setInterval(() => {
-    timerSegundosRestantes--;
+  function irAcademias() {
+    window.location.href = './cadastro-academia.html';
+  }
 
-    if (timerSegundosRestantes <= 0) {
-      timerSegundosRestantes = 0;
-      clearInterval(timerInterval);
-      timerInterval = null;
-      atualizarDisplay();
+  // ============================
+  // AVISOS PARA OS ALUNOS
+  // ============================
+  function obterListaAvisos() {
+    return JSON.parse(localStorage.getItem('gtjiu_avisos') || '[]');
+  }
 
-      /* Gongo final (3x) */
-      tocarGongo(3);
+  function salvarListaAvisos(lista) {
+    localStorage.setItem('gtjiu_avisos', JSON.stringify(lista));
+  }
+
+  function renderizarAvisos() {
+    const listaEl = document.getElementById('listaAvisos');
+    const avisos = obterListaAvisos()
+      .filter(a => a.professorEmail === professor.email)
+      .sort((a, b) => b.id - a.id);
+
+    if (avisos.length === 0) {
+      listaEl.textContent = 'Nenhum aviso publicado.';
       return;
     }
 
-    atualizarDisplay();
-  },1000);
-}
-
-function pausarTimer(){
-  if(timerInterval){
-    clearInterval(timerInterval);
-    timerInterval=null;
+    listaEl.innerHTML = '';
+    avisos.forEach(aviso => {
+      const data = aviso.criadoEm ? new Date(aviso.criadoEm) : null;
+      const dataStr = data && !isNaN(data) ? data.toLocaleDateString('pt-BR') : '';
+      const div = document.createElement('div');
+      div.className = 'aviso-item';
+      div.innerHTML =
+        `<strong>${aviso.titulo || 'Aviso'}</strong>` +
+        (dataStr ? ` <span style="color:#888;">(${dataStr})</span><br>` : '<br>') +
+        `${aviso.texto}`;
+      listaEl.appendChild(div);
+    });
   }
-  atualizarDisplay();
-}
-function resetarTimer(){
-  pausarTimer();
-  timerSegundosRestantes=(parseInt(minInput.value)||0)*60 + (parseInt(segInput.value)||0);
-  atualizarDisplay();
-}
 
-window.iniciarTimer=iniciarTimer;
-window.pausarTimer=pausarTimer;
-window.resetarTimer=resetarTimer;
+  function publicarAviso() {
+    const titulo = document.getElementById('tituloAviso').value.trim();
+    const texto  = document.getElementById('textoAviso').value.trim();
 
-atualizarDisplay();
+    if (!texto) {
+      alert('Digite o texto do aviso.');
+      return;
+    }
+
+    const avisos = obterListaAvisos();
+    const novo = {
+      id: Date.now(),
+      professorEmail: professor.email,
+      titulo,
+      texto,
+      criadoEm: new Date().toISOString()
+    };
+
+    avisos.push(novo);
+    salvarListaAvisos(avisos);
+
+    document.getElementById('tituloAviso').value = '';
+    document.getElementById('textoAviso').value = '';
+
+    renderizarAvisos();
+  }
+
+  renderizarAvisos();
+
+  // ============================
+  // CRONÔMETRO DE LUTA
+  // ============================
+  let timerSegundos = 5 * 60;  // default 5 minutos
+  let timerInterval = null;
+  let timerRodando = false;
+
+  const displayEl = document.getElementById('timerDisplay');
+  const statusEl  = document.getElementById('timerStatus');
+  const minInput  = document.getElementById('minInput');
+  const segInput  = document.getElementById('segInput');
+
+  function atualizarDisplay() {
+    const m = Math.floor(timerSegundos / 60);
+    const s = timerSegundos % 60;
+    displayEl.textContent =
+      String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+  }
+
+  function aplicarInputsParaTimer() {
+    let m = parseInt(minInput.value || '0', 10);
+    let s = parseInt(segInput.value || '0', 10);
+    if (m < 0) m = 0;
+    if (s < 0) s = 0;
+    timerSegundos = m * 60 + s;
+    if (timerSegundos <= 0) timerSegundos = 1;
+    atualizarDisplay();
+  }
+
+  minInput.addEventListener('change', aplicarInputsParaTimer);
+  segInput.addEventListener('change', aplicarInputsParaTimer);
+
+  function iniciarTimer() {
+    aplicarInputsParaTimer();
+    if (timerRodando) return;
+    timerRodando = true;
+    statusEl.textContent = 'Cronômetro em andamento...';
+
+    timerInterval = setInterval(() => {
+      timerSegundos--;
+      if (timerSegundos <= 0) {
+        timerSegundos = 0;
+        atualizarDisplay();
+        clearInterval(timerInterval);
+        timerRodando = false;
+        statusEl.textContent = 'Tempo encerrado!';
+        // aqui poderia tocar um som, se você quiser depois
+        return;
+      }
+      atualizarDisplay();
+    }, 1000);
+  }
+
+  function pausarTimer() {
+    if (!timerRodando) return;
+    clearInterval(timerInterval);
+    timerRodando = false;
+    statusEl.textContent = 'Cronômetro pausado.';
+  }
+
+  function zerarTimer() {
+    clearInterval(timerInterval);
+    timerRodando = false;
+    timerSegundos = 5 * 60;
+    minInput.value = 5;
+    segInput.value = 0;
+    atualizarDisplay();
+    statusEl.textContent = 'Pronto para iniciar';
+  }
+
+  function presetTimer(minutos) {
+    clearInterval(timerInterval);
+    timerRodando = false;
+    timerSegundos = minutos * 60;
+    minInput.value = minutos;
+    segInput.value = 0;
+    atualizarDisplay();
+    statusEl.textContent = 'Pronto para iniciar';
+  }
+
+  // inicializa display
+  atualizarDisplay();
 </script>
 
 </body>
