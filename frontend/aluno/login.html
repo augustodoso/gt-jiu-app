@@ -5,113 +5,266 @@
   <title>Login do Aluno - GT Jiu</title>
   <link rel="stylesheet" href="../css/style.css">
   <style>
-    .login-container {
-      max-width: 420px;
-      margin: 80px auto;
-      background: #181818;
-      padding: 30px 25px;
-      border-radius: 12px;
-      text-align: left;
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #000;
+      color: #f5f5f5;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
-    .login-container h1 {
-      font-size: 24px;
-      margin-bottom: 6px;
+
+    .shell {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 20px;
     }
-    .login-container p.sub {
-      margin: 0 0 20px 0;
+
+    .topo {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .topo-titulos h1 {
+      margin: 0;
+      font-size: 32px;
+    }
+
+    .topo-titulos p {
+      margin: 2px 0 0;
       font-size: 14px;
-      opacity: 0.8;
+      opacity: 0.85;
     }
-    .field {
-      margin-bottom: 15px;
-    }
-    .field label {
-      display: block;
-      margin-bottom: 4px;
+
+    .btn-voltar {
+      background: transparent;
+      border: 1px solid #444;
+      color: #f5f5f5;
+      padding: 8px 16px;
+      border-radius: 999px;
+      cursor: pointer;
       font-size: 13px;
+    }
+
+    .btn-voltar:hover {
+      background: #111;
+    }
+
+    .card-login {
+      background: #111;
+      border-radius: 16px;
+      padding: 24px 24px 26px;
+      max-width: 460px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.6);
+    }
+
+    .card-login h2 {
+      margin: 0 0 8px;
+      font-size: 24px;
+    }
+
+    .card-login p {
+      margin: 0 0 18px;
+      font-size: 14px;
       opacity: 0.9;
     }
-    .field input {
+
+    .campo {
+      margin-bottom: 14px;
+    }
+
+    .campo label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .campo input {
       width: 100%;
-      padding: 9px 10px;
       border-radius: 8px;
       border: none;
-      background: #101010;
+      padding: 10px 12px;
+      font-size: 14px;
+      background: #181818;
       color: #f5f5f5;
     }
-    .acoes-login {
-      margin-top: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+
+    .campo input::placeholder {
+      color: #777;
     }
-    .hint {
+
+    .lgpd-termo {
+      margin-top: 6px;
       font-size: 12px;
-      opacity: 0.7;
-      margin-top: 4px;
+      color: #ccc;
+    }
+
+    .lgpd-termo label {
+      cursor: pointer;
+    }
+
+    .lgpd-termo input {
+      margin-right: 6px;
+    }
+
+    .lgpd-termo a {
+      color: #ff6b6b;
+      text-decoration: none;
+    }
+
+    .lgpd-termo a:hover {
+      text-decoration: underline;
+    }
+
+    .acoes {
+      margin-top: 18px;
+      display: flex;
+      justify-content: flex-start;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn-primario {
+      background: #ff4444;
+      border: none;
+      color: #fff;
+      padding: 10px 22px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .btn-primario:hover {
+      opacity: 0.9;
+    }
+
+    .status-login {
+      font-size: 12px;
+      opacity: 0.85;
+    }
+
+    @media (max-width: 720px) {
+      .shell {
+        padding: 20px 16px 40px;
+      }
+      .topo {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .card-login {
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
 
-<div class="container" style="padding-top:40px;">
-  <div class="login-container">
-    <h1>Login do Aluno</h1>
-    <p class="sub">
-      Use o código de acesso fornecido pelo professor para entrar no painel do aluno.
-    </p>
+<div class="shell">
+  <div class="topo">
+    <div class="topo-titulos">
+      <h1>GT Jiu</h1>
+      <p>Painel do Aluno • Acesso</p>
+    </div>
+    <!-- ✅ VOLTAR PARA A TELA INICIAL -->
+    <button class="btn-voltar" onclick="voltarInicio()">Voltar</button>
+  </div>
 
-    <form onsubmit="handleLoginAluno(event)">
-      <div class="field">
-        <label for="codigo">Código de acesso</label>
-        <input id="codigo" type="text" placeholder="Ex.: GTJ-12345" required>
-        <div class="hint">O código aparece no cadastro feito pelo seu professor.</div>
+  <div class="card-login">
+    <h2>Entrar como aluno</h2>
+    <p>Use o código de acesso informado pelo seu professor e sua senha.</p>
+
+    <form id="formAluno" onsubmit="handleLoginAluno(event)">
+      <div class="campo">
+        <label for="codigoAluno">Código do aluno</label>
+        <input
+          type="text"
+          id="codigoAluno"
+          placeholder="Ex: GTJ-JIU-0001"
+          required
+        >
       </div>
 
-      <div class="acoes-login">
-        <button type="submit" class="btn">Entrar</button>
-        <button type="button" class="btn" style="background:#444;" onclick="voltarInicio()">
-          Voltar
-        </button>
+      <div class="campo">
+        <label for="senhaAluno">Senha</label>
+        <input
+          type="password"
+          id="senhaAluno"
+          placeholder="Sua senha"
+          required
+        >
+      </div>
+
+      <!-- ✅ LGPD / PRIVACIDADE -->
+      <div class="lgpd-termo">
+        <label>
+          <input type="checkbox" id="lgpdAluno">
+          Li e aceito a
+          <a href="../termos/lgpd.html" target="_blank">
+            Política de Privacidade e LGPD
+          </a>.
+        </label>
+      </div>
+
+      <div class="acoes">
+        <button type="submit" class="btn-primario">Entrar</button>
+        <span class="status-login" id="statusAluno">Deslogado</span>
       </div>
     </form>
   </div>
 </div>
 
+<script src="../js/apis.js"></script>
 <script>
-  // Se já estiver logado, você pode redirecionar se quiser:
-  const alunoLogadoStr = localStorage.getItem('gtjiu_aluno_logado');
-  if (alunoLogadoStr) {
-    // window.location.href = "./dashboard.html";
-  }
-
+  // ✅ VOLTAR PARA A TELA INICIAL
   function voltarInicio() {
-    window.location.href = "../conteudo/academias.html";
+    window.location.href = '../index.html';
   }
 
-  function handleLoginAluno(event) {
+  const alunoStr = localStorage.getItem('gtjiu_aluno_logado');
+  if (alunoStr) {
+    document.getElementById('statusAluno').textContent = 'Já logado';
+    // Se quiser redirecionar automático:
+    // window.location.href = './dashboard.html';
+  }
+
+  async function handleLoginAluno(event) {
     event.preventDefault();
 
-    const codigoInput = document.getElementById('codigo');
-    const codigo = codigoInput.value.trim().toUpperCase();
+    const codigo = document.getElementById('codigoAluno').value.trim();
+    const senha  = document.getElementById('senhaAluno').value.trim();
+    const aceitouLgpd = document.getElementById('lgpdAluno').checked;
+    const statusSpan = document.getElementById('statusAluno');
 
-    if (!codigo) {
-      alert("Informe o código de acesso.");
+    // ✅ LGPD obrigatório
+    if (!aceitouLgpd) {
+      alert('Para continuar, é necessário aceitar a Política de Privacidade / LGPD.');
       return;
     }
 
-    const alunos = JSON.parse(localStorage.getItem('gtjiu_alunos') || '[]');
-
-    const aluno = alunos.find(a => a.idAluno === codigo);
-
-    if (!aluno) {
-      alert("Código não encontrado. Confirme com seu professor se o cadastro já foi feito.");
-      codigoInput.focus();
+    if (!codigo || !senha) {
+      alert('Preencha código e senha.');
       return;
     }
 
-    localStorage.setItem('gtjiu_aluno_logado', JSON.stringify(aluno));
-    window.location.href = "./dashboard.html";
+    statusSpan.textContent = 'Entrando...';
+
+    try {
+      const dados = await loginAluno(codigo, senha); // função do apis.js
+      localStorage.setItem('gtjiu_aluno_logado', JSON.stringify(dados));
+      statusSpan.textContent = 'Login realizado';
+      window.location.href = './dashboard.html';
+    } catch (erro) {
+      console.error(erro);
+      alert('Erro ao fazer login do aluno. Verifique os dados.');
+      statusSpan.textContent = 'Erro no login';
+    }
   }
 </script>
 

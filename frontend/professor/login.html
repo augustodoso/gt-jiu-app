@@ -5,132 +5,284 @@
   <title>Login do Professor - GT Jiu</title>
   <link rel="stylesheet" href="../css/style.css">
   <style>
-    .login-container {
-      max-width: 420px;
-      margin: 80px auto;
-      background: #181818;
-      padding: 30px 25px;
-      border-radius: 12px;
-      text-align: left;
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #000;
+      color: #f5f5f5;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
-    .login-container h1 {
-      font-size: 24px;
-      margin-bottom: 6px;
+
+    .shell {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 20px;
     }
-    .login-container p.sub {
-      margin: 0 0 20px 0;
+
+    .topo {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .topo-titulos h1 {
+      margin: 0;
+      font-size: 32px;
+    }
+
+    .topo-titulos p {
+      margin: 2px 0 0;
       font-size: 14px;
-      opacity: 0.8;
+      opacity: 0.85;
     }
-    .field {
-      margin-bottom: 15px;
-    }
-    .field label {
-      display: block;
-      margin-bottom: 4px;
+
+    .btn-voltar {
+      background: transparent;
+      border: 1px solid #444;
+      color: #f5f5f5;
+      padding: 8px 16px;
+      border-radius: 999px;
+      cursor: pointer;
       font-size: 13px;
+    }
+
+    .btn-voltar:hover {
+      background: #111;
+    }
+
+    .card-login {
+      background: #111;
+      border-radius: 16px;
+      padding: 24px 24px 26px;
+      max-width: 460px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.6);
+    }
+
+    .card-login h2 {
+      margin: 0 0 8px;
+      font-size: 24px;
+    }
+
+    .card-login p {
+      margin: 0 0 18px;
+      font-size: 14px;
       opacity: 0.9;
     }
-    .field input {
+
+    .campo {
+      margin-bottom: 14px;
+    }
+
+    .campo label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .campo input {
       width: 100%;
-      padding: 9px 10px;
       border-radius: 8px;
       border: none;
-      background: #101010;
+      padding: 10px 12px;
+      font-size: 14px;
+      background: #181818;
       color: #f5f5f5;
     }
-    .acoes-login {
-      margin-top: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+
+    .campo input::placeholder {
+      color: #777;
     }
-    .link-menor {
-      font-size: 13px;
-      opacity: 0.8;
-      margin-top: 10px;
-      text-align: center;
+
+    .lgpd-termo {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #ccc;
     }
-    .link-menor a {
-      color: #ff6b4a;
+
+    .lgpd-termo label {
+      cursor: pointer;
+    }
+
+    .lgpd-termo input {
+      margin-right: 6px;
+    }
+
+    .lgpd-termo a {
+      color: #ff6b6b;
       text-decoration: none;
+    }
+
+    .lgpd-termo a:hover {
+      text-decoration: underline;
+    }
+
+    .acoes {
+      margin-top: 18px;
+      display: flex;
+      justify-content: flex-start;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-primario {
+      background: #ff4444;
+      border: none;
+      color: #fff;
+      padding: 10px 22px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .btn-primario:hover {
+      opacity: 0.9;
+    }
+
+    .status-login {
+      font-size: 12px;
+      opacity: 0.85;
     }
   </style>
 </head>
 <body>
 
-<div class="container" style="padding-top:40px;">
-  <div class="login-container">
-    <h1>Login do Professor</h1>
-    <p class="sub">
-      Entre com o e-mail e a senha cadastrados para acessar o painel do professor.
-    </p>
+<div class="shell">
+  <div class="topo">
+    <div class="topo-titulos">
+      <h1>GT Jiu</h1>
+      <p>Painel do Professor • Acesso restrito</p>
+    </div>
+    <button class="btn-voltar" onclick="voltarInicio()">Voltar</button>
+  </div>
 
-    <form onsubmit="handleLoginProfessor(event)">
-      <div class="field">
-        <label for="email">E-mail</label>
-        <input id="email" type="email" placeholder="voce@email.com" required>
+  <div class="card-login">
+    <h2>Entrar como professor</h2>
+    <p>Use o e-mail e senha cadastrados para acessar o painel da sua academia.</p>
+
+    <form id="formProfessor" onsubmit="handleLoginProfessor(event)">
+      <div class="campo">
+        <label for="emailProfessor">E-mail</label>
+        <input
+          type="email"
+          id="emailProfessor"
+          placeholder="voce@academia.com"
+          required
+        >
       </div>
 
-      <div class="field">
-        <label for="senha">Senha</label>
-        <input id="senha" type="password" placeholder="Sua senha" required>
+      <div class="campo">
+        <label for="senhaProfessor">Senha</label>
+        <input
+          type="password"
+          id="senhaProfessor"
+          placeholder="Sua senha"
+          required
+        >
       </div>
 
-      <div class="acoes-login">
-        <button type="submit" class="btn">Entrar</button>
-        <button type="button" class="btn" style="background:#444;" onclick="voltarInicio()">
-          Voltar
+      <div class="lgpd-termo">
+        <label>
+          <input type="checkbox" id="lgpdProfessor">
+          Li e aceito a
+          <a href="../termos/lgpd.html" target="_blank">
+            Política de Privacidade e LGPD
+          </a>.
+        </label>
+      </div>
+
+      <div class="acoes">
+        <button type="submit" class="btn-primario">Entrar</button>
+
+        <button
+          type="button"
+          class="btn-primario"
+          style="background:#444;"
+          onclick="abrirTelaRegistroProfessor()"
+        >
+          Registrar conta
         </button>
+
+        <span class="status-login" id="statusProfessor">Deslogado</span>
       </div>
     </form>
-
-    <p class="link-menor">
-      Ainda não tem cadastro? <a href="cadastro.html">Registrar professor</a>
-    </p>
   </div>
 </div>
 
 <script>
-  // Se já estiver logado, manda direto pro painel
-  const profLogadoStr = localStorage.getItem('gtjiu_professor_logado');
-  if (profLogadoStr) {
-    // Já tem sessão salva
-    // window.location.href = "./dashboard.html";
-    // Se quiser já redirecionar, descomente a linha acima.
-  }
+  const KEY_PROFESSORES = 'gtjiu_professores_cadastrados';
+  const KEY_LOGADO      = 'gtjiu_professor_logado';
 
   function voltarInicio() {
-    // volta para a tela de escolha professor/aluno
-    window.location.href = "../conteudo/academias.html";
+    window.location.href = '../index.html';
   }
 
-  function handleLoginProfessor(event) {
+  function abrirTelaRegistroProfessor() {
+    window.location.href = './register_professor.html';
+  }
+
+  // Se já tiver login salvo
+  (function initStatus() {
+    const logadoStr = localStorage.getItem(KEY_LOGADO);
+    if (logadoStr) {
+      document.getElementById('statusProfessor').textContent = 'Já logado';
+    }
+  })();
+
+  function carregarProfessores() {
+    const listaStr = localStorage.getItem(KEY_PROFESSORES);
+    if (!listaStr) return [];
+    try {
+      return JSON.parse(listaStr) || [];
+    } catch {
+      return [];
+    }
+  }
+
+  function salvarProfessorLogado(professor) {
+    localStorage.setItem(KEY_LOGADO, JSON.stringify(professor));
+  }
+
+  async function handleLoginProfessor(event) {
     event.preventDefault();
 
-    const email = document.getElementById('email').value.trim();
-    const senha = document.getElementById('senha').value.trim();
+    const email = document.getElementById('emailProfessor').value.trim();
+    const senha = document.getElementById('senhaProfessor').value.trim();
+    const aceitouLgpd = document.getElementById('lgpdProfessor').checked;
+    const statusSpan = document.getElementById('statusProfessor');
+
+    if (!aceitouLgpd) {
+      alert('Para continuar, é necessário aceitar a Política de Privacidade / LGPD.');
+      return;
+    }
 
     if (!email || !senha) {
-      alert("Preencha e-mail e senha.");
+      alert('Preencha e-mail e senha.');
       return;
     }
 
-    // Professores cadastrados localmente
-    const professores = JSON.parse(localStorage.getItem('gtjiu_professores') || '[]');
+    statusSpan.textContent = 'Verificando...';
 
-    const prof = professores.find(p => p.email === email && p.senha === senha);
+    const professores = carregarProfessores();
+    const professor = professores.find(
+      (p) => p.email === email && p.senha === senha
+    );
 
-    if (!prof) {
-      alert("E-mail ou senha inválidos. Verifique os dados ou faça o cadastro.");
+    if (!professor) {
+      alert('Erro ao fazer login. Verifique os dados ou crie uma conta.');
+      statusSpan.textContent = 'Erro no login';
       return;
     }
 
-    // Salva sessão
-    localStorage.setItem('gtjiu_professor_logado', JSON.stringify(prof));
-
-    // Vai para o painel
-    window.location.href = "./dashboard.html";
+    salvarProfessorLogado(professor);
+    statusSpan.textContent = 'Login realizado';
+    window.location.href = './dashboard.html';
   }
 </script>
 

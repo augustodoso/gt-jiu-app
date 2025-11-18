@@ -41,11 +41,12 @@ async function apiRequest(path, options = {}) {
 }
 
 // =======================================
-// AUTENTICAÇÃO
+// AUTENTICAÇÃO GENÉRICA
 // =======================================
 
-// Registrar usuário (ex.: professor ou admin)
-// O corpo exato depende do seu backend, aqui deixamos genérico.
+// Registrar usuário (professor / aluno)
+// O formato exato depende do backend.
+// Aqui vamos mandar APENAS nome, email, senha.
 async function apiRegistrarUsuario(dadosUsuario) {
   return apiRequest("/register", {
     method: "POST",
@@ -53,11 +54,9 @@ async function apiRegistrarUsuario(dadosUsuario) {
   });
 }
 
-// Login (pode ser usado tanto para professor quanto para aluno,
-// dependendo de como seu backend foi implementado)
+// Login genérico
+// Exemplo de corpo: { email: "...", senha: "..." }
 async function apiLogin(dadosLogin) {
-  // Exemplo esperado: { email: "...", senha: "..." }
-  // ou o formato que o seu backend estiver usando
   return apiRequest("/login", {
     method: "POST",
     body: dadosLogin,
@@ -65,10 +64,53 @@ async function apiLogin(dadosLogin) {
 }
 
 // =======================================
+// AUTENTICAÇÃO ESPECÍFICA - PROFESSOR
+// =======================================
+
+// Usado na tela login do professor
+async function loginProfessor(email, senha) {
+  return apiLogin({
+    email: email,
+    senha: senha,
+    // se o backend NÃO usar role, tudo bem manter só email/senha;
+    // se der erro, tiramos esse campo:
+    // role: "professor",
+  });
+}
+
+// Usado na tela de registro do professor
+async function registrarProfessor(nome, email, senha) {
+  // IMPORTANTE: mandando somente esses 3 campos
+  return apiRegistrarUsuario({
+    nome: nome,
+    email: email,
+    senha: senha,
+  });
+}
+
+// =======================================
+// (OPCIONAL) AUTENTICAÇÃO ESPECÍFICA - ALUNO
+// =======================================
+
+async function loginAluno(email, senha) {
+  return apiLogin({
+    email: email,
+    senha: senha,
+    // role: "aluno",
+  });
+}
+
+async function registrarAluno(dados) {
+  return apiRegistrarUsuario({
+    ...dados,
+    // role: "aluno",
+  });
+}
+
+// =======================================
 // CATEGORIA (tabela IBJJF/CBJJ)
 // =======================================
 
-// Chama o endpoint /categoria do backend
 // Exemplo de corpo: { idade: 27, peso: 76.5, sexo: "masculino" }
 async function apiCalcularCategoria(dadosCategoria) {
   return apiRequest("/categoria", {
@@ -81,16 +123,16 @@ async function apiCalcularCategoria(dadosCategoria) {
 // ACADEMIAS
 // =======================================
 
-// Criar academia (para quando uma nova academia contratar o app)
+// Criar academia
 async function apiCriarAcademia(dadosAcademia) {
-  // Exemplo de corpo: { nome, mestre, cidade, bairro, endereco, telefone, email, obs }
+  // Exemplo: { nome, mestre, cidade, bairro, endereco, telefone, email, obs }
   return apiRequest("/academias", {
     method: "POST",
     body: dadosAcademia,
   });
 }
 
-// Listar academias com filtro opcional por cidade/bairro
+// Listar academias com filtro opcional
 async function apiListarAcademias({ cidade, bairro } = {}) {
   const params = new URLSearchParams();
   if (cidade) params.append("cidade", cidade);
@@ -106,7 +148,7 @@ async function apiListarAcademias({ cidade, bairro } = {}) {
 // MEDALHAS
 // =======================================
 
-// Criar medalha (aluno envia resultado / professor cadastra)
+// Criar medalha
 async function apiCriarMedalha(dadosMedalha) {
   // Ex.: { aluno_id, academia_id, tipo, categoria, evento, cidade, data }
   return apiRequest("/medalhas", {
@@ -115,7 +157,7 @@ async function apiCriarMedalha(dadosMedalha) {
   });
 }
 
-// Listar medalhas (pode ter filtros dependendo do backend)
+// Listar medalhas
 async function apiListarMedalhas(filtros = {}) {
   const params = new URLSearchParams();
   Object.entries(filtros).forEach(([chave, valor]) => {
@@ -134,7 +176,7 @@ async function apiListarMedalhas(filtros = {}) {
 // RANKING DE ACADEMIAS
 // =======================================
 
-// Ranking geral de academias (por medalhas)
+// Ranking geral de academias
 async function apiRankingAcademias(filtros = {}) {
   const params = new URLSearchParams();
   Object.entries(filtros).forEach(([chave, valor]) => {
@@ -150,14 +192,10 @@ async function apiRankingAcademias(filtros = {}) {
 }
 
 // =======================================
-// (OPCIONAL) AVISOS - se no futuro você criar isso no backend
+// AVISOS (OPCIONAL - futuro backend)
 // =======================================
 
-// Mantive como exemplo caso você crie rotas de avisos depois.
-// Por enquanto, o painel está usando localStorage para avisos.
-
 async function apiCriarAvisoBackend(dadosAviso) {
-  // Ajuste a rota quando tiver endpoint real
   return apiRequest("/avisos", {
     method: "POST",
     body: dadosAviso,
