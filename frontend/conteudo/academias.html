@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Mapa de Academias — GT Jiu</title>
+  <link rel="stylesheet" href="../css/style.css">
+
+  <style>
+    body { 
+      background: #050505;
+      color: #fff;
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 32px;
+      margin-bottom: 5px;
+    }
+
+    p.sub {
+      text-align: center;
+      color: #bbb;
+      margin-bottom: 40px;
+    }
+
+    .container {
+      display: flex;
+      gap: 25px;
+      max-width: 1200px;
+      margin: auto;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .card {
+      background: #111;
+      padding: 25px;
+      border-radius: 14px;
+      width: 500px;
+      box-shadow: 0 0 20px #0006;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      margin-top: 10px;
+      background: #222;
+      color: #fff;
+      font-size: 15px;
+    }
+
+    button {
+      background: #ff3b3b;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: #ff5252;
+    }
+
+    .item {
+      padding: 15px;
+      background: #181818;
+      border-radius: 10px;
+      margin-top: 15px;
+      line-height: 22px;
+    }
+
+    .tag {
+      background: #333;
+      color: #fff;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      margin-right: 5px;
+    }
+
+  </style>
+</head>
+<body>
+
+<h1>Encontre uma academia de Jiu-Jitsu</h1>
+<p class="sub">Busque por cidade e bairro para ver academias cadastradas</p>
+
+<div class="container">
+
+  <!-- Buscar Academias -->
+  <div class="card">
+    <h2>Buscar academias</h2>
+
+    <input id="cidadeBusca" placeholder="Cidade (ex: Belo Horizonte)">
+    <input id="bairroBusca" placeholder="Bairro (opcional)">
+    <button onclick="buscar()">Buscar</button>
+
+    <div id="resultado"></div>
+  </div>
+
+</div>
+
+<script>
+function buscar() {
+  const cidade = document.getElementById("cidadeBusca").value.trim();
+  const bairro = document.getElementById("bairroBusca").value.trim();
+
+  const academias = JSON.parse(localStorage.getItem("gtjiu_academias") || "[]");
+
+  const filtradas = academias.filter(a => 
+    a.cidade.toLowerCase().includes(cidade.toLowerCase()) &&
+    (bairro === "" || a.bairro.toLowerCase().includes(bairro.toLowerCase()))
+  );
+
+  const alvo = document.getElementById("resultado");
+  alvo.innerHTML = "";
+
+  if (filtradas.length === 0) {
+    alvo.innerHTML = "<p>Nenhuma academia encontrada.</p>";
+    return;
+  }
+
+  filtradas.forEach(a => {
+    const div = document.createElement("div");
+    div.className = "item";
+
+    div.innerHTML = `
+      <strong>${a.nome}</strong><br>
+      <span class="tag">${a.cidade}</span>
+      <span class="tag">${a.bairro}</span><br><br>
+      Mestre: ${a.mestre}<br>
+      Endereço: ${a.endereco}<br>
+      Telefone: ${a.telefone}<br>
+      Email: ${a.email}<br>
+    `;
+
+    alvo.appendChild(div);
+  });
+}
+</script>
+
+</body>
+</html>

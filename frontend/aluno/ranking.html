@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Ranking da academia - GT JIU</title>
+  <link rel="stylesheet" href="../css/style.css">
+
+  <style>
+    body {
+      background: #050505;
+      color: #f5f5ff;
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .box {
+      background: #181818;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .cards-resumo {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .card-resumo {
+      background: #181818;
+      padding: 12px;
+      border-radius: 10px;
+    }
+
+    .card-resumo h3 {
+      margin: 0 0 5px 0;
+      font-size: 16px;
+    }
+
+    .card-resumo p {
+      margin: 0;
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 13px;
+    }
+
+    th, td {
+      border-bottom: 1px solid #333;
+      padding: 6px;
+      text-align: left;
+    }
+
+    @media (min-width: 768px) {
+      .cards-resumo {
+        flex-direction: row;
+      }
+      .card-resumo {
+        flex: 1;
+      }
+    }
+
+    .legenda {
+      font-size: 12px;
+      opacity: 0.75;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="topbar">
+    <div>
+      <h1>Ranking da academia</h1>
+      <p id="infoAluno" style="margin:4px 0 0;font-size:13px;opacity:0.85;"></p>
+    </div>
+    <button class="btn" style="background:#444;" onclick="voltarDashboard()">Voltar</button>
+  </div>
+
+  <div class="cards-resumo">
+    <div class="card-resumo">
+      <h3>Resumo geral (apenas medalhas aprovadas)</h3>
+      <p><strong>Total de medalhas:</strong> <span id="qtdTotal">0</span></p>
+      <p><strong>Atletas pontuando:</strong> <span id="qtdAtletas">0</span></p>
+    </div>
+    <div class="card-resumo">
+      <h3>Por tipo de medalha</h3>
+      <p>🥇 Ouro: <span id="qtdOuro">0</span></p>
+      <p>🥈 Prata: <span id="qtdPrata">0</span></p>
+      <p>🥉 Bronze: <span id="qtdBronze">0</span></p>
+    </div>
+    <div class="card-resumo" id="rankingResumo">
+      <h3>Aluno destaque</h3>
+      <p id="alunoDestaque">Ainda não há medalhas aprovadas.</p>
+    </div>
+  </div>
+
+  <div class="box" id="ranking">
+    <h3>Ranking interno</h3>
+    <p class="legenda">
+      Baseado somente nas medalhas aprovadas pelo professor da sua academia.
+    </p>
+    <table id="tabelaRanking">
+      <thead>
+        <tr>
+          <th>Aluno</th>
+          <th>Ouro</th>
+          <th>Prata</th>
+          <th>Bronze</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  const alunoStr = localStorage.getItem('gtjiu_aluno_logado');
+
+  if (!alunoStr) {
+    alert("Você precisa fazer login.");
+    window.location.href = "login.html";
+  }
+
+  const alunoLogado = JSON.parse(alunoStr);
+
+  function getMedalhas() {
+    return JSON.parse(localStorage.getItem('gtjiu_medalhas') || '[]');
+  }
+
+  function getAlunos() {
+    return JSON.parse(localStorage.getItem('gtjiu_alunos') || '[]');
+  }
+
+  const infoAluno = document.getElementById("infoAluno");
+  infoAluno.textContent = `Professor responsável: ${alunoLogado.professorEmail}`;
+
+  function nomeAluno(id) {
+    const todos = getAlunos();
+    const a = todos.find(x => x.idAluno === id);
+    return a ? a.nome : "Aluno";
+  }
+
+  function montarRanking() {
+    const medalhas = getMedalhas();
+    const medalhasAprovadas = medalhas.filter(m => 
+      m.professorEmail === alunoLogado.professorEmail &&
+      m.status === "aprovada"
+    );
+
+    let mapa = {};
+
+    medalhasAprovadas.forEach(m => {
+      if (!mapa[m.idAluno]) {
+        mapa[m.idAluno] = { ouro:0, prata:0, bronze:0, total:0 };
+      }
+      mapa[m.idAluno][m.tipo]++;
+      mapa[m.idAluno].total++;
+    });
+
+    document.getElementById("qtdTotal").textContent = medalhasAprovadas.length;
+    document.getElementById("qtdAtletas").textContent = Object.keys(mapa).length;
+
+    let ouro=0, prata=0, bronze=0;
+    medalhasAprovadas.forEach(m => {
+      if (m.tipo==="ouro") ouro++;
+      if (m.tipo==="prata") prata++;
+      if (m.tipo==="bronze") bronze++;
+    });
+
+    document.getElementById("qtdOuro").textContent = ouro;
+    document.getElementById("qtdPrata").textContent = prata;
+    document.getElementById("qtdBronze").textContent = bronze;
+
+    const tbody = document.querySelector("#tabelaRanking tbody");
+    tbody.innerHTML = "";
+
+    let arr = Object.keys(mapa).map(id => ({
+      nome: nomeAluno(id),
+      ...mapa[id]
+    })).sort((a,b) => b.total - a.total);
+
+    if (arr.length === 0) {
+      tbody.innerHTML = "<tr><td colspan='5'>Ainda não há medalhas aprovadas.</td></tr>";
+      return;
+    }
+
+    document.getElementById("alunoDestaque").textContent =
+      `${arr[0].nome} lidera com ${arr[0].total} medalha(s).`;
+
+    arr.forEach(r => {
+      tbody.innerHTML += `
+      <tr>
+        <td>${r.nome}</td>
+        <td>${r.ouro}</td>
+        <td>${r.prata}</td>
+        <td>${r.bronze}</td>
+        <td>${r.total}</td>
+      </tr>`;
+    });
+  }
+
+  montarRanking();
+
+  function voltarDashboard() {
+    window.location.href = "dashboard.html";
+  }
+</script>
+
+</body>
+</html>

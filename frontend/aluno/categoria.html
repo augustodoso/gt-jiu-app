@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>GT Jiu • Categoria do Aluno</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #17172e 0, #050510 45%, #000000 100%);
+      color: #f5f5ff;
+      min-height: 100vh;
+    }
+
+    .page-wrapper {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .app-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    .app-sub {
+      font-size: 0.85rem;
+      opacity: 0.8;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #ff5858, #ff8c5a);
+      color: #fff;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: #f5f5ff;
+      border: 1px solid #ffffff33;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+      gap: 20px;
+    }
+
+    .card {
+      background: rgba(8, 8, 22, 0.96);
+      border-radius: 22px;
+      padding: 20px 20px 18px;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.85);
+      border: 1px solid #ffffff14;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      margin-bottom: 4px;
+    }
+
+    .card-sub {
+      font-size: 0.85rem;
+      opacity: 0.8;
+      margin-bottom: 16px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.82rem;
+      margin-bottom: 4px;
+      opacity: 0.9;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid #ffffff22;
+      background: #0b0b1a;
+      color: #f5f5ff;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    input::placeholder {
+      color: #7b7b95;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #ff6b6b;
+      box-shadow: 0 0 0 1px #ff6b6b55;
+    }
+
+    .card-footer {
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .resultado {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .resultado strong {
+      color: #ffb46b;
+    }
+
+    ul {
+      padding-left: 18px;
+      margin: 8px 0 0;
+      font-size: 0.85rem;
+      opacity: 0.9;
+    }
+
+    .badge-small {
+      display: inline-block;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: #ff4b4b22;
+      border: 1px solid #ff4b4b55;
+      color: #ffb3b3;
+      margin-bottom: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+    <header>
+      <div>
+        <div class="app-title">GT Jiu • Área do aluno</div>
+        <div class="app-sub">Calculadora de categoria (base CBJJ – Juvenil, Adulto e Masters)</div>
+      </div>
+
+      <div class="header-actions">
+        <button class="btn btn-primary" type="button" onclick="irParaPainelAluno()">
+          Ir para meu painel
+        </button>
+        <button class="btn btn-ghost" type="button" onclick="irParaInicio()">
+          Sair
+        </button>
+      </div>
+    </header>
+
+    <div class="grid">
+      <!-- CARD ESQUERDO: CALCULADORA -->
+      <div class="card">
+        <h2 class="card-title">Calcular categoria</h2>
+        <p class="card-sub">
+          Informe idade, peso e sexo. O sistema retorna uma <strong>sugestão</strong> de divisão
+          de peso e grupo etário com base na tabela oficial CBJJ / IBJJF para
+          <strong>juvenis, adultos e masters</strong>.
+        </p>
+
+        <form onsubmit="calcularCategoria(event)">
+          <div class="form-row">
+            <div>
+              <label for="idade">Idade (anos)</label>
+              <input id="idade" type="number" min="4" max="90" placeholder="Ex: 27" />
+            </div>
+
+            <div>
+              <label for="peso">Peso (kg)</label>
+              <input id="peso" type="number" min="10" max="200" step="0.1" placeholder="Ex: 76.5" />
+            </div>
+
+            <div>
+              <label for="sexo">Sexo</label>
+              <select id="sexo">
+                <option value="">Selecione</option>
+                <option value="M">Masculino</option>
+                <option value="F">Feminino</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary">
+            Calcular categoria
+          </button>
+        </form>
+
+        <div class="card-footer">
+          <p id="resultadoCategoria" class="resultado">
+            Preencha os dados e clique em <strong>Calcular categoria</strong>.
+          </p>
+        </div>
+      </div>
+
+      <!-- CARD DIREITO: SOBRE A FERRAMENTA -->
+      <div class="card">
+        <span class="badge-small">Sobre esta ferramenta</span>
+        <h2 class="card-title">Apoio baseado na CBJJ</h2>
+        <p class="card-sub">
+          Os valores seguem a tabela oficial de pesos para <strong>Juvenis (16–17)</strong>,
+          <strong>Adultos (18–29)</strong> e <strong>Masters (30+)</strong>. Para crianças de 4 a 15 anos,
+          a CBJJ utiliza uma tabela específica por faixa etária.
+        </p>
+
+        <ul>
+          <li>Use sempre em conjunto com o regulamento oficial do evento.</li>
+          <li>Em caso de dúvida, confirme com o professor ou a federação.</li>
+          <li>Os pesos consideram o atleta com quimono vestido.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // navegação
+    function irParaPainelAluno() {
+      // /frontend/aluno/dashboard.html
+      window.location.href = "./dashboard.html";
+    }
+
+    function irParaInicio() {
+      // /frontend/index.html
+      window.location.href = "../index.html";
+    }
+
+    // lógica da tabela de peso CBJJ (juvenil/adulto/master)
+    function calcularCategoria(event) {
+      event.preventDefault();
+
+      const idade = parseInt(document.getElementById("idade").value, 10);
+      const peso = parseFloat(
+        document.getElementById("peso").value.toString().replace(",", ".")
+      );
+      const sexo = document.getElementById("sexo").value;
+
+      if (isNaN(idade) || isNaN(peso) || !sexo) {
+        document.getElementById("resultadoCategoria").innerHTML =
+          "Preencha <strong>idade</strong>, <strong>peso</strong> e <strong>sexo</strong> para calcular.";
+        return;
+      }
+
+      if (idade < 4) {
+        document.getElementById("resultadoCategoria").innerHTML =
+          "A tabela oficial CBJJ começa a partir de 4 anos de idade. Consulte o regulamento da federação.";
+        return;
+      }
+
+      // Crianças 4–15: só orientação
+      if (idade <= 15) {
+        document.getElementById("resultadoCategoria").innerHTML =
+          "Para idades entre <strong>4 e 15 anos</strong>, a CBJJ usa uma tabela específica por categoria de idade. " +
+          "Consulte a <strong>tabela infantil oficial</strong> e o professor responsável. " +
+          "Esta calculadora cobre a partir de <strong>16 anos (Juvenil, Adulto e Masters)</strong>.";
+        return;
+      }
+
+      // Determinar grupo etário CBJJ
+      let faixaLabel;
+      let grupoPesos; // "juvenile" ou "adult"
+
+      if (idade <= 17) {
+        faixaLabel = "Juvenil (16–17 anos)";
+        grupoPesos = "juvenile";
+      } else if (idade <= 29) {
+        faixaLabel = "Adulto (18–29 anos)";
+        grupoPesos = "adult";
+      } else {
+        faixaLabel = "Master (30+ anos)";
+        grupoPesos = "adult"; // usa mesma coluna de Adult/Master
+      }
+
+      // Tabela de pesos CBJJ (kg) – parte inferior do PDF
+      const nomesDivisoes = [
+        "Galo",
+        "Pluma",
+        "Pena",
+        "Leve",
+        "Médio",
+        "Meio-Pesado",
+        "Pesado",
+        "Super-Pesado"
+        // acima disso será Pesadíssimo
+      ];
+
+      const tabelaPesos = {
+        M: {
+          juvenile: [53.5, 58.5, 64.0, 69.0, 74.0, 79.3, 84.3, 89.3],
+          adult:   [57.5, 64.0, 70.0, 76.0, 82.3, 88.3, 94.3, 100.5]
+        },
+        F: {
+          juvenile: [44.3, 48.3, 52.5, 56.5, 61.5, 65.9, 69.0, 73.0],
+          adult:    [48.5, 53.5, 58.5, 64.0, 69.0, 74.0, 79.3, 79.3] // acima disso vira Pesadíssimo
+        }
+      };
+
+      const limites =
+        tabelaPesos[sexo] && tabelaPesos[sexo][grupoPesos]
+          ? tabelaPesos[sexo][grupoPesos]
+          : null;
+
+      if (!limites) {
+        document.getElementById("resultadoCategoria").innerHTML =
+          "Não foi possível determinar a categoria. Verifique os dados informados.";
+        return;
+      }
+
+      let divisaoPeso = "Pesadíssimo";
+
+      for (let i = 0; i < limites.length; i++) {
+        if (peso <= limites[i]) {
+          divisaoPeso = nomesDivisoes[i];
+          break;
+        }
+      }
+
+      const pesoFormatado = peso.toFixed(1).replace(".", ",");
+
+      document.getElementById("resultadoCategoria").innerHTML =
+        `Faixa etária (CBJJ): <strong>${faixaLabel}</strong><br>` +
+        `Divisão de peso sugerida: <strong>${divisaoPeso}</strong> (${pesoFormatado} kg)<br>` +
+        `<span style="font-size:0.8rem;opacity:0.8;">Baseado na tabela oficial de pesos CBJJ/IBJJF para juvenis, adultos e masters. Sempre confira com o regulamento do campeonato.</span>`;
+    }
+  </script>
+</body>
+</html>

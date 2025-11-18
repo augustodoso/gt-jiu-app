@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Graduação & Hierarquia - GT Jiu</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #050510;
+      color: #f5f5ff;
+    }
+
+    .page-wrapper {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 16px 56px;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .title-main {
+      font-size: 1.6rem;
+      font-weight: 600;
+    }
+
+    .title-sub {
+      font-size: 0.9rem;
+      opacity: 0.75;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      padding: 2px 10px;
+      border-radius: 999px;
+      border: 1px solid #ffffff22;
+      background: #ffffff08;
+      opacity: 0.9;
+      margin-bottom: 4px;
+    }
+
+    .btn {
+      border-radius: 999px;
+      padding: 8px 16px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: #f5f5ff;
+      border: 1px solid #ffffff33;
+    }
+
+    .search-bar {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .search-input-wrapper {
+      flex: 1;
+      min-width: 220px;
+      position: relative;
+    }
+
+    .search-input-wrapper input {
+      width: 100%;
+      padding: 8px 30px 8px 10px;
+      border-radius: 999px;
+      border: 1px solid #ffffff33;
+      background: #0b0b1a;
+      color: #f5f5ff;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .search-input-wrapper input::placeholder {
+      color: #7f7fa0;
+    }
+
+    .search-hint {
+      font-size: 0.8rem;
+      opacity: 0.65;
+    }
+
+    .grid-cards {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 14px;
+    }
+
+    @media (min-width: 768px) {
+      .grid-cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    .rule-card {
+      background: radial-gradient(circle at top left, #202040 0, #181820 40%, #101018 100%);
+      border-radius: 16px;
+      padding: 14px 16px 14px;
+      border: 1px solid #ffffff14;
+      box-shadow: 0 14px 40px rgba(0,0,0,0.9);
+    }
+
+    .rule-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .rule-body {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      opacity: 0.95;
+    }
+
+    .rule-body ul {
+      padding-left: 18px;
+      margin: 6px 0 0;
+    }
+
+    .rule-body li {
+      margin-bottom: 2px;
+    }
+
+    .highlight {
+      font-weight: 600;
+      color: #ffd27f;
+    }
+
+    .no-result {
+      margin-top: 18px;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    .badge-note {
+      display: inline-block;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #ffb3471a;
+      border: 1px solid #ffb34766;
+      color: #ffcf80;
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+  <header>
+    <div class="title-block">
+      <span class="tag">Guia oficial</span>
+      <div class="title-main">Graduação & hierarquia</div>
+      <div class="title-sub">
+        Baseado no sistema de faixas da IBJJF. Sempre confirme com o regulamento da sua federação e do seu professor.
+      </div>
+    </div>
+    <button class="btn btn-ghost" type="button" onclick="voltarAluno()">Voltar</button>
+  </header>
+
+  <div class="search-bar">
+    <div class="search-input-wrapper">
+      <input
+        id="campoBusca"
+        type="text"
+        placeholder="Pesquisar por faixa, idade, grau ou palavra-chave (ex: azul, preta, infantil)...">
+    </div>
+    <div class="search-hint">
+      Ex.: <strong>infantil</strong>, <strong>amarela</strong>, <strong>graus</strong>, <strong>adulto</strong>, <strong>preta</strong>.
+    </div>
+  </div>
+
+  <div id="cardsContainer" class="grid-cards">
+
+    <!-- VISÃO GERAL -->
+    <article class="rule-card">
+      <h2 class="rule-title">Visão geral da hierarquia</h2>
+      <div class="rule-body">
+        <p>
+          O sistema oficial de graduação do Jiu-Jitsu organiza os praticantes por
+          <span class="highlight">faixas</span> (cores) e <span class="highlight">graus</span> (barrinhas).
+          Em geral, as faixas indicam tempo de prática, maturidade técnica e responsabilidade dentro do tatame.
+        </p>
+        <p style="margin-top:6px;">
+          Para crianças, existe um sistema próprio de cores. A partir dos 16 anos, o aluno entra no sistema juvenil/adulto,
+          aproximando-se das faixas azul, roxa, marrom e preta.
+        </p>
+      </div>
+    </article>
+
+    <!-- SISTEMA INFANTIL -->
+    <article class="rule-card">
+      <h2 class="rule-title">Faixas infantis (4 a 15 anos)</h2>
+      <div class="rule-body">
+        <p>
+          No sistema da IBJJF, crianças e pré-adolescentes utilizam faixas com combinações de cores
+          que permitem uma progressão mais gradual:
+        </p>
+        <ul>
+          <li><span class="highlight">Cinza:</span> transição inicial após a branca em crianças.</li>
+          <li><span class="highlight">Amarela:</span> indica evolução técnica e compreensão básica de posições.</li>
+          <li><span class="highlight">Laranja:</span> nível intermediário, com mais repertório de posições e transições.</li>
+          <li><span class="highlight">Verde:</span> faixa mais avançada no ciclo infantil, geralmente próxima da transição para o sistema juvenil.</li>
+        </ul>
+        <p style="margin-top:6px;">
+          A combinação de faixas (ex.: <span class="highlight">cinza/branca</span>, <span class="highlight">amarela/laranja</span>, etc.)
+          ajuda a distribuir a progressão ao longo dos anos de prática infantil.
+        </p>
+      </div>
+    </article>
+
+    <!-- SISTEMA JUVENIL -->
+    <article class="rule-card">
+      <h2 class="rule-title">Faixas juvenil (16–17 anos)</h2>
+      <div class="rule-body">
+        <p>
+          A partir dos 16 anos, o praticante passa a utilizar as faixas do sistema
+          <span class="highlight">juvenil/adulto</span>:
+        </p>
+        <ul>
+          <li><span class="highlight">Azul:</span> consolidação dos fundamentos, defesa e transições básicas.</li>
+          <li><span class="highlight">Roxa:</span> refinamento técnico, jogo mais ofensivo, entendimento de estratégias.</li>
+          <li><span class="highlight">Marrom:</span> nível pré-preta, alto domínio de posições, finalizações e didática.</li>
+        </ul>
+        <p style="margin-top:6px;">
+          O atleta juvenil pode competir em categorias específicas, respeitando idade e graduação.
+        </p>
+      </div>
+    </article>
+
+    <!-- SISTEMA ADULTO -->
+    <article class="rule-card">
+      <h2 class="rule-title">Faixas adulto & masters (18+)</h2>
+      <div class="rule-body">
+        <p>
+          No sistema da IBJJF, a progressão oficial de faixas para adultos e masters segue a ordem:
+        </p>
+        <ul>
+          <li><span class="highlight">Branca:</span> início da jornada.</li>
+          <li><span class="highlight">Azul:</span> consolidação dos fundamentos.</li>
+          <li><span class="highlight">Roxa:</span> refinamento técnico e desenvolvimento de estilo próprio.</li>
+          <li><span class="highlight">Marrom:</span> alto nível técnico e responsabilidade no tatame.</li>
+          <li><span class="highlight">Preta:</span> referência técnica, liderança e maturidade dentro da arte.</li>
+          <li><span class="highlight">Coral (vermelha/preta, vermelha/branca):</span> graduação honorífica para faixas-pretas com muitos anos de contribuição.</li>
+          <li><span class="highlight">Vermelha:</span> nível máximo de graduação, reservado a grandes mestres.</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- GRAUS -->
+    <article class="rule-card">
+      <h2 class="rule-title">Graus (barrinhas) na faixa</h2>
+      <div class="rule-body">
+        <p>
+          Os <span class="highlight">graus</span> são marcações na ponta da faixa que indicam progresso dentro da mesma cor.
+          Em geral:
+        </p>
+        <ul>
+          <li>Faixas coloridas (infantil e adulto) costumam ter até <span class="highlight">4 graus</span>.</li>
+          <li>Na faixa preta, existe um sistema específico de <span class="highlight">graus numerados</span>, que evoluem ao longo dos anos de prática e contribuição.</li>
+        </ul>
+        <p style="margin-top:6px;">
+          A forma exata de conceder graus (tempo, critérios, avaliações) pode variar entre federações e academias,
+          sempre seguindo o regulamento do professor responsável.
+        </p>
+      </div>
+    </article>
+
+    <!-- POSTURA / HIERARQUIA NO TATAME -->
+    <article class="rule-card">
+      <h2 class="rule-title">Postura & respeito na hierarquia</h2>
+      <div class="rule-body">
+        <ul>
+          <li>Cumprimentar o tatame, o professor e os colegas ao entrar e sair.</li>
+          <li>Evitar caminhar calçado sobre o tatame.</li>
+          <li>Ouvir o professor com atenção durante a explicação.</li>
+          <li>Guardar o celular e evitar conversas paralelas durante o treino.</li>
+          <li>Respeitar as graduações: faixas mais altas servem de referência para os demais alunos.</li>
+        </ul>
+        <p style="margin-top:6px;">
+          A faixa não representa apenas técnica, mas também <span class="highlight">exemplo, disciplina e responsabilidade</span>.
+        </p>
+      </div>
+    </article>
+
+    <!-- FEDERAÇÃO MINEIRA -->
+    <article class="rule-card">
+      <div class="badge-note">Observação importante</div>
+      <h2 class="rule-title">Federação Mineira & faixa amarela em adultos</h2>
+      <div class="rule-body">
+        <p>
+          Algumas federações regionais podem adotar pequenas variações no sistema de faixas.
+          Um exemplo é a <span class="highlight">Federação Mineira de Jiu-Jitsu</span>, que mantém a
+          <span class="highlight">faixa amarela</span> também para <strong>adultos e masters</strong> em seu programa de graduação.
+        </p>
+        <p style="margin-top:6px;">
+          Por isso, sempre confirme:
+        </p>
+        <ul>
+          <li>Qual é o sistema de faixas usado pela <strong>sua equipe</strong>;</li>
+          <li>Qual é o regulamento da <strong>sua federação local</strong>;</li>
+          <li>Quais faixas e graus se aplicam à sua realidade (infantil, juvenil, adulto ou master).</li>
+        </ul>
+        <p style="margin-top:6px;">
+          Em caso de dúvida, a palavra final é sempre do <span class="highlight">professor responsável</span>.
+        </p>
+      </div>
+    </article>
+
+  </div>
+
+  <p id="semResultados" class="no-result" style="display:none;">
+    Nenhum item encontrado para esse termo. Tente outra palavra ou sinônimo.
+  </p>
+</div>
+
+<script>
+  function voltarAluno() {
+    window.location.href = "../aluno/dashboard.html";
+  }
+
+  const campoBusca = document.getElementById("campoBusca");
+  const cards = Array.from(document.querySelectorAll(".rule-card"));
+  const semResultados = document.getElementById("semResultados");
+
+  function aplicarFiltro() {
+    const termo = campoBusca.value.trim().toLowerCase();
+    let visiveis = 0;
+
+    cards.forEach(card => {
+      const texto = card.innerText.toLowerCase();
+      if (!termo || texto.includes(termo)) {
+        card.style.display = "";
+        visiveis++;
+      } else {
+        card.style.display = "none";
+      }
+    });
+
+    semResultados.style.display = visiveis === 0 ? "block" : "none";
+  }
+
+  campoBusca.addEventListener("input", aplicarFiltro);
+</script>
+
+</body>
+</html>

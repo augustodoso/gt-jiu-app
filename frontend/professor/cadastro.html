@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Cadastrar Professor - GT JIU</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div class="container">
+  <h1>Criar conta de Professor</h1>
+  <p>Use seus dados para administrar sua academia.</p>
+
+  <form id="cadastroForm">
+    <input type="text" id="nome" placeholder="Seu nome" required><br><br>
+    <input type="email" id="email" placeholder="Seu e-mail" required><br><br>
+    <input type="password" id="senha" placeholder="Crie uma senha" required><br><br>
+
+    <label style="font-size:13px;">
+      <input type="checkbox" id="lgpd" required>
+      Declaro que li e concordo com a <a href="../termos/lgpd.html" target="_blank">Política de Privacidade (LGPD)</a>
+    </label><br><br>
+
+    <button type="submit" class="btn">Registrar conta</button>
+  </form>
+
+  <br>
+  <a class="btn" style="background:#333;" href="login.html">Já tenho conta</a>
+</div>
+
+<script>
+  const form = document.getElementById('cadastroForm');
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const nome = document.getElementById('nome').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const senha = document.getElementById('senha').value.trim();
+    const aceitouLgpd = document.getElementById('lgpd').checked;
+
+    if (!aceitouLgpd) {
+      alert('Você precisa aceitar a política de privacidade (LGPD).');
+      return;
+    }
+
+    const lista = JSON.parse(localStorage.getItem('gtjiu_professores') || '[]');
+
+    if (lista.some(p => p.email === email)) {
+      alert('Já existe um professor cadastrado com esse e-mail.');
+      return;
+    }
+
+    lista.push({ nome, email, senha });
+    localStorage.setItem('gtjiu_professores', JSON.stringify(lista));
+
+    alert('Conta criada com sucesso! Faça login.');
+    window.location.href = 'login.html';
+  });
+</script>
+</body>
+</html>

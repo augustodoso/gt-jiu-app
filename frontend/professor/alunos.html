@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Alunos - GT JIU</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .form-box, .lista-box {
+      background: #181818;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+    label {
+      font-size: 14px;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0 12px 0;
+      border-radius: 6px;
+      border: none;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    th, td {
+      border-bottom: 1px solid #333;
+      padding: 8px;
+      text-align: left;
+    }
+    .status-ok {
+      color: #4caf50;
+    }
+    .status-alerta {
+      color: #ffc107;
+    }
+    .status-atrasado {
+      color: #ff5252;
+    }
+    .btn-mini {
+      padding: 5px 10px;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="topbar">
+    <h1>Alunos</h1>
+    <button class="btn" style="background:#444;" onclick="voltarDashboard()">Voltar</button>
+  </div>
+
+  <p id="boasVindas"></p>
+
+  <!-- FORMULÁRIO DE CADASTRO -->
+  <div class="form-box">
+    <h3>Cadastrar novo aluno</h3>
+    <form id="formAluno">
+      <label>Nome do aluno</label>
+      <input type="text" id="nome" required>
+
+      <label>Plano / Observação</label>
+      <input type="text" id="plano" placeholder="Ex: Jiu 3x por semana">
+
+      <label>Valor da mensalidade (R$)</label>
+      <input type="number" step="0.01" id="valor" placeholder="Ex: 150.00" required>
+
+      <label>Dia de vencimento</label>
+      <input type="number" id="diaVencimento" min="1" max="31" placeholder="Ex: 10" required>
+
+      <button type="submit" class="btn">Salvar aluno</button>
+    </form>
+  </div>
+
+  <!-- LISTA DE ALUNOS -->
+  <div class="lista-box">
+    <h3>Alunos cadastrados</h3>
+    <table id="tabelaAlunos">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Código</th>
+          <th>Plano</th>
+          <th>Mensalidade</th>
+          <th>Vencimento</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- linhas geradas via JS -->
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+  // --------- VALIDAR LOGIN DO PROFESSOR ----------
+  const profLogadoStr = localStorage.getItem('gtjiu_professor_logado');
+  const boasVindas = document.getElementById('boasVindas');
+
+  if (!profLogadoStr) {
+    alert('Você precisa estar logado como professor.');
+    window.location.href = 'login.html';
+  }
+
+  const profLogado = JSON.parse(profLogadoStr);
+  boasVindas.textContent = `Gerenciando alunos do professor: ${profLogado.nome}`;
+
+  // --------- HELPERS LOCALSTORAGE ----------
+  function pegarAlunos() {
+    const lista = JSON.parse(localStorage.getItem('gtjiu_alunos') || '[]');
+    // filtra só alunos desse professor
+    return lista.filter(al => al.professorEmail === profLogado.email);
+  }
+
+  function salvarAlunoListaCompleta(novaListaDoProfessor) {
+    // pega lista global
+    const listaGlobal = JSON.parse(localStorage.getItem('gtjiu_alunos') || '[]');
+    // remove alunos deste professor
+    const filtrada = listaGlobal.filter(al => al.professorEmail !== profLogado.email);
+    // junta com nova lista desse professor
+    const final = filtrada.concat(novaListaDoProfessor);
+    localStorage.setItem('gtjiu_alunos', JSON.stringify(final));
+  }
+
+  // --------- GERAR CÓDIGO DE ALUNO ----------
+  function gerarCodigoAluno(alunosExistentes) {
+    let codigo;
+    let existe = true;
+
+    while (existe) {
+      const rand = Math.floor(100000 + Math.random() * 900000); // 6 dígitos
+      codigo = 'GTJ-' + rand;
+      existe = alunosExistentes.some(a => a.idAluno === codigo);
+    }
+
+    return codigo;
+  }
+
+  // --------- STATUS FINANCEIRO ----------
+  function calcularStatus(diaVencimento) {
+    const hoje = new Date();
+    const dia = hoje.getDate();
+
+    // simples: em dia, alerta (3 dias antes/depois), atrasado
+    if (dia > diaVencimento + 3) {
+      return { texto: 'Atrasado', classe: 'status-atrasado' };
+    } else if (dia >= diaVencimento - 3 && dia <= diaVencimento + 3) {
+      return { texto: 'Vence agora', classe: 'status-alerta' };
+    } else {
+      return { texto: 'Em dia', classe: 'status-ok' };
+    }
+  }
+
+  // --------- RENDERIZAR TABELA ----------
+  function renderTabela() {
+    const tbody = document.querySelector('#tabelaAlunos tbody');
+    tbody.innerHTML = '';
+
+    const alunos = pegarAlunos();
+    alunos.forEach((aluno, idx) => {
+      const status = calcularStatus(aluno.diaVencimento);
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${aluno.nome}</td>
+        <td>${aluno.idAluno}</td>
+        <td>${aluno.plano || '-'}</td>
+        <td>R$ ${Number(aluno.valor).toFixed(2)}</td>
+        <td>Dia ${aluno.diaVencimento}</td>
+        <td class="${status.classe}">${status.texto}</td>
+        <td><button class="btn btn-mini" style="background:#555;" onclick="removerAluno(${idx})">Remover</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // --------- REMOVER ALUNO ----------
+  function removerAluno(indice) {
+    const alunos = pegarAlunos();
+    if (!confirm(`Remover o aluno "${alunos[indice].nome}"?`)) return;
+    alunos.splice(indice, 1);
+    salvarAlunoListaCompleta(alunos);
+    renderTabela();
+  }
+
+  window.removerAluno = removerAluno; // expõe para o onclick
+
+  // --------- CADASTRO DE ALUNO ----------
+  const form = document.getElementById('formAluno');
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const nome = document.getElementById('nome').value.trim();
+    const plano = document.getElementById('plano').value.trim();
+    const valor = parseFloat(document.getElementById('valor').value);
+    const diaVencimento = parseInt(document.getElementById('diaVencimento').value, 10);
+
+    if (!nome || isNaN(valor) || isNaN(diaVencimento)) {
+      alert('Preencha todos os campos obrigatórios.');
+      return;
+    }
+
+    const alunos = pegarAlunos();
+    const codigo = gerarCodigoAluno(alunos);
+
+    alunos.push({
+      professorEmail: profLogado.email,
+      idAluno: codigo,
+      nome,
+      plano,
+      valor,
+      diaVencimento
+    });
+
+    salvarAlunoListaCompleta(alunos);
+    form.reset();
+    renderTabela();
+
+    alert(`Aluno salvo com sucesso!\nCódigo de acesso do aluno: ${codigo}`);
+  });
+
+  function voltarDashboard() {
+    window.location.href = 'dashboard.html';
+  }
+
+  // inicializa tabela
+  renderTabela();
+</script>
+</body>
+</html>

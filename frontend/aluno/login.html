@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Login do Aluno - GT Jiu</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .login-container {
+      max-width: 420px;
+      margin: 80px auto;
+      background: #181818;
+      padding: 30px 25px;
+      border-radius: 12px;
+      text-align: left;
+    }
+    .login-container h1 {
+      font-size: 24px;
+      margin-bottom: 6px;
+    }
+    .login-container p.sub {
+      margin: 0 0 20px 0;
+      font-size: 14px;
+      opacity: 0.8;
+    }
+    .field {
+      margin-bottom: 15px;
+    }
+    .field label {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 13px;
+      opacity: 0.9;
+    }
+    .field input {
+      width: 100%;
+      padding: 9px 10px;
+      border-radius: 8px;
+      border: none;
+      background: #101010;
+      color: #f5f5f5;
+    }
+    .acoes-login {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .hint {
+      font-size: 12px;
+      opacity: 0.7;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container" style="padding-top:40px;">
+  <div class="login-container">
+    <h1>Login do Aluno</h1>
+    <p class="sub">
+      Use o código de acesso fornecido pelo professor para entrar no painel do aluno.
+    </p>
+
+    <form onsubmit="handleLoginAluno(event)">
+      <div class="field">
+        <label for="codigo">Código de acesso</label>
+        <input id="codigo" type="text" placeholder="Ex.: GTJ-12345" required>
+        <div class="hint">O código aparece no cadastro feito pelo seu professor.</div>
+      </div>
+
+      <div class="acoes-login">
+        <button type="submit" class="btn">Entrar</button>
+        <button type="button" class="btn" style="background:#444;" onclick="voltarInicio()">
+          Voltar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Se já estiver logado, você pode redirecionar se quiser:
+  const alunoLogadoStr = localStorage.getItem('gtjiu_aluno_logado');
+  if (alunoLogadoStr) {
+    // window.location.href = "./dashboard.html";
+  }
+
+  function voltarInicio() {
+    window.location.href = "../conteudo/academias.html";
+  }
+
+  function handleLoginAluno(event) {
+    event.preventDefault();
+
+    const codigoInput = document.getElementById('codigo');
+    const codigo = codigoInput.value.trim().toUpperCase();
+
+    if (!codigo) {
+      alert("Informe o código de acesso.");
+      return;
+    }
+
+    const alunos = JSON.parse(localStorage.getItem('gtjiu_alunos') || '[]');
+
+    const aluno = alunos.find(a => a.idAluno === codigo);
+
+    if (!aluno) {
+      alert("Código não encontrado. Confirme com seu professor se o cadastro já foi feito.");
+      codigoInput.focus();
+      return;
+    }
+
+    localStorage.setItem('gtjiu_aluno_logado', JSON.stringify(aluno));
+    window.location.href = "./dashboard.html";
+  }
+</script>
+
+</body>
+</html>

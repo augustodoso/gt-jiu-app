@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Painel do Aluno - GT JIU</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    body {
+      margin: 0;
+      background: #050505;
+      color: #f5f5ff;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 16px 60px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 4px;
+      font-size: 28px;
+    }
+
+    #subtituloAluno {
+      font-size: 0.95rem;
+      opacity: 0.85;
+      margin-bottom: 24px;
+    }
+
+    /* cards principais */
+    .cards-linha {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: #181818;
+      padding: 15px;
+      border-radius: 12px;
+      text-align: left;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    }
+
+    .card h3 {
+      margin: 0 0 6px 0;
+      font-size: 18px;
+    }
+
+    .card p {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    /* ações principais */
+    .acoes {
+      margin-top: 8px;
+      margin-bottom: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn {
+      border-radius: 999px;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .btn-principal { background:#e53935; color:#fff; }
+    .btn-secundario { background:#333; color:#fff; }
+    .btn-neutro { background:#444; color:#fff; }
+
+    .status-ok { color: #4caf50; }
+    .status-alerta { color: #ffc107; }
+    .status-atrasado { color: #ff5252; }
+
+    /* ATALHOS DE ESTUDO */
+    .atalhos-wrapper {
+      text-align: left;
+    }
+
+    .atalhos-titulo {
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+
+    .atalhos-sub {
+      font-size: 13px;
+      opacity: 0.85;
+      margin-bottom: 14px;
+    }
+
+    .atalhos-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .atalho-card {
+      background: #181818;
+      padding: 14px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .atalho-card h4 {
+      margin: 0 0 4px 0;
+      font-size: 16px;
+    }
+
+    .atalho-card p {
+      margin: 0;
+      font-size: 13px;
+      opacity: 0.9;
+    }
+
+    .btn-atalho {
+      border-radius: 999px;
+      padding: 6px 14px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      background: #f44336;
+      color: #fff;
+      white-space: nowrap;
+    }
+
+    @media (min-width: 768px) {
+      .cards-linha {
+        flex-direction: row;
+      }
+      .card {
+        flex: 1;
+      }
+
+      .atalhos-grid {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+      .atalho-card {
+        flex: 1 1 calc(50% - 8px);
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- CABEÇALHO -->
+  <h1 id="tituloAluno">Painel do Aluno</h1>
+  <p id="subtituloAluno"></p>
+
+  <!-- LINHA DE 3 CARDS: MENSALIDADE / MEDALHAS+RANKING / AVISOS -->
+  <div class="cards-linha">
+    <!-- MENSALIDADE -->
+    <div class="card">
+      <h3>Mensalidade</h3>
+      <p id="infoMensalidade"></p>
+      <p id="statusMensalidade"></p>
+    </div>
+
+    <!-- MEDALHAS + RANKING RESUMO -->
+    <div class="card">
+      <h3>Minhas medalhas & ranking</h3>
+      <p id="infoMedalhas"></p>
+      <p id="infoRankingAluno" style="margin-top:6px;font-size:13px;"></p>
+    </div>
+
+    <!-- AVISOS -->
+    <div class="card">
+      <h3>Avisos do professor</h3>
+      <p id="avisosAlunoResumo"></p>
+    </div>
+  </div>
+
+  <!-- BOTÕES PRINCIPAIS -->
+  <div class="acoes">
+    <button class="btn btn-principal" onclick="irParaMedalhas()">Ver / cadastrar medalhas</button>
+    <button class="btn btn-secundario" onclick="irParaRanking()">Ver ranking completo</button>
+    <button class="btn btn-neutro" onclick="sairAluno()">Sair</button>
+  </div>
+
+  <!-- ATALHOS DE ESTUDO -->
+  <div class="atalhos-wrapper">
+    <h2 class="atalhos-titulo">Atalhos de estudo</h2>
+    <p class="atalhos-sub">
+      Use esses módulos para tirar dúvidas rápidas sobre regras oficiais, graduação e categoria de competição.
+    </p>
+
+    <div class="atalhos-grid">
+      <div class="atalho-card">
+        <div>
+          <h4>Regras & pontuação</h4>
+          <p>Resumo das principais regras e formas de pontuar com base na CBJJ/IBJJF.</p>
+        </div>
+        <button class="btn-atalho" onclick="abrirRegras()">Abrir</button>
+      </div>
+
+      <div class="atalho-card">
+        <div>
+          <h4>Graduação & hierarquia</h4>
+          <p>Sistema oficial de faixas, incluindo observação da Federação Mineira.</p>
+        </div>
+        <button class="btn-atalho" onclick="abrirFaixas()">Abrir</button>
+      </div>
+
+      <div class="atalho-card">
+        <div>
+          <h4>Categoria IBJJF</h4>
+          <p>Calculadora de categoria por idade, peso e sexo, seguindo a lógica da tabela oficial.</p>
+        </div>
+        <button class="btn-atalho" onclick="abrirCategoria()">Abrir</button>
+      </div>
+
+      <div class="atalho-card">
+        <div>
+          <h4>Em breve</h4>
+          <p>Histórico detalhado das suas medalhas e evolução no tempo.</p>
+        </div>
+        <button class="btn-atalho" disabled style="opacity:.4;cursor:not-allowed;">Futuro</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ---- PROTEGER A PÁGINA ----
+  const alunoStr = localStorage.getItem('gtjiu_aluno_logado');
+
+  if (!alunoStr) {
+    alert("Você precisa fazer login como aluno.");
+    window.location.href = "login.html";
+  }
+
+  const alunoSessao = JSON.parse(alunoStr);
+
+  document.getElementById("tituloAluno").textContent =
+    `Painel do Aluno - ${alunoSessao.nome}`;
+
+  document.getElementById("subtituloAluno").textContent =
+    `Código de acesso: GTJ-${alunoSessao.idAluno}`;
+
+  // ---- BUSCAR DADOS COMPLETOS ----
+  function buscarAlunoCompleto() {
+    const todos = JSON.parse(localStorage.getItem('gtjiu_alunos') || '[]');
+    return todos.find(a => a.idAluno === alunoSessao.idAluno) || alunoSessao;
+  }
+
+  const aluno = buscarAlunoCompleto();
+
+  // ---- MENSALIDADE ----
+  function calcularStatusMensalidade(diaVencimento) {
+    const hoje = new Date();
+    const dia = hoje.getDate();
+
+    if (dia > diaVencimento + 3) {
+      return { texto: 'Atrasado', classe: 'status-atrasado' };
+    } else if (dia >= diaVencimento - 3 && dia <= diaVencimento + 3) {
+      return { texto: 'Vence agora', classe: 'status-alerta' };
+    } else {
+      return { texto: 'Em dia', classe: 'status-ok' };
+    }
+  }
+
+  const infoMensalidade = document.getElementById('infoMensalidade');
+  const statusMensalidade = document.getElementById('statusMensalidade');
+
+  if (aluno.valor && aluno.diaVencimento) {
+    infoMensalidade.textContent =
+      `Plano: ${aluno.plano || '-'} | Valor: R$ ${Number(aluno.valor).toFixed(2)} | Vencimento: dia ${aluno.diaVencimento}`;
+    const status = calcularStatusMensalidade(aluno.diaVencimento);
+    statusMensalidade.textContent = `Status: ${status.texto}`;
+    statusMensalidade.className = status.classe;
+  } else {
+    infoMensalidade.textContent =
+      'Seu professor ainda não cadastrou os detalhes da sua mensalidade.';
+    statusMensalidade.textContent = '';
+  }
+
+  // ---- MEDALHAS ----
+  function carregarMedalhasDoAluno() {
+    const todas = JSON.parse(localStorage.getItem('gtjiu_medalhas') || '[]');
+    return todas.filter(m => m.idAluno === aluno.idAluno || m.idAluno === alunoSessao.idAluno);
+  }
+
+  const medalhas = carregarMedalhasDoAluno();
+  const infoMedalhas = document.getElementById('infoMedalhas');
+
+  if (medalhas.length === 0) {
+    infoMedalhas.textContent = 'Você ainda não cadastrou nenhuma medalha.';
+  } else {
+    const aprovadas = medalhas.filter(m => m.status === 'aprovada').length;
+    const pendentes = medalhas.filter(m => m.status === 'pendente').length;
+    const rejeitadas = medalhas.filter(m => m.status === 'rejeitada').length;
+
+    infoMedalhas.textContent =
+      `Total: ${medalhas.length} | Aprovadas: ${aprovadas} | Pendentes: ${pendentes} | Rejeitadas: ${rejeitadas}`;
+  }
+
+  // ---- RESUMO RANKING ----
+  function calcularResumoRankingAluno() {
+    const alvo = document.getElementById('infoRankingAluno');
+
+    if (!aluno.professorEmail) {
+      alvo.textContent = 'Seu cadastro ainda não está vinculado a um professor, ranking indisponível.';
+      return;
+    }
+
+    const todasMedalhas = JSON.parse(localStorage.getItem('gtjiu_medalhas') || '[]');
+
+    const medalhasProf = todasMedalhas.filter(m =>
+      m.professorEmail === aluno.professorEmail &&
+      m.status === 'aprovada'
+    );
+
+    if (medalhasProf.length === 0) {
+      alvo.textContent = 'Ainda não há ranking disponível na sua academia.';
+      return;
+    }
+
+    const rankingMap = {};
+    medalhasProf.forEach(m => {
+      const id = m.idAluno;
+      if (!rankingMap[id]) rankingMap[id] = { total: 0 };
+      rankingMap[id].total++;
+    });
+
+    const entradas = Object.keys(rankingMap)
+      .map(id => ({ idAluno: id, total: rankingMap[id].total }))
+      .sort((a, b) => b.total - a.total);
+
+    const idx = entradas.findIndex(e => e.idAluno === aluno.idAluno || e.idAluno === alunoSessao.idAluno);
+
+    if (idx === -1) {
+      alvo.textContent = 'Você ainda não aparece no ranking (é preciso ter medalhas aprovadas).';
+      return;
+    }
+
+    const posicao = idx + 1;
+    const minhaQtd = entradas[idx].total;
+    const totalAlunos = entradas.length;
+
+    alvo.textContent =
+      `Você está em ${posicao}º lugar no ranking interno da academia, com ${minhaQtd} medalha(s) aprovada(s) entre ${totalAlunos} aluno(s).`;
+  }
+
+  calcularResumoRankingAluno();
+
+  // ---- AVISOS ----
+  function carregarAvisosDoProfessor() {
+    const alvo = document.getElementById('avisosAlunoResumo');
+
+    if (!aluno.professorEmail) {
+      alvo.textContent = 'Seu cadastro ainda não está vinculado a um professor.';
+      return;
+    }
+
+    const avisos = JSON.parse(localStorage.getItem('gtjiu_avisos') || '[]')
+      .filter(a => a.professorEmail === aluno.professorEmail)
+      .sort((a, b) => b.id - a.id);
+
+    if (avisos.length === 0) {
+      alvo.textContent = 'Nenhum aviso publicado pelo professor ainda.';
+      return;
+    }
+
+    const ultimo = avisos[0];
+    const data = new Date(ultimo.criadoEm);
+    const dataStr = isNaN(data)
+      ? ''
+      : ' (' + data.toLocaleDateString('pt-BR') + ')';
+
+    alvo.textContent = `${ultimo.titulo}${dataStr}: ${ultimo.texto}`;
+  }
+
+  carregarAvisosDoProfessor();
+
+  // ---- AÇÕES / NAVEGAÇÃO ----
+  function sairAluno() {
+    localStorage.removeItem('gtjiu_aluno_logado');
+    window.location.href = "login.html";
+  }
+
+  function irParaMedalhas() {
+    window.location.href = "medalhas.html";
+  }
+
+  function irParaRanking() {
+    window.location.href = "ranking.html";
+  }
+
+  function abrirCategoria() {
+    window.location.href = "categoria.html";
+  }
+
+  function abrirRegras() {
+    window.location.href = "../conteudo/regras.html";
+  }
+
+  function abrirFaixas() {
+    window.location.href = "../conteudo/faixas.html";
+  }
+</script>
+
+</body>
+</html>

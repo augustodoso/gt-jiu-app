@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>GT Jiu — Acesso</title>
+  <link rel="stylesheet" href="./css/style.css">
+
+  <style>
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #15151f 0, #050505 80%);
+      color: #f5f5f5;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: 600px;
+      padding: 30px;
+    }
+
+    h1 {
+      font-size: 34px;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    p {
+      color: #cccccc;
+      margin-bottom: 30px;
+      font-size: 15px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      margin: 8px 0;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-size: 17px;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+
+    .btn-prof {
+      background: #ff3b3b;
+      color: #fff;
+    }
+    .btn-prof:hover {
+      background: #ff5252;
+    }
+
+    .btn-aluno {
+      background: #1f7aff;
+      color: #fff;
+    }
+    .btn-aluno:hover {
+      background: #3a8fff;
+    }
+
+    .btn-map {
+      background: #444;
+      color: #fff;
+    }
+    .btn-map:hover {
+      background: #555;
+    }
+
+    footer {
+      margin-top: 30px;
+      font-size: 12px;
+      color: #777;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="shell">
+    <h1>GT Jiu • Plataforma</h1>
+    <p>Escolha como deseja acessar</p>
+
+    <button class="btn btn-prof" onclick="irProfessor()">Sou Professor</button>
+    <button class="btn btn-aluno" onclick="irAluno()">Sou Aluno</button>
+    <button class="btn btn-map" onclick="irAcademias()">Mapa de Academias</button>
+
+    <footer>
+      Projeto educacional — Aurevix Creation
+    </footer>
+  </div>
+
+
+  <script>
+    function irProfessor() {
+      window.location.href = "./professor/login.html";
+    }
+
+    function irAluno() {
+      window.location.href = "./aluno/login.html";
+    }
+
+    function irAcademias() {
+      window.location.href = "./conteudo/academias.html";
+    }
+  </script>
+
+</body>
+</html>

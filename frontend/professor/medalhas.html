@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Medalhas dos alunos - GT JIU</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .box {
+      background: #181818;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+    .cards-resumo {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .card-resumo {
+      background: #181818;
+      padding: 12px;
+      border-radius: 10px;
+    }
+    .card-resumo h3 {
+      margin: 0 0 5px 0;
+      font-size: 16px;
+    }
+    .card-resumo p {
+      margin: 0;
+      font-size: 14px;
+      opacity: 0.9;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 13px;
+    }
+    th, td {
+      border-bottom: 1px solid #333;
+      padding: 6px;
+      text-align: left;
+    }
+    .status {
+      font-weight: bold;
+    }
+    .status-pendente {
+      color: #ffc107;
+    }
+    .status-aprovada {
+      color: #4caf50;
+    }
+    .status-rejeitada {
+      color: #ff5252;
+    }
+    .btn-mini {
+      padding: 4px 8px;
+      font-size: 11px;
+      margin-right: 4px;
+    }
+    .filtros {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: 13px;
+    }
+    .filtros select {
+      padding: 5px;
+      border-radius: 6px;
+      border: none;
+    }
+    @media (min-width: 768px) {
+      .cards-resumo {
+        flex-direction: row;
+      }
+      .card-resumo {
+        flex: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="topbar">
+    <h1>Medalhas dos alunos</h1>
+    <button class="btn" style="background:#444;" onclick="voltarDashboard()">Voltar</button>
+  </div>
+
+  <p id="infoProf"></p>
+
+  <!-- RESUMO GERAL -->
+  <div class="cards-resumo">
+    <div class="card-resumo">
+      <h3>Resumo geral</h3>
+      <p><strong>Aprovadas:</strong> <span id="qtdAprovadas">0</span></p>
+      <p><strong>Pendentes:</strong> <span id="qtdPendentes">0</span></p>
+      <p><strong>Rejeitadas:</strong> <span id="qtdRejeitadas">0</span></p>
+    </div>
+    <div class="card-resumo">
+      <h3>Por tipo de medalha (aprovadas)</h3>
+      <p>🥇 Ouro: <span id="qtdOuro">0</span></p>
+      <p>🥈 Prata: <span id="qtdPrata">0</span></p>
+      <p>🥉 Bronze: <span id="qtdBronze">0</span></p>
+    </div>
+    <div class="card-resumo" id="rankingResumo">
+      <h3>Aluno destaque</h3>
+      <p id="alunoDestaque">Ainda não há medalhas aprovadas.</p>
+    </div>
+  </div>
+
+  <!-- LISTA DE MEDALHAS -->
+  <div class="box">
+    <h3>Medalhas enviadas pelos alunos</h3>
+
+    <div class="filtros">
+      <div>
+        Status:
+        <select id="filtroStatus">
+          <option value="todos">Todos</option>
+          <option value="pendente">Pendentes</option>
+          <option value="aprovada">Aprovadas</option>
+          <option value="rejeitada">Rejeitadas</option>
+        </select>
+      </div>
+      <div>
+        Tipo:
+        <select id="filtroTipo">
+          <option value="todos">Todos</option>
+          <option value="ouro">Ouro</option>
+          <option value="prata">Prata</option>
+          <option value="bronze">Bronze</option>
+        </select>
+      </div>
+    </div>
+
+    <table id="tabelaMedalhas">
+      <thead>
+        <tr>
+          <th>Aluno</th>
+          <th>Evento</th>
+          <th>Cidade</th>
+          <th>Tipo</th>
+          <th>Categoria</th>
+          <th>Data</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- linhas via JS -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- RANKING POR ALUNO -->
+  <div class="box" id="ranking">
+    <h3>Ranking interno da academia (somente medalhas aprovadas)</h3>
+    <table id="tabelaRanking">
+      <thead>
+        <tr>
+          <th>Aluno</th>
+          <th>Ouro</th>
+          <th>Prata</th>
+          <th>Bronze</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- linhas via JS -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  // --------- VALIDAR LOGIN DO PROFESSOR ----------
+  const profStr = localStorage.getItem('gtjiu_professor_logado');
+  if (!profStr) {
+    alert('Você precisa estar logado como professor.');
+    window.location.href = 'login.html';
+  }
+  const prof = JSON.parse(profStr);
+  document.getElementById('infoProf').textContent =
+    `Você está visualizando as medalhas dos alunos vinculados ao seu e-mail: ${prof.email}`;
+
+  // --------- CARREGAR DADOS DO LOCALSTORAGE ----------
+  function getTodasMedalhas() {
+    return JSON.parse(localStorage.getItem('gtjiu_medalhas') || '[]');
+  }
+
+  function setTodasMedalhas(lista) {
+    localStorage.setItem('gtjiu_medalhas', JSON.stringify(lista));
+  }
+
+  function getAlunosDoProfessor() {
+    const todos = JSON.parse(localStorage.getItem('gtjiu_alunos') || '[]');
+    return todos.filter(a => a.professorEmail === prof.email);
+  }
+
+  const alunosDoProf = getAlunosDoProfessor();
+
+  function nomeAluno(idAluno) {
+    const a = alunosDoProf.find(x => x.idAluno === idAluno);
+    return a ? a.nome : idAluno;
+  }
+
+  // --------- FILTRAR MEDALHAS DO PROFESSOR ----------
+  function getMedalhasDoProfessor() {
+    const todas = getTodasMedalhas();
+    return todas
+      .map((m, idx) => ({ ...m, _idx: idx }))
+      .filter(m => m.professorEmail === prof.email);
+  }
+
+  // --------- RESUMO GERAL ----------
+  function atualizarResumo() {
+    const medalhas = getMedalhasDoProfessor();
+
+    const aprovadas = medalhas.filter(m => m.status === 'aprovada');
+    const pendentes = medalhas.filter(m => m.status === 'pendente');
+    const rejeitadas = medalhas.filter(m => m.status === 'rejeitada');
+
+    document.getElementById('qtdAprovadas').textContent = aprovadas.length;
+    document.getElementById('qtdPendentes').textContent = pendentes.length;
+    document.getElementById('qtdRejeitadas').textContent = rejeitadas.length;
+
+    const ouro = aprovadas.filter(m => m.tipo === 'ouro').length;
+    const prata = aprovadas.filter(m => m.tipo === 'prata').length;
+    const bronze = aprovadas.filter(m => m.tipo === 'bronze').length;
+
+    document.getElementById('qtdOuro').textContent = ouro;
+    document.getElementById('qtdPrata').textContent = prata;
+    document.getElementById('qtdBronze').textContent = bronze;
+
+    // Ranking interno / aluno destaque
+    const rankingMap = {};
+    aprovadas.forEach(m => {
+      const key = m.idAluno;
+      if (!rankingMap[key]) {
+        rankingMap[key] = { ouro: 0, prata: 0, bronze: 0, total: 0 };
+      }
+      if (m.tipo === 'ouro') rankingMap[key].ouro++;
+      if (m.tipo === 'prata') rankingMap[key].prata++;
+      if (m.tipo === 'bronze') rankingMap[key].bronze++;
+      rankingMap[key].total++;
+    });
+
+    let melhorAluno = null;
+    let melhorDados = null;
+
+    Object.keys(rankingMap).forEach(id => {
+      const dados = rankingMap[id];
+      if (!melhorDados || dados.total > melhorDados.total) {
+        melhorDados = dados;
+        melhorAluno = nomeAluno(id);
+      }
+    });
+
+    const destaqueElem = document.getElementById('alunoDestaque');
+    if (!melhorAluno) {
+      destaqueElem.textContent = 'Ainda não há medalhas aprovadas.';
+    } else {
+      destaqueElem.textContent =
+        `${melhorAluno} é o aluno destaque, com ${melhorDados.total} medalha(s) aprovada(s).`;
+    }
+
+    // Atualiza tabela de ranking
+    const tbodyRanking = document.querySelector('#tabelaRanking tbody');
+    tbodyRanking.innerHTML = '';
+
+    const entradas = Object.keys(rankingMap)
+      .map(id => ({
+        idAluno: id,
+        nome: nomeAluno(id),
+        ...rankingMap[id]
+      }))
+      .sort((a, b) => b.total - a.total);
+
+    if (entradas.length === 0) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<td colspan="5">Ainda não há medalhas aprovadas.</td>';
+      tbodyRanking.appendChild(tr);
+    } else {
+      entradas.forEach(e => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${e.nome}</td>
+          <td>${e.ouro}</td>
+          <td>${e.prata}</td>
+          <td>${e.bronze}</td>
+          <td>${e.total}</td>
+        `;
+        tbodyRanking.appendChild(tr);
+      });
+    }
+  }
+
+  // --------- RENDERIZAR TABELA DE MEDALHAS ----------
+  let filtroStatus = 'todos';
+  let filtroTipo = 'todos';
+
+  const selectStatus = document.getElementById('filtroStatus');
+  const selectTipo = document.getElementById('filtroTipo');
+
+  selectStatus.addEventListener('change', () => {
+    filtroStatus = selectStatus.value;
+    renderTabelaMedalhas();
+  });
+
+  selectTipo.addEventListener('change', () => {
+    filtroTipo = selectTipo.value;
+    renderTabelaMedalhas();
+  });
+
+  function renderTabelaMedalhas() {
+    const tbody = document.querySelector('#tabelaMedalhas tbody');
+    tbody.innerHTML = '';
+
+    let medalhas = getMedalhasDoProfessor();
+
+    if (filtroStatus !== 'todos') {
+      medalhas = medalhas.filter(m => m.status === filtroStatus);
+    }
+    if (filtroTipo !== 'todos') {
+      medalhas = medalhas.filter(m => m.tipo === filtroTipo);
+    }
+
+    if (medalhas.length === 0) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<td colspan="8">Nenhuma medalha encontrada com os filtros atuais.</td>';
+      tbody.appendChild(tr);
+      return;
+    }
+
+    medalhas.forEach(m => {
+      const tr = document.createElement('tr');
+
+      const dataFormatada = m.dataEvento
+        ? new Date(m.dataEvento).toLocaleDateString('pt-BR')
+        : '-';
+
+      let classeStatus = 'status-pendente';
+      if (m.status === 'aprovada') classeStatus = 'status-aprovada';
+      if (m.status === 'rejeitada') classeStatus = 'status-rejeitada';
+
+      tr.innerHTML = `
+        <td>${nomeAluno(m.idAluno)}</td>
+        <td>${m.evento}</td>
+        <td>${m.cidade}</td>
+        <td>${m.tipo.toUpperCase()}</td>
+        <td>${m.categoria}</td>
+        <td>${dataFormatada}</td>
+        <td class="status ${classeStatus}">${m.status}</td>
+        <td>
+          <button class="btn btn-mini" onclick="aprovarMedalha(${m._idx})">Aprovar</button>
+          <button class="btn btn-mini" style="background:#555;" onclick="rejeitarMedalha(${m._idx})">Rejeitar</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // --------- AÇÕES: APROVAR / REJEITAR ----------
+  function aprovarMedalha(idxGlobal) {
+    const todas = getTodasMedalhas();
+    if (!todas[idxGlobal]) return;
+
+    todas[idxGlobal].status = 'aprovada';
+    setTodasMedalhas(todas);
+    atualizarResumo();
+    renderTabelaMedalhas();
+  }
+
+  function rejeitarMedalha(idxGlobal) {
+    const todas = getTodasMedalhas();
+    if (!todas[idxGlobal]) return;
+
+    todas[idxGlobal].status = 'rejeitada';
+    setTodasMedalhas(todas);
+    atualizarResumo();
+    renderTabelaMedalhas();
+  }
+
+  window.aprovarMedalha = aprovarMedalha;
+  window.rejeitarMedalha = rejeitarMedalha;
+
+  function voltarDashboard() {
+    window.location.href = 'dashboard.html';
+  }
+
+  // --------- INICIALIZA ----------
+  atualizarResumo();
+  renderTabelaMedalhas();
+</script>
+
+</body>
+</html>

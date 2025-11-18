@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Regras & Pontuação - GT Jiu</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #050510;
+      color: #f5f5ff;
+    }
+
+    .page-wrapper {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 16px 56px;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .title-main {
+      font-size: 1.6rem;
+      font-weight: 600;
+    }
+
+    .title-sub {
+      font-size: 0.9rem;
+      opacity: 0.75;
+    }
+
+    .btn {
+      border-radius: 999px;
+      padding: 8px 16px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: #f5f5ff;
+      border: 1px solid #ffffff33;
+    }
+
+    .search-bar {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .search-input-wrapper {
+      flex: 1;
+      min-width: 220px;
+      position: relative;
+    }
+
+    .search-input-wrapper input {
+      width: 100%;
+      padding: 8px 30px 8px 10px;
+      border-radius: 999px;
+      border: 1px solid #ffffff33;
+      background: #0b0b1a;
+      color: #f5f5ff;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .search-input-wrapper input::placeholder {
+      color: #7f7fa0;
+    }
+
+    .search-hint {
+      font-size: 0.8rem;
+      opacity: 0.65;
+    }
+
+    .grid-cards {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 14px;
+    }
+
+    @media (min-width: 768px) {
+      .grid-cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    .rule-card {
+      background: radial-gradient(circle at top left, #202040 0, #181820 40%, #101018 100%);
+      border-radius: 16px;
+      padding: 14px 16px 14px;
+      border: 1px solid #ffffff14;
+      box-shadow: 0 14px 40px rgba(0,0,0,0.9);
+    }
+
+    .rule-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .rule-body {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      opacity: 0.95;
+    }
+
+    .rule-body ul {
+      padding-left: 18px;
+      margin: 6px 0 0;
+    }
+
+    .rule-body li {
+      margin-bottom: 2px;
+    }
+
+    .highlight {
+      font-weight: 600;
+      color: #ffd27f;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      padding: 2px 10px;
+      border-radius: 999px;
+      border: 1px solid #ffffff22;
+      background: #ffffff08;
+      opacity: 0.9;
+      margin-bottom: 4px;
+    }
+
+    .no-result {
+      margin-top: 18px;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+  <header>
+    <div class="title-block">
+      <span class="tag">Guia rápido</span>
+      <div class="title-main">Regras & pontuação</div>
+      <div class="title-sub">
+        Conteúdo educativo baseado em CBJJ/IBJJF – use sempre em conjunto com o regulamento oficial do campeonato.
+      </div>
+    </div>
+    <button class="btn btn-ghost" type="button" onclick="voltarAluno()">Voltar</button>
+  </header>
+
+  <div class="search-bar">
+    <div class="search-input-wrapper">
+      <input
+        id="campoBusca"
+        type="text"
+        placeholder="Pesquisar por posição, pontuação ou palavra-chave (ex: montada, raspagem, vantagem)...">
+    </div>
+    <div class="search-hint">
+      Dica: digite termos como <strong>queda</strong>, <strong>montada</strong>, <strong>punição</strong>, etc.
+    </div>
+  </div>
+
+  <div id="cardsContainer" class="grid-cards">
+
+    <!-- FORMAS DE ENCERRAR -->
+    <article class="rule-card">
+      <h2 class="rule-title">Formas de encerrar uma luta</h2>
+      <div class="rule-body">
+        <ul>
+          <li><span class="highlight">Finalização (desistência):</span> o atleta bate com a mão, com os pés ou verbalmente, indicando que não consegue mais se defender.</li>
+          <li><span class="highlight">Interrupção:</span> o árbitro ou o médico param a luta por risco de lesão, sangramento que não para, câimbras fortes, etc.</li>
+          <li><span class="highlight">Desclassificação:</span> quando o atleta comete faltas graves ou repetidas.</li>
+          <li><span class="highlight">Perda dos sentidos:</span> o atleta apaga por um estrangulamento ou situação de luta.</li>
+          <li><span class="highlight">Pontuação:</span> vence quem tiver mais pontos ao final do tempo.</li>
+          <li><span class="highlight">Decisão do árbitro:</span> se a luta estiver empatada em pontos, vantagens e punições.</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- PONTUAÇÕES PRINCIPAIS -->
+    <article class="rule-card">
+      <h2 class="rule-title">Pontuações principais</h2>
+      <div class="rule-body">
+        <ul>
+          <li><span class="highlight">4 pontos:</span> montada, pegada de costas (back control).</li>
+          <li><span class="highlight">3 pontos:</span> passagem de guarda.</li>
+          <li><span class="highlight">2 pontos:</span> queda com controle, raspagem, joelho na barriga (em algumas regras) ou pegada de costas sem ganchos.</li>
+        </ul>
+        <p style="margin-top:6px;">
+          Para valer a pontuação, a posição precisa ser estabilizada por alguns segundos. Se não estabilizar,
+          normalmente gera <span class="highlight">vantagem</span>, não pontos.
+        </p>
+      </div>
+    </article>
+
+    <!-- QUEDA -->
+    <article class="rule-card">
+      <h2 class="rule-title">Queda (2 pontos)</h2>
+      <div class="rule-body">
+        <p>
+          Acontece quando você derruba o adversário e mantém o controle por alguns segundos.
+          É a forma clássica de trazer a luta para o chão com domínio.
+        </p>
+      </div>
+    </article>
+
+    <!-- RASPAGEM -->
+    <article class="rule-card">
+      <h2 class="rule-title">Raspagem (2 pontos)</h2>
+      <div class="rule-body">
+        <p>
+          Só existe raspagem se você estiver na <span class="highlight">guarda</span> ou <span class="highlight">meia-guarda</span>.
+          Você inverte a posição e passa a ficar por cima, com controle. Se a inversão não vier de
+          guarda ou meia-guarda, normalmente não gera pontos de raspagem.
+        </p>
+      </div>
+    </article>
+
+    <!-- PASSAGEM DE GUARDA -->
+    <article class="rule-card">
+      <h2 class="rule-title">Passagem de guarda (3 pontos)</h2>
+      <div class="rule-body">
+        <p>
+          Quando você está dentro da guarda/meia-guarda do oponente e consegue sair,
+          chegando em uma posição de domínio por cima sem ele conseguir usar as pernas para se defender.
+        </p>
+      </div>
+    </article>
+
+    <!-- JOELHO NA BARRIGA -->
+    <article class="rule-card">
+      <h2 class="rule-title">Joelho na barriga (2 pontos)</h2>
+      <div class="rule-body">
+        <p>
+          Você controla o adversário com o joelho apoiado na barriga, o outro joelho fora do chão
+          e o corpo voltado para a cabeça do oponente. Precisa haver pressão e controle para valer pontuação.
+        </p>
+      </div>
+    </article>
+
+    <!-- MONTADA -->
+    <article class="rule-card">
+      <h2 class="rule-title">Montada (4 pontos)</h2>
+      <div class="rule-body">
+        <p>
+          Você sentado em cima do tronco do adversário, com as pernas de cada lado do corpo.
+          É uma das posições mais dominantes do Jiu-Jitsu e abre espaço para ataques fortes de finalização.
+        </p>
+      </div>
+    </article>
+
+    <!-- PEGADA DE COSTAS -->
+    <article class="rule-card">
+      <h2 class="rule-title">Pegada de costas (4 pontos)</h2>
+      <div class="rule-body">
+        <p>
+          Você controla as costas do adversário com ganchos (ou cinto de segurança, dependendo da regra),
+          mantendo domínio e grande risco de finalização. É uma posição de altíssimo controle.
+        </p>
+      </div>
+    </article>
+
+    <!-- VANTAGENS E PUNIÇÕES -->
+    <article class="rule-card">
+      <h2 class="rule-title">Vantagens & punições (resumo)</h2>
+      <div class="rule-body">
+        <ul>
+          <li><span class="highlight">Vantagens:</span> quase-pontos – ataques que chegaram perto de estabilizar a posição ou finalizar.</li>
+          <li><span class="highlight">Critério de desempate:</span> se a luta terminar empatada em pontos, quem tiver mais vantagens vence.</li>
+          <li><span class="highlight">Punições:</span> faltas técnicas ou antidesportivas (fugir da luta, segurar dentro da calça, etc.).</li>
+          <li><span class="highlight">Acúmulo de punições:</span> pode gerar pontos para o oponente ou até desclassificação.</li>
+        </ul>
+      </div>
+    </article>
+
+  </div>
+
+  <p id="semResultados" class="no-result" style="display:none;">
+    Nenhum item encontrado para esse termo. Tente outra palavra ou sinônimo.
+  </p>
+</div>
+
+<script>
+  function voltarAluno() {
+    // volta para o painel do aluno
+    window.location.href = "../aluno/dashboard.html";
+  }
+
+  const campoBusca = document.getElementById("campoBusca");
+  const cards = Array.from(document.querySelectorAll(".rule-card"));
+  const semResultados = document.getElementById("semResultados");
+
+  function aplicarFiltro() {
+    const termo = campoBusca.value.trim().toLowerCase();
+    let visiveis = 0;
+
+    cards.forEach(card => {
+      const texto = card.innerText.toLowerCase();
+      if (!termo || texto.includes(termo)) {
+        card.style.display = "";
+        visiveis++;
+      } else {
+        card.style.display = "none";
+      }
+    });
+
+    semResultados.style.display = visiveis === 0 ? "block" : "none";
+  }
+
+  campoBusca.addEventListener("input", aplicarFiltro);
+</script>
+
+</body>
+</html>

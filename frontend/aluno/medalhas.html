@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Minhas medalhas - GT JIU</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .box {
+      background: #181818;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+    label {
+      font-size: 14px;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0 12px 0;
+      border-radius: 6px;
+      border: none;
+      resize: vertical;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 13px;
+    }
+    th, td {
+      border-bottom: 1px solid #333;
+      padding: 6px;
+      text-align: left;
+    }
+    .status {
+      font-weight: bold;
+    }
+    .status-pendente {
+      color: #ffc107;
+    }
+    .status-aprovada {
+      color: #4caf50;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="topbar">
+    <h1>Minhas medalhas</h1>
+    <button class="btn" style="background:#444;" onclick="voltarDashboard()">Voltar</button>
+  </div>
+
+  <p id="infoAluno"></p>
+
+  <div class="box">
+    <h3>Registrar nova medalha</h3>
+    <form id="formMedalha">
+      <label>Evento / Campeonato</label>
+      <input type="text" id="evento" placeholder="Ex: Open Nova Serrana 2025" required>
+
+      <label>Cidade do evento</label>
+      <input type="text" id="cidade" placeholder="Ex: Nova Serrana - MG" required>
+
+      <label>Tipo de medalha</label>
+      <select id="tipo" required>
+        <option value="">Selecione</option>
+        <option value="ouro">Ouro</option>
+        <option value="prata">Prata</option>
+        <option value="bronze">Bronze</option>
+      </select>
+
+      <label>Categoria (peso/faixa)</label>
+      <input type="text" id="categoria" placeholder="Ex: Adulto - Leve - Faixa Azul" required>
+
+      <label>Data do evento</label>
+      <input type="date" id="dataEvento" required>
+
+      <label>Descrição do comprovante</label>
+      <textarea id="comprovante" rows="3" placeholder="Ex: Foto no pódio / PDF da ata / declaração do organizador"></textarea>
+
+      <button type="submit" class="btn">Salvar medalha</button>
+    </form>
+  </div>
+
+  <div class="box">
+    <h3>Histórico de medalhas enviadas</h3>
+    <table id="tabelaMedalhas">
+      <thead>
+        <tr>
+          <th>Evento</th>
+          <th>Cidade</th>
+          <th>Tipo</th>
+          <th>Categoria</th>
+          <th>Data</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- linhas geradas via JS -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  // -------- PROTEGER PÁGINA E PEGAR ALUNO LOGADO ----------
+  const alunoStr = localStorage.getItem('gtjiu_aluno_logado');
+
+  if (!alunoStr) {
+    alert("Você precisa fazer login como aluno.");
+    window.location.href = "login.html";
+  }
+
+  const aluno = JSON.parse(alunoStr);
+  const infoAluno = document.getElementById('infoAluno');
+  infoAluno.textContent = `Aluno: ${aluno.nome} | Código: ${aluno.idAluno}`;
+
+  // -------- FUNÇÕES DE LOCALSTORAGE PARA MEDALHAS ----------
+
+  function carregarMedalhas() {
+    const lista = JSON.parse(localStorage.getItem('gtjiu_medalhas') || '[]');
+    // Só medalhas desse aluno
+    return lista.filter(m => m.idAluno === aluno.idAluno);
+  }
+
+  function salvarMedalhasDoAluno(novaListaAluno) {
+    const listaGlobal = JSON.parse(localStorage.getItem('gtjiu_medalhas') || '[]');
+    // remove as do aluno
+    const filtrada = listaGlobal.filter(m => m.idAluno !== aluno.idAluno);
+    const final = filtrada.concat(novaListaAluno);
+    localStorage.setItem('gtjiu_medalhas', JSON.stringify(final));
+  }
+
+  // -------- RENDERIZAR TABELA ----------
+  function renderTabela() {
+    const tbody = document.querySelector('#tabelaMedalhas tbody');
+    tbody.innerHTML = '';
+
+    const medalhas = carregarMedalhas();
+
+    if (medalhas.length === 0) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<td colspan="6">Nenhuma medalha registrada ainda.</td>';
+      tbody.appendChild(tr);
+      return;
+    }
+
+    medalhas.forEach(m => {
+      const tr = document.createElement('tr');
+
+      const dataFormatada = m.dataEvento
+        ? new Date(m.dataEvento).toLocaleDateString('pt-BR')
+        : '-';
+
+      let classeStatus = 'status-pendente';
+      if (m.status === 'aprovada') classeStatus = 'status-aprovada';
+
+      tr.innerHTML = `
+        <td>${m.evento}</td>
+        <td>${m.cidade}</td>
+        <td>${m.tipo.toUpperCase()}</td>
+        <td>${m.categoria}</td>
+        <td>${dataFormatada}</td>
+        <td class="status ${classeStatus}">${m.status}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // -------- FORMULÁRIO DE MEDALHA ----------
+  const form = document.getElementById('formMedalha');
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const evento = document.getElementById('evento').value.trim();
+    const cidade = document.getElementById('cidade').value.trim();
+    const tipo = document.getElementById('tipo').value;
+    const categoria = document.getElementById('categoria').value.trim();
+    const dataEvento = document.getElementById('dataEvento').value;
+    const comprovante = document.getElementById('comprovante').value.trim();
+
+    if (!evento || !cidade || !tipo || !categoria || !dataEvento) {
+      alert('Preencha todos os campos obrigatórios.');
+      return;
+    }
+
+    const medalhas = carregarMedalhas();
+
+    medalhas.push({
+      idAluno: aluno.idAluno,
+      professorEmail: aluno.professorEmail || null, // se no futuro quisermos vincular
+      evento,
+      cidade,
+      tipo,
+      categoria,
+      dataEvento,
+      comprovante,
+      status: 'pendente' // depois o professor pode aprovar
+    });
+
+    salvarMedalhasDoAluno(medalhas);
+    form.reset();
+    renderTabela();
+
+    alert('Medalha registrada com sucesso!\nEla poderá ser validada pelo professor ou pela organização.');
+  });
+
+  function voltarDashboard() {
+    window.location.href = 'dashboard.html';
+  }
+
+  // inicializa
+  renderTabela();
+</script>
+
+</body>
+</html>
