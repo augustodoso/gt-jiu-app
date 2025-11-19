@@ -127,6 +127,7 @@
       justify-content: flex-start;
       gap: 10px;
       align-items: center;
+      flex-wrap: wrap;
     }
 
     .btn-primario {
@@ -148,20 +149,6 @@
       font-size: 12px;
       opacity: 0.85;
     }
-
-    @media (max-width: 720px) {
-      .shell {
-        padding: 20px 16px 40px;
-      }
-      .topo {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-      }
-      .card-login {
-        width: 100%;
-      }
-    }
   </style>
 </head>
 <body>
@@ -170,38 +157,27 @@
   <div class="topo">
     <div class="topo-titulos">
       <h1>GT Jiu</h1>
-      <p>Painel do Aluno • Acesso</p>
+      <p>Painel do Aluno • Acesso com código</p>
     </div>
-    <!-- ✅ VOLTAR PARA A TELA INICIAL -->
     <button class="btn-voltar" onclick="voltarInicio()">Voltar</button>
   </div>
 
   <div class="card-login">
     <h2>Entrar como aluno</h2>
-    <p>Use o código de acesso informado pelo seu professor e sua senha.</p>
+    <p>Informe o <strong>código de acesso</strong> fornecido pelo seu professor para entrar.</p>
 
     <form id="formAluno" onsubmit="handleLoginAluno(event)">
       <div class="campo">
-        <label for="codigoAluno">Código do aluno</label>
+        <label for="codigoAluno">Código de acesso</label>
         <input
           type="text"
           id="codigoAluno"
-          placeholder="Ex: GTJ-JIU-0001"
+          placeholder="Ex: GT-ALUNO-1234"
           required
         >
       </div>
 
-      <div class="campo">
-        <label for="senhaAluno">Senha</label>
-        <input
-          type="password"
-          id="senhaAluno"
-          placeholder="Sua senha"
-          required
-        >
-      </div>
-
-      <!-- ✅ LGPD / PRIVACIDADE -->
+      <!-- LGPD -->
       <div class="lgpd-termo">
         <label>
           <input type="checkbox" id="lgpdAluno">
@@ -220,51 +196,47 @@
   </div>
 </div>
 
-<script src="../js/apis.js"></script>
 <script>
-  // ✅ VOLTAR PARA A TELA INICIAL
+  const KEY_ALUNO_LOGADO = 'gtjiu_aluno_logado';
+
   function voltarInicio() {
     window.location.href = '../index.html';
   }
 
-  const alunoStr = localStorage.getItem('gtjiu_aluno_logado');
-  if (alunoStr) {
-    document.getElementById('statusAluno').textContent = 'Já logado';
-    // Se quiser redirecionar automático:
-    // window.location.href = './dashboard.html';
-  }
+  // Mostrar "Já logado" se já houver aluno salvo
+  (function initStatus() {
+    const alunoStr = localStorage.getItem(KEY_ALUNO_LOGADO);
+    if (alunoStr) {
+      document.getElementById('statusAluno').textContent = 'Já logado';
+    }
+  })();
 
   async function handleLoginAluno(event) {
     event.preventDefault();
 
     const codigo = document.getElementById('codigoAluno').value.trim();
-    const senha  = document.getElementById('senhaAluno').value.trim();
     const aceitouLgpd = document.getElementById('lgpdAluno').checked;
     const statusSpan = document.getElementById('statusAluno');
 
-    // ✅ LGPD obrigatório
     if (!aceitouLgpd) {
       alert('Para continuar, é necessário aceitar a Política de Privacidade / LGPD.');
       return;
     }
 
-    if (!codigo || !senha) {
-      alert('Preencha código e senha.');
+    if (!codigo) {
+      alert('Informe o código de acesso.');
       return;
     }
 
-    statusSpan.textContent = 'Entrando...';
+    // Aqui você poderia validar o código em um backend no futuro.
+    // Por enquanto, para o MVP, qualquer código não vazio é aceito.
+    const aluno = { codigo };
+    localStorage.setItem(KEY_ALUNO_LOGADO, JSON.stringify(aluno));
 
-    try {
-      const dados = await loginAluno(codigo, senha); // função do apis.js
-      localStorage.setItem('gtjiu_aluno_logado', JSON.stringify(dados));
-      statusSpan.textContent = 'Login realizado';
-      window.location.href = './dashboard.html';
-    } catch (erro) {
-      console.error(erro);
-      alert('Erro ao fazer login do aluno. Verifique os dados.');
-      statusSpan.textContent = 'Erro no login';
-    }
+    statusSpan.textContent = 'Login realizado';
+
+    // 👇 Se o painel do aluno estiver em outro arquivo, troque "dashboard.html" aqui
+    window.location.href = './dashboard.html';
   }
 </script>
 
