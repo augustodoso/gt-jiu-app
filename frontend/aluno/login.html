@@ -239,78 +239,82 @@
 </div>
 
 <script>
-  const API_BASE_URL     = "https://gt-jiu-app.onrender.com";
+  const API_BASE_URL = "https://gt-jiu-app.onrender.com";
   const KEY_ALUNO_LOGADO = "gtjiu_aluno_logado";
 
   function voltarInicio() {
-    window.location.href = '../index.html';
+    window.location.href = "../index.html";
   }
 
   // Se já tiver login salvo, mostra status
   (function initStatus() {
     const logadoStr = localStorage.getItem(KEY_ALUNO_LOGADO);
     if (logadoStr) {
-      document.getElementById('statusAluno').textContent = 'Já logado';
+      document.getElementById("statusAluno").textContent = "Já logado";
     }
   })();
-
-  function salvarAlunoLogado(aluno) {
-    localStorage.setItem(KEY_ALUNO_LOGADO, JSON.stringify(aluno));
-  }
 
   async function handleLoginAluno(event) {
     event.preventDefault();
 
-    const codigoInput = document.getElementById('codigoAluno');
-    const aceitouLgpd = document.getElementById('lgpdAluno').checked;
-    const statusSpan  = document.getElementById('statusAluno');
-
-    const codigo = codigoInput.value.trim();
+    const codigo = document.getElementById("codigoAluno").value.trim();
+    const aceitouLgpd = document.getElementById("lgpdAluno").checked;
+    const statusSpan = document.getElementById("statusAluno");
 
     if (!aceitouLgpd) {
-      alert('Para continuar, é necessário aceitar a Política de Privacidade e LGPD.');
+      alert("Para continuar, é necessário aceitar a Política de Privacidade / LGPD.");
       return;
     }
 
     if (!codigo) {
-      alert('Preencha o código de acesso.');
+      alert("Preencha o código de acesso.");
       return;
     }
 
-    statusSpan.textContent = 'Verificando...';
+    statusSpan.textContent = "Verificando...";
 
     try {
-      const resposta = await fetch(`${API_BASE_URL}/alunos/login`, {
+      const resp = await fetch(`${API_BASE_URL}/alunos/login`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ codigo })
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ codigo }),
       });
 
-      if (!resposta.ok) {
-        if (resposta.status === 404) {
-          alert('Código não encontrado. Verifique com a sua academia.');
-          statusSpan.textContent = 'Erro no login';
+      if (!resp.ok) {
+        if (resp.status === 404) {
+          alert("Código não encontrado. Verifique com a sua academia.");
         } else {
-          alert('Erro ao fazer login. Tente novamente.');
-          statusSpan.textContent = 'Erro no login';
+          alert("Erro ao fazer login. Tente novamente em instantes.");
         }
+        statusSpan.textContent = "Erro no login";
         return;
       }
 
-      const dadosAluno = await resposta.json();
+      const data = await resp.json();
 
-      salvarAlunoLogado(dadosAluno);
-      statusSpan.textContent = 'Login realizado';
+      // Guarda infos básicas do aluno no navegador
+      const alunoInfo = {
+        id: data.id,
+        nome: data.nome,
+        academia_id: data.academia_id,
+        codigo: data.codigo,
+      };
 
-      // Ajuste o nome do painel do aluno se for diferente
-      window.location.href = './dashboard.html';
-    } catch (erro) {
-      console.error(erro);
-      alert('Erro de conexão com o servidor.');
-      statusSpan.textContent = 'Erro no login';
+      localStorage.setItem(KEY_ALUNO_LOGADO, JSON.stringify(alunoInfo));
+      statusSpan.textContent = "Login realizado";
+
+      // Ajuste aqui o nome do dashboard do aluno
+      window.location.href = "./dashboard.html";
+    } catch (err) {
+      console.error(err);
+      alert("Erro de rede ao tentar fazer login. Confira sua internet.");
+      statusSpan.textContent = "Erro no login";
     }
   }
 </script>
+
 
 </body>
 </html>
