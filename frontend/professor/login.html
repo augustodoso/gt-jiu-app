@@ -259,12 +259,20 @@
 </div>
 
 <script>
-  const API_BASE_URL = "https://gt-jiu-app.onrender.com"; 
-  const TOKEN_KEY  = "gtjiu_professor_token";
-  const NOME_KEY   = "gtjiu_professor_nome";
-  const EMAIL_KEY  = "gtjiu_professor_email";
+  const API_BASE_URL = "https://gt-jiu-app.onrender.com";
+
+  const TOKEN_KEY = "gtjiu_professor_token";
+  const NOME_KEY  = "gtjiu_professor_nome";
+  const EMAIL_KEY = "gtjiu_professor_email";
+
+  function salvarSessao(token, nome, email) {
+    localStorage.setItem(TOKEN_KEY, token);
+    localStorage.setItem(NOME_KEY, nome);
+    localStorage.setItem(EMAIL_KEY, email);
+  }
 
   function voltarInicio() {
+    // volta pra tela index da plataforma
     window.location.href = "../index.html";
   }
 
@@ -272,34 +280,33 @@
     window.location.href = "./register_professor.html";
   }
 
-  // Só para mostrar o status no rodapé do card
+  // Mostra status se já tiver token
   (function initStatus() {
     const token = localStorage.getItem(TOKEN_KEY);
     if (token) {
-      const span = document.getElementById("statusProfessor");
-      if (span) span.textContent = "Já logado";
+      document.getElementById("statusProfessor").textContent = "Já logado";
     }
   })();
 
   async function handleLoginProfessor(event) {
     event.preventDefault();
 
-    const email = document.getElementById("emailProfessor").value.trim();
-    const senha = document.getElementById("senhaProfessor").value.trim();
-    const aceitouLgpd = document.getElementById("lgpdProfessor").checked;
-    const statusSpan = document.getElementById("statusProfessor");
+    const email = document.getElementById('emailProfessor').value.trim();
+    const senha = document.getElementById('senhaProfessor').value.trim();
+    const aceitouLgpd = document.getElementById('lgpdProfessor').checked;
+    const statusSpan = document.getElementById('statusProfessor');
 
     if (!aceitouLgpd) {
-      alert("Para continuar, é necessário aceitar a Política de Privacidade / LGPD.");
+      alert('Para continuar, é necessário aceitar a Política de Privacidade / LGPD.');
       return;
     }
 
     if (!email || !senha) {
-      alert("Preencha e-mail e senha.");
+      alert('Preencha e-mail e senha.');
       return;
     }
 
-    statusSpan.textContent = "Verificando...";
+    statusSpan.textContent = 'Verificando credenciais...';
 
     try {
       const resp = await fetch(`${API_BASE_URL}/login`, {
@@ -309,28 +316,27 @@
       });
 
       if (!resp.ok) {
-        const dataErro = await resp.json().catch(() => ({}));
-        const msg = dataErro.detail || "Erro ao fazer login. Verifique os dados.";
-        alert(msg);
+        if (resp.status === 401) {
+          alert("E-mail ou senha inválidos.");
+        } else {
+          alert("Erro ao fazer login. Tente novamente.");
+        }
         statusSpan.textContent = "Erro no login";
         return;
       }
 
       const data = await resp.json();
-
-      // 🔐 Salva token e dados no localStorage
-      localStorage.setItem(TOKEN_KEY, data.token);
-      localStorage.setItem(NOME_KEY, data.nome || "");
-      localStorage.setItem(EMAIL_KEY, email);
+      // ⬇️ AQUI É O PONTO IMPORTANTE: SALVAR TOKEN + NOME + EMAIL
+      salvarSessao(data.token, data.nome || "Professor", email);
 
       statusSpan.textContent = "Login realizado";
-
-      // Vai para o painel do professor
+      // Redireciona para o painel do professor
       window.location.href = "./dashboard.html";
-    } catch (err) {
-      console.error(err);
+
+    } catch (e) {
+      console.error(e);
       alert("Não foi possível conectar ao servidor. Verifique sua conexão e tente novamente.");
-      statusSpan.textContent = "Erro de conexão";
+      statusSpan.textContent = "Falha de conexão";
     }
   }
 </script>

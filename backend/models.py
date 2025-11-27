@@ -31,6 +31,7 @@ class Academia(Base):
     email = Column(String)
 
     medalhas = relationship("Medalha", back_populates="academia")
+    alunos = relationship("Aluno", back_populates="academia")
 
 
 class Medalha(Base):
@@ -49,6 +50,17 @@ class Medalha(Base):
     status_validacao = Column(String, default="aprovado")
 
     academia = relationship("Academia", back_populates="medalhas")
+
+
+class Aluno(Base):
+    __tablename__ = "alunos"
+
+    id = Column(Integer, primary_key=True, index=True)
+    nome = Column(String, nullable=False)
+    codigo = Column(String, unique=True, index=True, nullable=False)
+    academia_id = Column(Integer, ForeignKey("academias.id"), nullable=False)
+
+    academia = relationship("Academia", back_populates="alunos")
 
 
 # ---------------------- SCHEMAS PYDANTIC ----------------------
@@ -137,3 +149,27 @@ class RankingAcademia(BaseModel):
     prata: int
     bronze: int
     total: int
+
+
+# ---------- ALUNO (SCHEMAS) ----------
+
+
+class AlunoBase(BaseModel):
+    nome: str
+    academia_id: int
+
+
+class AlunoCreate(AlunoBase):
+    pass
+
+
+class AlunoOut(AlunoBase):
+    id: int
+    codigo: str
+
+    class Config:
+        orm_mode = True
+
+
+class LoginAlunoRequest(BaseModel):
+    codigo: str

@@ -209,7 +209,7 @@
         <input
           type="text"
           id="codigoAluno"
-          placeholder="Ex: GTJ-00123"
+          placeholder="Ex: GTJ-123456"
           required
         >
       </div>
@@ -239,30 +239,20 @@
 </div>
 
 <script>
-  const KEY_ALUNOS       = 'gtjiu_alunos_cadastrados';
-  const KEY_ALUNO_LOGADO = 'gtjiu_aluno_logado';
+  const API_BASE_URL     = "https://gt-jiu-app.onrender.com";
+  const KEY_ALUNO_LOGADO = "gtjiu_aluno_logado";
 
   function voltarInicio() {
     window.location.href = '../index.html';
   }
 
-  // Se já tiver login salvo
+  // Se já tiver login salvo, mostra status
   (function initStatus() {
     const logadoStr = localStorage.getItem(KEY_ALUNO_LOGADO);
     if (logadoStr) {
       document.getElementById('statusAluno').textContent = 'Já logado';
     }
   })();
-
-  function carregarAlunos() {
-    const listaStr = localStorage.getItem(KEY_ALUNOS);
-    if (!listaStr) return [];
-    try {
-      return JSON.parse(listaStr) || [];
-    } catch {
-      return [];
-    }
-  }
 
   function salvarAlunoLogado(aluno) {
     localStorage.setItem(KEY_ALUNO_LOGADO, JSON.stringify(aluno));
@@ -271,12 +261,14 @@
   async function handleLoginAluno(event) {
     event.preventDefault();
 
-    const codigo = document.getElementById('codigoAluno').value.trim();
+    const codigoInput = document.getElementById('codigoAluno');
     const aceitouLgpd = document.getElementById('lgpdAluno').checked;
-    const statusSpan = document.getElementById('statusAluno');
+    const statusSpan  = document.getElementById('statusAluno');
+
+    const codigo = codigoInput.value.trim();
 
     if (!aceitouLgpd) {
-      alert('Para continuar, é necessário aceitar a Política de Privacidade / LGPD.');
+      alert('Para continuar, é necessário aceitar a Política de Privacidade e LGPD.');
       return;
     }
 
@@ -287,20 +279,36 @@
 
     statusSpan.textContent = 'Verificando...';
 
-    const alunos = carregarAlunos();
-    const aluno = alunos.find((a) => a.codigo === codigo);
+    try {
+      const resposta = await fetch(`${API_BASE_URL}/alunos/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ codigo })
+      });
 
-    if (!aluno) {
-      alert('Código não encontrado. Verifique com a sua academia.');
+      if (!resposta.ok) {
+        if (resposta.status === 404) {
+          alert('Código não encontrado. Verifique com a sua academia.');
+          statusSpan.textContent = 'Erro no login';
+        } else {
+          alert('Erro ao fazer login. Tente novamente.');
+          statusSpan.textContent = 'Erro no login';
+        }
+        return;
+      }
+
+      const dadosAluno = await resposta.json();
+
+      salvarAlunoLogado(dadosAluno);
+      statusSpan.textContent = 'Login realizado';
+
+      // Ajuste o nome do painel do aluno se for diferente
+      window.location.href = './dashboard.html';
+    } catch (erro) {
+      console.error(erro);
+      alert('Erro de conexão com o servidor.');
       statusSpan.textContent = 'Erro no login';
-      return;
     }
-
-    salvarAlunoLogado(aluno);
-    statusSpan.textContent = 'Login realizado';
-
-    // Ajuste o caminho do dashboard do aluno se o seu arquivo tiver outro nome:
-    window.location.href = './dashboard_aluno.html';
   }
 </script>
 
