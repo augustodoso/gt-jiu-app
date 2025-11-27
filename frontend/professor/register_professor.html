@@ -179,33 +179,19 @@
 </div>
 
 <script>
-  const KEY_PROFESSORES = 'gtjiu_professores_cadastrados';
+  const API_BASE_URL = "https://gt-jiu-app.onrender.com";
 
   function voltarLogin() {
-    window.location.href = './login.html';
-  }
-
-  function carregarProfessores() {
-    const listaStr = localStorage.getItem(KEY_PROFESSORES);
-    if (!listaStr) return [];
-    try {
-      return JSON.parse(listaStr) || [];
-    } catch {
-      return [];
-    }
-  }
-
-  function salvarProfessores(lista) {
-    localStorage.setItem(KEY_PROFESSORES, JSON.stringify(lista));
+    window.location.href = "./login.html";
   }
 
   async function handleRegistro(event) {
     event.preventDefault();
 
-    const nome  = document.getElementById('nome').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const senha = document.getElementById('senha').value.trim();
-    const aceitou = document.getElementById('lgpdRegistro').checked;
+    const nome  = document.getElementById("nome").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const senha = document.getElementById("senha").value.trim();
+    const aceitou = document.getElementById("lgpdRegistro").checked;
 
     if (!aceitou) {
       alert("Você precisa aceitar a Política de Privacidade / LGPD.");
@@ -217,26 +203,40 @@
       return;
     }
 
-    const lista = carregarProfessores();
+    try {
+      // Chama o endpoint /register do seu backend FastAPI
+      const resp = await fetch(`${API_BASE_URL}/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ nome, email, senha }),
+      });
 
-    const jaExiste = lista.some(p => p.email === email);
-    if (jaExiste) {
-      alert("Já existe um professor cadastrado com esse e-mail.");
-      return;
+      const data = await resp.json().catch(() => ({}));
+
+      if (!resp.ok) {
+        alert(data.detail || "Erro ao registrar. Tente novamente.");
+        return;
+      }
+
+      // Guarda token e nome já no cadastro
+      if (data.token) {
+        localStorage.setItem("gtjiu_token", data.token);
+      }
+      if (data.nome || nome) {
+        localStorage.setItem("gtjiu_professor_nome", data.nome || nome);
+      }
+      localStorage.setItem("gtjiu_professor_email", email);
+
+      alert("Conta criada com sucesso! Você já está logado.");
+      // Vai direto para o painel do professor
+      window.location.href = "./dashboard.html";
+
+    } catch (err) {
+      console.error(err);
+      alert("Não foi possível conectar ao servidor. Verifique sua conexão e tente novamente.");
     }
-
-    const novoProfessor = {
-      id: Date.now(),
-      nome,
-      email,
-      senha
-    };
-
-    lista.push(novoProfessor);
-    salvarProfessores(lista);
-
-    alert("Conta criada com sucesso! Agora faça login.");
-    window.location.href = "./login.html";
   }
 </script>
 

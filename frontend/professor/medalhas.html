@@ -183,28 +183,35 @@
 </div>
 
 <script>
-  // --------- VALIDAR LOGIN DO PROFESSOR ----------
-  const profStr = localStorage.getItem('gtjiu_professor_logado');
-  if (!profStr) {
-    alert('Você precisa estar logado como professor.');
-    window.location.href = 'login.html';
+  // --------- LOGIN NOVO: TOKEN / NOME / EMAIL ----------
+  const TOKEN_KEY = "gtjiu_professor_token";
+  const NOME_KEY  = "gtjiu_professor_nome";
+  const EMAIL_KEY = "gtjiu_professor_email";
+
+  const token          = localStorage.getItem(TOKEN_KEY);
+  const professorNome  = localStorage.getItem(NOME_KEY)  || "Professor";
+  const professorEmail = localStorage.getItem(EMAIL_KEY) || "";
+
+  if (!token) {
+    alert("Você precisa estar logado como professor.");
+    window.location.href = "login.html";
   }
-  const prof = JSON.parse(profStr);
-  document.getElementById('infoProf').textContent =
-    `Você está visualizando as medalhas dos alunos vinculados ao seu e-mail: ${prof.email}`;
+
+  document.getElementById("infoProf").textContent =
+    `Você está visualizando as medalhas dos alunos vinculados ao seu e-mail: ${professorEmail || "não informado"}`;
 
   // --------- CARREGAR DADOS DO LOCALSTORAGE ----------
   function getTodasMedalhas() {
-    return JSON.parse(localStorage.getItem('gtjiu_medalhas') || '[]');
+    return JSON.parse(localStorage.getItem("gtjiu_medalhas") || "[]");
   }
 
   function setTodasMedalhas(lista) {
-    localStorage.setItem('gtjiu_medalhas', JSON.stringify(lista));
+    localStorage.setItem("gtjiu_medalhas", JSON.stringify(lista));
   }
 
   function getAlunosDoProfessor() {
-    const todos = JSON.parse(localStorage.getItem('gtjiu_alunos') || '[]');
-    return todos.filter(a => a.professorEmail === prof.email);
+    const todos = JSON.parse(localStorage.getItem("gtjiu_alunos") || "[]");
+    return todos.filter(a => a.professorEmail === professorEmail);
   }
 
   const alunosDoProf = getAlunosDoProfessor();
@@ -219,28 +226,28 @@
     const todas = getTodasMedalhas();
     return todas
       .map((m, idx) => ({ ...m, _idx: idx }))
-      .filter(m => m.professorEmail === prof.email);
+      .filter(m => m.professorEmail === professorEmail);
   }
 
   // --------- RESUMO GERAL ----------
   function atualizarResumo() {
     const medalhas = getMedalhasDoProfessor();
 
-    const aprovadas = medalhas.filter(m => m.status === 'aprovada');
-    const pendentes = medalhas.filter(m => m.status === 'pendente');
-    const rejeitadas = medalhas.filter(m => m.status === 'rejeitada');
+    const aprovadas = medalhas.filter(m => m.status === "aprovada");
+    const pendentes = medalhas.filter(m => m.status === "pendente");
+    const rejeitadas = medalhas.filter(m => m.status === "rejeitada");
 
-    document.getElementById('qtdAprovadas').textContent = aprovadas.length;
-    document.getElementById('qtdPendentes').textContent = pendentes.length;
-    document.getElementById('qtdRejeitadas').textContent = rejeitadas.length;
+    document.getElementById("qtdAprovadas").textContent = aprovadas.length;
+    document.getElementById("qtdPendentes").textContent = pendentes.length;
+    document.getElementById("qtdRejeitadas").textContent = rejeitadas.length;
 
-    const ouro = aprovadas.filter(m => m.tipo === 'ouro').length;
-    const prata = aprovadas.filter(m => m.tipo === 'prata').length;
-    const bronze = aprovadas.filter(m => m.tipo === 'bronze').length;
+    const ouro   = aprovadas.filter(m => m.tipo === "ouro").length;
+    const prata  = aprovadas.filter(m => m.tipo === "prata").length;
+    const bronze = aprovadas.filter(m => m.tipo === "bronze").length;
 
-    document.getElementById('qtdOuro').textContent = ouro;
-    document.getElementById('qtdPrata').textContent = prata;
-    document.getElementById('qtdBronze').textContent = bronze;
+    document.getElementById("qtdOuro").textContent   = ouro;
+    document.getElementById("qtdPrata").textContent  = prata;
+    document.getElementById("qtdBronze").textContent = bronze;
 
     // Ranking interno / aluno destaque
     const rankingMap = {};
@@ -249,9 +256,9 @@
       if (!rankingMap[key]) {
         rankingMap[key] = { ouro: 0, prata: 0, bronze: 0, total: 0 };
       }
-      if (m.tipo === 'ouro') rankingMap[key].ouro++;
-      if (m.tipo === 'prata') rankingMap[key].prata++;
-      if (m.tipo === 'bronze') rankingMap[key].bronze++;
+      if (m.tipo === "ouro")   rankingMap[key].ouro++;
+      if (m.tipo === "prata")  rankingMap[key].prata++;
+      if (m.tipo === "bronze") rankingMap[key].bronze++;
       rankingMap[key].total++;
     });
 
@@ -266,17 +273,17 @@
       }
     });
 
-    const destaqueElem = document.getElementById('alunoDestaque');
+    const destaqueElem = document.getElementById("alunoDestaque");
     if (!melhorAluno) {
-      destaqueElem.textContent = 'Ainda não há medalhas aprovadas.';
+      destaqueElem.textContent = "Ainda não há medalhas aprovadas.";
     } else {
       destaqueElem.textContent =
         `${melhorAluno} é o aluno destaque, com ${melhorDados.total} medalha(s) aprovada(s).`;
     }
 
     // Atualiza tabela de ranking
-    const tbodyRanking = document.querySelector('#tabelaRanking tbody');
-    tbodyRanking.innerHTML = '';
+    const tbodyRanking = document.querySelector("#tabelaRanking tbody");
+    tbodyRanking.innerHTML = "";
 
     const entradas = Object.keys(rankingMap)
       .map(id => ({
@@ -287,12 +294,12 @@
       .sort((a, b) => b.total - a.total);
 
     if (entradas.length === 0) {
-      const tr = document.createElement('tr');
+      const tr = document.createElement("tr");
       tr.innerHTML = '<td colspan="5">Ainda não há medalhas aprovadas.</td>';
       tbodyRanking.appendChild(tr);
     } else {
       entradas.forEach(e => {
-        const tr = document.createElement('tr');
+        const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${e.nome}</td>
           <td>${e.ouro}</td>
@@ -306,52 +313,52 @@
   }
 
   // --------- RENDERIZAR TABELA DE MEDALHAS ----------
-  let filtroStatus = 'todos';
-  let filtroTipo = 'todos';
+  let filtroStatus = "todos";
+  let filtroTipo   = "todos";
 
-  const selectStatus = document.getElementById('filtroStatus');
-  const selectTipo = document.getElementById('filtroTipo');
+  const selectStatus = document.getElementById("filtroStatus");
+  const selectTipo   = document.getElementById("filtroTipo");
 
-  selectStatus.addEventListener('change', () => {
+  selectStatus.addEventListener("change", () => {
     filtroStatus = selectStatus.value;
     renderTabelaMedalhas();
   });
 
-  selectTipo.addEventListener('change', () => {
+  selectTipo.addEventListener("change", () => {
     filtroTipo = selectTipo.value;
     renderTabelaMedalhas();
   });
 
   function renderTabelaMedalhas() {
-    const tbody = document.querySelector('#tabelaMedalhas tbody');
-    tbody.innerHTML = '';
+    const tbody = document.querySelector("#tabelaMedalhas tbody");
+    tbody.innerHTML = "";
 
     let medalhas = getMedalhasDoProfessor();
 
-    if (filtroStatus !== 'todos') {
+    if (filtroStatus !== "todos") {
       medalhas = medalhas.filter(m => m.status === filtroStatus);
     }
-    if (filtroTipo !== 'todos') {
+    if (filtroTipo !== "todos") {
       medalhas = medalhas.filter(m => m.tipo === filtroTipo);
     }
 
     if (medalhas.length === 0) {
-      const tr = document.createElement('tr');
+      const tr = document.createElement("tr");
       tr.innerHTML = '<td colspan="8">Nenhuma medalha encontrada com os filtros atuais.</td>';
       tbody.appendChild(tr);
       return;
     }
 
     medalhas.forEach(m => {
-      const tr = document.createElement('tr');
+      const tr = document.createElement("tr");
 
       const dataFormatada = m.dataEvento
-        ? new Date(m.dataEvento).toLocaleDateString('pt-BR')
-        : '-';
+        ? new Date(m.dataEvento).toLocaleDateString("pt-BR")
+        : "-";
 
-      let classeStatus = 'status-pendente';
-      if (m.status === 'aprovada') classeStatus = 'status-aprovada';
-      if (m.status === 'rejeitada') classeStatus = 'status-rejeitada';
+      let classeStatus = "status-pendente";
+      if (m.status === "aprovada")  classeStatus = "status-aprovada";
+      if (m.status === "rejeitada") classeStatus = "status-rejeitada";
 
       tr.innerHTML = `
         <td>${nomeAluno(m.idAluno)}</td>
@@ -363,7 +370,9 @@
         <td class="status ${classeStatus}">${m.status}</td>
         <td>
           <button class="btn btn-mini" onclick="aprovarMedalha(${m._idx})">Aprovar</button>
-          <button class="btn btn-mini" style="background:#555;" onclick="rejeitarMedalha(${m._idx})">Rejeitar</button>
+          <button class="btn btn-mini" style="background:#555;" onclick="rejeitarMedalha(${m._idx})">
+            Rejeitar
+          </button>
         </td>
       `;
       tbody.appendChild(tr);
@@ -375,7 +384,7 @@
     const todas = getTodasMedalhas();
     if (!todas[idxGlobal]) return;
 
-    todas[idxGlobal].status = 'aprovada';
+    todas[idxGlobal].status = "aprovada";
     setTodasMedalhas(todas);
     atualizarResumo();
     renderTabelaMedalhas();
@@ -385,17 +394,17 @@
     const todas = getTodasMedalhas();
     if (!todas[idxGlobal]) return;
 
-    todas[idxGlobal].status = 'rejeitada';
+    todas[idxGlobal].status = "rejeitada";
     setTodasMedalhas(todas);
     atualizarResumo();
     renderTabelaMedalhas();
   }
 
-  window.aprovarMedalha = aprovarMedalha;
+  window.aprovarMedalha  = aprovarMedalha;
   window.rejeitarMedalha = rejeitarMedalha;
 
   function voltarDashboard() {
-    window.location.href = 'dashboard.html';
+    window.location.href = "dashboard.html";
   }
 
   // --------- INICIALIZA ----------

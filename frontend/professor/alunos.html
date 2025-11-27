@@ -108,31 +108,37 @@
 </div>
 
 <script>
-  // --------- VALIDAR LOGIN DO PROFESSOR ----------
-  const profLogadoStr = localStorage.getItem('gtjiu_professor_logado');
+  // --------- CHAVES DO LOGIN NOVO ----------
+  const TOKEN_KEY  = "gtjiu_professor_token";
+  const NOME_KEY   = "gtjiu_professor_nome";
+  const EMAIL_KEY  = "gtjiu_professor_email";
+
   const boasVindas = document.getElementById('boasVindas');
 
-  if (!profLogadoStr) {
+  // Guarda de rota – só entra aqui se tiver token
+  const token = localStorage.getItem(TOKEN_KEY);
+  if (!token) {
     alert('Você precisa estar logado como professor.');
     window.location.href = 'login.html';
   }
 
-  const profLogado = JSON.parse(profLogadoStr);
-  boasVindas.textContent = `Gerenciando alunos do professor: ${profLogado.nome}`;
+  // Dados do professor vindos do login
+  const professorNome  = localStorage.getItem(NOME_KEY)  || 'Professor';
+  const professorEmail = localStorage.getItem(EMAIL_KEY) || '';
+
+  boasVindas.textContent = `Gerenciando alunos do professor: ${professorNome}`;
 
   // --------- HELPERS LOCALSTORAGE ----------
   function pegarAlunos() {
     const lista = JSON.parse(localStorage.getItem('gtjiu_alunos') || '[]');
-    // filtra só alunos desse professor
-    return lista.filter(al => al.professorEmail === profLogado.email);
+    // filtra só alunos desse professor (pelo e-mail salvo no login)
+    return lista.filter(al => al.professorEmail === professorEmail);
   }
 
   function salvarAlunoListaCompleta(novaListaDoProfessor) {
-    // pega lista global
     const listaGlobal = JSON.parse(localStorage.getItem('gtjiu_alunos') || '[]');
     // remove alunos deste professor
-    const filtrada = listaGlobal.filter(al => al.professorEmail !== profLogado.email);
-    // junta com nova lista desse professor
+    const filtrada = listaGlobal.filter(al => al.professorEmail !== professorEmail);
     const final = filtrada.concat(novaListaDoProfessor);
     localStorage.setItem('gtjiu_alunos', JSON.stringify(final));
   }
@@ -156,7 +162,6 @@
     const hoje = new Date();
     const dia = hoje.getDate();
 
-    // simples: em dia, alerta (3 dias antes/depois), atrasado
     if (dia > diaVencimento + 3) {
       return { texto: 'Atrasado', classe: 'status-atrasado' };
     } else if (dia >= diaVencimento - 3 && dia <= diaVencimento + 3) {
@@ -183,7 +188,11 @@
         <td>R$ ${Number(aluno.valor).toFixed(2)}</td>
         <td>Dia ${aluno.diaVencimento}</td>
         <td class="${status.classe}">${status.texto}</td>
-        <td><button class="btn btn-mini" style="background:#555;" onclick="removerAluno(${idx})">Remover</button></td>
+        <td>
+          <button class="btn btn-mini" style="background:#555;" onclick="removerAluno(${idx})">
+            Remover
+          </button>
+        </td>
       `;
       tbody.appendChild(tr);
     });
@@ -197,7 +206,6 @@
     salvarAlunoListaCompleta(alunos);
     renderTabela();
   }
-
   window.removerAluno = removerAluno; // expõe para o onclick
 
   // --------- CADASTRO DE ALUNO ----------
@@ -220,7 +228,7 @@
     const codigo = gerarCodigoAluno(alunos);
 
     alunos.push({
-      professorEmail: profLogado.email,
+      professorEmail: professorEmail,
       idAluno: codigo,
       nome,
       plano,

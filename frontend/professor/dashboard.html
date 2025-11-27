@@ -6,467 +6,587 @@
   <link rel="stylesheet" href="../css/style.css">
   <style>
     body {
+      margin: 0;
+      min-height: 100vh;
       background: #000;
       color: #f5f5f5;
-    }
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 40px 20px 80px;
-    }
-    .topo {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       display: flex;
       justify-content: center;
-      position: relative;
-      margin-bottom: 30px;
-      text-align: center;
+      align-items: flex-start;
     }
-    .topo h1 {
+
+    .shell {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px 60px;
+    }
+
+    /* topo */
+
+    .topo {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .topo-esquerda {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .topo-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .topo-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .topo-titulos h1 {
       margin: 0;
-      font-size: 36px;
-      line-height: 1.2;
+      font-size: 28px;
     }
+
+    .topo-titulos p {
+      margin: 2px 0 0;
+      font-size: 13px;
+      opacity: 0.85;
+    }
+
+    .topo-titulos span {
+      font-weight: 600;
+    }
+
     .btn-sair {
-      position: absolute;
-      right: 0;
-      top: 0;
-    }
-    .btn {
       background: #ff4444;
       border: none;
       color: #fff;
-      padding: 10px 20px;
-      border-radius: 8px;
+      padding: 10px 22px;
+      border-radius: 999px;
       cursor: pointer;
+      font-size: 14px;
       font-weight: 600;
     }
-    .btn:hover {
+
+    .btn-sair:hover {
       opacity: 0.9;
     }
 
-    .nome-prof {
-      text-align: center;
-      margin-bottom: 30px;
-      font-size: 15px;
-      opacity: 0.9;
-    }
+    /* cards principais */
 
-    .cards-topo {
+    .grid-cards {
       display: grid;
-      /* agora só 3 cards: Alunos, Medalhas, Academias */
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-      margin-bottom: 30px;
+      gap: 18px;
+      margin-bottom: 26px;
     }
-    .card-topo {
-      background: #181818;
-      border-radius: 12px;
-      padding: 18px 16px;
-      text-align: center;
-      cursor: pointer;
-      transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+
+    .card {
+      background: #101010;
+      border-radius: 18px;
+      padding: 18px 20px;
+      box-shadow: 0 0 26px rgba(0,0,0,0.65);
     }
-    .card-topo h2 {
-      margin: 0 0 8px;
-      font-size: 20px;
+
+    .card h2 {
+      margin: 0 0 6px;
+      font-size: 18px;
     }
-    .card-topo p {
+
+    .card p {
       margin: 0;
       font-size: 13px;
       opacity: 0.9;
     }
-    .card-topo:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
-      background: #202020;
+
+    .card-botao {
+      margin-top: 16px;
     }
 
-    .grade-baixo {
-      display: grid;
-      grid-template-columns: 1.1fr 1fr;
-      gap: 20px;
-      align-items: stretch;
-    }
-    .box {
-      background: #181818;
-      border-radius: 14px;
-      padding: 18px 18px 22px;
-    }
-    .box h2 {
-      margin: 0 0 10px;
-      font-size: 20px;
-    }
-    .box p {
+    .card-botao button {
+      background: #ff4444;
+      border: none;
+      color: #fff;
+      padding: 9px 18px;
+      border-radius: 999px;
+      cursor: pointer;
       font-size: 13px;
+      font-weight: 600;
+    }
+
+    .card-botao button:hover {
       opacity: 0.9;
     }
 
-    /* Avisos */
-    .campo-titulo,
-    .campo-texto {
+    /* linha 2: avisos + cronômetro */
+
+    .linha-secundaria {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 18px;
+      margin-bottom: 30px;
+    }
+
+    .card-avisos textarea {
+      resize: vertical;
+      min-height: 90px;
+      max-height: 200px;
+      width: 100%;
+      border-radius: 10px;
+      border: none;
+      padding: 10px 12px;
+      font-size: 14px;
+      background: #181818;
+      color: #f5f5f5;
+      box-sizing: border-box;
+    }
+
+    .card-avisos input {
       width: 100%;
       border-radius: 8px;
       border: none;
-      padding: 10px 12px;
-      margin-top: 10px;
-      font-size: 14px;
-      background: #101010;
-      color: #fff;
+      padding: 8px 10px;
+      font-size: 13px;
+      background: #181818;
+      color: #f5f5f5;
+      margin-bottom: 8px;
+      box-sizing: border-box;
     }
-    .campo-texto {
-      resize: vertical;
-      min-height: 80px;
-      max-height: 150px;
+
+    .card-avisos small {
+      font-size: 11px;
+      opacity: 0.75;
     }
+
     .lista-avisos {
       margin-top: 14px;
       font-size: 13px;
-      border-top: 1px solid #333;
+      border-top: 1px solid #222;
       padding-top: 10px;
-      max-height: 160px;
-      overflow-y: auto;
     }
+
+    .lista-avisos-vazia {
+      opacity: 0.7;
+    }
+
     .aviso-item {
       margin-bottom: 6px;
     }
-    .aviso-item strong {
-      color: #ff6b6b;
+
+    /* cronômetro */
+
+    .cronometro-display {
+      font-size: 40px;
+      font-weight: 700;
+      text-align: center;
+      margin: 4px 0 10px;
     }
 
-    /* Cronômetro */
-    .timer-display {
-      margin-top: 15px;
-      margin-bottom: 6px;
-      font-size: 48px;
-      text-align: center;
-      font-weight: 700;
-    }
-    .timer-status {
+    .cronometro-status {
       text-align: center;
       font-size: 12px;
       opacity: 0.85;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
-    .timer-controles {
+
+    .cronometro-botoes {
       display: flex;
       justify-content: center;
       gap: 10px;
       margin-bottom: 12px;
     }
-    .timer-controles button {
-      padding: 8px 16px;
+
+    .cronometro-botoes button {
       border-radius: 999px;
       border: none;
+      padding: 8px 16px;
       cursor: pointer;
       font-size: 13px;
       font-weight: 600;
     }
-    .btn-start {
-      background: #22c55e;
+
+    .btn-iniciar {
+      background: #00c853;
       color: #000;
     }
-    .btn-pause {
-      background: #facc15;
+    .btn-pausar {
+      background: #ffd600;
       color: #000;
     }
-    .btn-reset {
-      background: #ef4444;
+    .btn-zerar {
+      background: #ff5252;
       color: #fff;
     }
-    .timer-config {
+
+    .cronometro-presets {
       display: flex;
       justify-content: center;
-      gap: 6px;
-      font-size: 13px;
-      margin-bottom: 8px;
-    }
-    .timer-config input {
-      width: 48px;
-      padding: 4px 6px;
-      border-radius: 6px;
-      border: none;
-      background: #101010;
-      color: #fff;
-      text-align: center;
-    }
-    .timer-presets {
-      display: flex;
-      justify-content: center;
-      gap: 6px;
+      gap: 8px;
       font-size: 11px;
       margin-top: 4px;
     }
-    .timer-presets button {
-      border: none;
+
+    .cronometro-presets button {
       border-radius: 999px;
-      padding: 3px 10px;
-      background: #262626;
+      border: 1px solid #333;
+      background: #131313;
       color: #fff;
+      padding: 4px 10px;
       cursor: pointer;
+      font-size: 11px;
     }
-    .timer-presets button:hover {
-      background: #333;
+
+    .cronometro-presets button:hover {
+      background: #1f1f1f;
+    }
+
+    /* rodapé Aurevix */
+
+    .rodape {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+    }
+
+    .rodape-logo {
+      margin-bottom: 6px;
+    }
+
+    .rodape-logo img {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+    }
+
+    .rodape span {
+      display: block;
     }
 
     @media (max-width: 900px) {
-      .cards-topo {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-      .grade-baixo {
+      .grid-cards {
         grid-template-columns: 1fr;
       }
-    }
 
-    @media (max-width: 640px) {
-      .cards-topo {
+      .linha-secundaria {
         grid-template-columns: 1fr;
       }
-      .topo h1 {
-        font-size: 28px;
+
+      .topo {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
       }
     }
   </style>
 </head>
 <body>
 
-<div class="container">
-  <div class="topo">
-    <h1>Painel do Professor</h1>
-    <button class="btn btn-sair" onclick="sairProfessor()">Sair</button>
-  </div>
+<div class="shell">
+  <!-- topo -->
+  <header class="topo">
+    <div class="topo-esquerda">
+      <div class="topo-logo">
+        <img src="../img/logo-gtjiu-aurevix.png" alt="GT Jiu - Aurevix">
+      </div>
+      <div class="topo-titulos">
+        <h1 id="nomeProfessorHeader">GT Jiu</h1>
+        <p>Painel do Professor • <span>Acesso restrito</span></p>
+      </div>
+    </div>
 
-  <div class="nome-prof" id="infoProfessor"></div>
+    <button class="btn-sair" onclick="sairProfessor()">Sair</button>
+  </header>
 
-  <!-- CARDS SUPERIORES -->
-  <div class="cards-topo">
-    <div class="card-topo" onclick="irAlunos()">
+  <!-- cards principais -->
+  <section class="grid-cards">
+    <article class="card">
       <h2>Alunos</h2>
       <p>Cadastro de alunos, planos e mensalidades.</p>
-    </div>
+      <div class="card-botao">
+        <button onclick="window.location.href='./alunos.html'">Gerenciar alunos</button>
+      </div>
+    </article>
 
-    <div class="card-topo" onclick="irMedalhas()">
+    <article class="card">
       <h2>Medalhas</h2>
       <p>Valide medalhas enviadas e acompanhe o desempenho.</p>
-    </div>
+      <div class="card-botao">
+        <button onclick="window.location.href='./medalhas.html'">Ver medalhas</button>
+      </div>
+    </article>
 
-    <!-- REMOVIDO: RANKING -->
-    <div class="card-topo" onclick="irAcademias()">
+    <article class="card">
       <h2>Academias</h2>
       <p>Cadastre sua academia e atualize dados públicos.</p>
-    </div>
-  </div>
-
-  <div class="grade-baixo">
-    <!-- AVISOS -->
-    <div class="box">
-      <h2>Avisos para os alunos</h2>
-      <p>Os avisos aparecem no painel dos alunos vinculados ao seu e-mail.</p>
-
-      <input id="tituloAviso" class="campo-titulo" placeholder="Título do aviso (opcional)">
-      <textarea id="textoAviso" class="campo-texto" placeholder="Digite seu aviso..."></textarea>
-
-      <div style="margin-top: 10px;">
-        <button class="btn" onclick="publicarAviso()">Publicar aviso</button>
+      <div class="card-botao">
+        <button onclick="window.location.href='./academias.html'">Gerenciar academias</button>
       </div>
+    </article>
+  </section>
+
+  <!-- linha 2: avisos + cronômetro -->
+  <section class="linha-secundaria">
+    <!-- avisos -->
+    <article class="card card-avisos">
+      <h2>Avisos para os alunos</h2>
+      <p style="font-size:13px; opacity:0.9;">
+        Os avisos aparecem no painel dos alunos vinculados ao seu e-mail (futuro backend).
+      </p>
+
+      <input id="tituloAviso" type="text" placeholder="Título do aviso (opcional)">
+      <textarea id="textoAviso" placeholder="Digite seu aviso..."></textarea>
+
+      <div class="card-botao">
+        <button onclick="publicarAvisoLocal()">Publicar aviso (local)</button>
+      </div>
+      <small>Por enquanto, os avisos ficam salvos só no seu navegador (MVP local).</small>
 
       <div class="lista-avisos" id="listaAvisos">
-        Nenhum aviso publicado ainda.
+        <div class="lista-avisos-vazia">Nenhum aviso publicado ainda.</div>
       </div>
-    </div>
+    </article>
 
-    <!-- CRONÔMETRO -->
-    <div class="box">
+    <!-- cronômetro -->
+    <article class="card">
       <h2>Cronômetro de Luta</h2>
-      <p>Estilo placar de campeonato. Ideal para rounds de rola e treinos específicos.</p>
+      <p style="font-size:13px; opacity:0.9;">
+        Estilo placar de campeonato. Ideal para rounds de rola e treinos específicos.
+      </p>
 
-      <div class="timer-display" id="displayTempo">05:00</div>
-      <div class="timer-status" id="statusTimer">Pronto para iniciar</div>
+      <div class="cronometro-display" id="cronometroDisplay">05:00</div>
+      <div class="cronometro-status" id="cronometroStatus">Pronto para iniciar</div>
 
-      <div class="timer-controles">
-        <button class="btn-start" onclick="iniciarTimer()">Iniciar</button>
-        <button class="btn-pause" onclick="pausarTimer()">Pausar</button>
-        <button class="btn-reset" onclick="zerarTimer()">Zerar</button>
+      <div class="cronometro-botoes">
+        <button class="btn-iniciar" onclick="iniciarCronometro()">Iniciar</button>
+        <button class="btn-pausar" onclick="pausarCronometro()">Pausar</button>
+        <button class="btn-zerar" onclick="zerarCronometro()">Zerar</button>
       </div>
 
-      <div class="timer-config">
-        <span>Min</span>
-        <input type="number" id="minInput" value="5" min="0" max="20">
-        <span>Seg</span>
-        <input type="number" id="segInput" value="0" min="0" max="59">
+      <div style="text-align:center; font-size:12px; margin-bottom:8px;">
+        Presets rápidos
       </div>
+      <div class="cronometro-presets">
+        <button onclick="setPreset(5)">5:00</button>
+        <button onclick="setPreset(6)">6:00</button>
+        <button onclick="setPreset(8)">8:00</button>
+        <button onclick="setPreset(10)">10:00</button>
+      </div>
+    </article>
+  </section>
 
-      <div class="timer-presets">
-        <button onclick="setPreset(5,0)">5:00</button>
-        <button onclick="setPreset(6,0)">6:00</button>
-        <button onclick="setPreset(8,0)">8:00</button>
-        <button onclick="setPreset(10,0)">10:00</button>
-      </div>
+  <!-- rodapé Aurevix -->
+  <footer class="rodape">
+    <div class="rodape-logo">
+      <img src="../img/logo-aurevix-avx.png" alt="Aurevix Tech">
     </div>
-  </div>
+    <span>Desenvolvido por Aurevix Tech</span>
+    <span>Projeto educacional — Aurevix Creation</span>
+  </footer>
 </div>
 
+<!-- scripts -->
 <script>
-  // -------- PROTEGE E CARREGA DADOS DO PROFESSOR --------
-  const profStr = localStorage.getItem('gtjiu_professor_logado');
-  if (!profStr) {
-    alert('Você precisa fazer login como professor.');
-    window.location.href = 'login.html';
-  }
-  const prof = JSON.parse(profStr);
-  document.getElementById('infoProfessor').textContent =
-    `${prof.nome || ''} (${prof.email || ''})`;
 
-  // -------- NAVEGAÇÃO DOS CARDS --------
-  function irAlunos() {
-    window.location.href = './alunos.html';
+  const API_BASE_URL = "https://gt-jiu-app.onrender.com";
+
+  // 🔐 2) Chaves de armazenamento
+  const TOKEN_KEY  = "gtjiu_professor_token";
+  const NOME_KEY   = "gtjiu_professor_nome";
+  const EMAIL_KEY  = "gtjiu_professor_email";
+
+  function obterToken() {
+    return localStorage.getItem(TOKEN_KEY);
   }
-  function irMedalhas() {
-    window.location.href = './medalhas.html';
-  }
-  // Ranking removido
-  function irAcademias() {
-    // agora vai para a tela de cadastro da academia do professor
-    window.location.href = './cadastro_academia.html';
-  }
+
   function sairProfessor() {
-    localStorage.removeItem('gtjiu_professor_logado');
-    window.location.href = 'login.html';
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(NOME_KEY);
+    localStorage.removeItem(EMAIL_KEY);
+    window.location.href = "./login.html";
   }
 
-  // -------- AVISOS (LOCALSTORAGE) --------
-  const CHAVE_AVISOS = 'gtjiu_avisos';
+  // 🚧 Guarda de rota – protege o painel
+  (function protegerPainel() {
+    const token = obterToken();
+    console.log("Token encontrado no dashboard:", token);
+
+    if (!token) {
+      alert("Sua sessão expirou. Faça login novamente.");
+      window.location.href = "./login.html";
+      return;
+    }
+
+    const nome = localStorage.getItem(NOME_KEY) || "Professor";
+    const elNome = document.getElementById("nomeProfessorHeader");
+    if (elNome) {
+      elNome.textContent = `GT Jiu — ${nome}`;
+    }
+  })();
+
+  // Exemplo de chamada autenticada (vamos usar depois em alunos/academias)
+  async function exemploChamadaProtegida() {
+    const token = obterToken();
+    if (!token) return;
+
+    const resp = await fetch(`${API_BASE_URL}/academias`, {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+
+    if (resp.status === 401 || resp.status === 403) {
+      alert("Sessão inválida. Faça login novamente.");
+      sairProfessor();
+      return;
+    }
+
+    const data = await resp.json();
+    console.log("Academias:", data);
+  }
+
+  // ---------- Avisos (MVP local, só no navegador) ----------
+
+  const AVISOS_KEY = "gtjiu_professor_avisos_local";
 
   function carregarAvisos() {
-    const avisos = JSON.parse(localStorage.getItem(CHAVE_AVISOS) || '[]')
-      .filter(a => a.professorEmail === prof.email)
-      .sort((a, b) => b.criadoEm - a.criadoEm);
+    const raw = localStorage.getItem(AVISOS_KEY);
+    if (!raw) return [];
+    try {
+      return JSON.parse(raw) || [];
+    } catch {
+      return [];
+    }
+  }
 
-    const lista = document.getElementById('listaAvisos');
-    if (avisos.length === 0) {
-      lista.textContent = 'Nenhum aviso publicado ainda.';
+  function salvarAvisos(lista) {
+    localStorage.setItem(AVISOS_KEY, JSON.stringify(lista));
+  }
+
+  function renderizarAvisos() {
+    const container = document.getElementById("listaAvisos");
+    const avisos = carregarAvisos();
+
+    if (!avisos.length) {
+      container.innerHTML = '<div class="lista-avisos-vazia">Nenhum aviso publicado ainda.</div>';
       return;
     }
 
-    lista.innerHTML = '';
-    avisos.forEach(aviso => {
-      const div = document.createElement('div');
-      div.className = 'aviso-item';
-
-      const data = new Date(aviso.criadoEm);
-      const dataStr = !isNaN(data) ? data.toLocaleDateString('pt-BR') : '';
-
-      div.innerHTML = `
-        <strong>${aviso.titulo || 'Aviso'}</strong>
-        ${dataStr ? ' - ' + dataStr : ''}<br>
-        ${aviso.texto}
-      `;
-      lista.appendChild(div);
-    });
+    container.innerHTML = "";
+    avisos
+      .slice()
+      .reverse()
+      .forEach(aviso => {
+        const div = document.createElement("div");
+        div.className = "aviso-item";
+        const titulo = aviso.titulo ? `<strong>${aviso.titulo}</strong> - ` : "";
+        const data = new Date(aviso.data).toLocaleString("pt-BR");
+        div.innerHTML = `${titulo}${aviso.texto} <span style="opacity:0.6;font-size:11px;">(${data})</span>`;
+        container.appendChild(div);
+      });
   }
 
-  function publicarAviso() {
-    const titulo = document.getElementById('tituloAviso').value.trim();
-    const texto  = document.getElementById('textoAviso').value.trim();
+  function publicarAvisoLocal() {
+    const tituloInput = document.getElementById("tituloAviso");
+    const textoInput  = document.getElementById("textoAviso");
+
+    const titulo = tituloInput.value.trim();
+    const texto  = textoInput.value.trim();
 
     if (!texto) {
-      alert('Digite o texto do aviso.');
+      alert("Digite o texto do aviso.");
       return;
     }
 
-    const avisos = JSON.parse(localStorage.getItem(CHAVE_AVISOS) || '[]');
+    const avisos = carregarAvisos();
     avisos.push({
-      professorEmail: prof.email,
       titulo,
       texto,
-      criadoEm: Date.now()
+      data: new Date().toISOString()
     });
-    localStorage.setItem(CHAVE_AVISOS, JSON.stringify(avisos));
+    salvarAvisos(avisos);
 
-    document.getElementById('tituloAviso').value = '';
-    document.getElementById('textoAviso').value  = '';
-    carregarAvisos();
+    tituloInput.value = "";
+    textoInput.value = "";
+    renderizarAvisos();
   }
 
-  carregarAvisos();
+  renderizarAvisos();
 
-  // -------- CRONÔMETRO --------
-  let tempoRestante = 5 * 60; // em segundos
-  let timerId = null;
-  let rodando = false;
+  // ---------- Cronômetro de luta ----------
 
-  const displayTempo = document.getElementById('displayTempo');
-  const statusTimer  = document.getElementById('statusTimer');
-  const minInput     = document.getElementById('minInput');
-  const segInput     = document.getElementById('segInput');
+  let tempoRestanteSegundos = 5 * 60; // default 5 min
+  let intervaloCronometro = null;
+  let cronometroRodando = false;
 
-  function formatar(segundos) {
-    const m = String(Math.floor(segundos / 60)).padStart(2, '0');
-    const s = String(segundos % 60).padStart(2, '0');
-    return `${m}:${s}`;
+  const displayCron = document.getElementById("cronometroDisplay");
+  const statusCron  = document.getElementById("cronometroStatus");
+
+  function atualizarDisplayCronometro() {
+    const m = Math.floor(tempoRestanteSegundos / 60);
+    const s = tempoRestanteSegundos % 60;
+    const mm = String(m).padStart(2, "0");
+    const ss = String(s).padStart(2, "0");
+    displayCron.textContent = `${mm}:${ss}`;
   }
 
-  function atualizarDisplay() {
-    displayTempo.textContent = formatar(tempoRestante);
+  function iniciarCronometro() {
+    if (cronometroRodando) return;
+    if (tempoRestanteSegundos <= 0) tempoRestanteSegundos = 5 * 60;
+
+    cronometroRodando = true;
+    statusCron.textContent = "Cronômetro rodando...";
+    intervaloCronometro = setInterval(() => {
+      tempoRestanteSegundos -= 1;
+      if (tempoRestanteSegundos <= 0) {
+        tempoRestanteSegundos = 0;
+        atualizarDisplayCronometro();
+        clearInterval(intervaloCronometro);
+        cronometroRodando = false;
+        statusCron.textContent = "Tempo encerrado!";
+        return;
+      }
+      atualizarDisplayCronometro();
+    }, 1000);
   }
 
-  function aplicarInputs() {
-    let m = parseInt(minInput.value, 10);
-    let s = parseInt(segInput.value, 10);
-    if (isNaN(m) || m < 0) m = 0;
-    if (isNaN(s) || s < 0) s = 0;
-    if (s > 59) s = 59;
-    tempoRestante = m * 60 + s;
-    atualizarDisplay();
+  function pausarCronometro() {
+    if (!cronometroRodando) return;
+    clearInterval(intervaloCronometro);
+    cronometroRodando = false;
+    statusCron.textContent = "Cronômetro pausado.";
   }
 
-  minInput.addEventListener('change', aplicarInputs);
-  segInput.addEventListener('change', aplicarInputs);
-
-  function setPreset(m, s) {
-    minInput.value = m;
-    segInput.value = s;
-    aplicarInputs();
+  function zerarCronometro() {
+    clearInterval(intervaloCronometro);
+    cronometroRodando = false;
+    tempoRestanteSegundos = 5 * 60;
+    atualizarDisplayCronometro();
+    statusCron.textContent = "Pronto para iniciar";
   }
 
-  function tick() {
-    if (tempoRestante > 0) {
-      tempoRestante--;
-      atualizarDisplay();
-    } else {
-      clearInterval(timerId);
-      timerId = null;
-      rodando = false;
-      statusTimer.textContent = 'Tempo encerrado';
-      // aqui entra o som de gongo se você quiser no futuro
-    }
+  function setPreset(minutos) {
+    clearInterval(intervaloCronometro);
+    cronometroRodando = false;
+    tempoRestanteSegundos = minutos * 60;
+    atualizarDisplayCronometro();
+    statusCron.textContent = `Preset selecionado: ${minutos}:00`;
   }
 
-  function iniciarTimer() {
-    aplicarInputs();
-    if (rodando) return;
-    if (tempoRestante <= 0) return;
-    rodando = true;
-    statusTimer.textContent = 'Cronômetro rodando';
-    timerId = setInterval(tick, 1000);
-  }
-
-  function pausarTimer() {
-    if (!rodando) return;
-    rodando = false;
-    statusTimer.textContent = 'Cronômetro pausado';
-    clearInterval(timerId);
-    timerId = null;
-  }
-
-  function zerarTimer() {
-    rodando = false;
-    clearInterval(timerId);
-    timerId = null;
-    aplicarInputs();
-    statusTimer.textContent = 'Pronto para iniciar';
-  }
-
-  atualizarDisplay();
+  atualizarDisplayCronometro();
 </script>
 
 </body>

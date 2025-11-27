@@ -3,7 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <title>GT Jiu — Acesso</title>
+
+  <!-- CSS global que você já tinha -->
   <link rel="stylesheet" href="./css/style.css">
+
+  <!-- FAVICON AUREVIX -->
+  <link rel="icon" type="image/png" href="./img/logo-aurevix.png">
 
   <style>
     body {
@@ -72,18 +77,47 @@
       background: #555;
     }
 
-    footer {
-      margin-top: 30px;
-      font-size: 12px;
-      color: #777;
+    /* --- AUREVIX / LOGOS --- */
+
+    .logo-gtjiu {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 18px;
     }
 
+    .logo-gtjiu img {
+      width: 96px;
+      max-width: 40vw;
+      height: auto;
+    }
+
+    .assinatura-aurevix {
+      margin-top: 24px;
+      font-size: 12px;
+      color: #888;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      opacity: 0.9;
+    }
+
+    .assinatura-aurevix img {
+      width: 42px;
+      height: auto;
+    }
   </style>
 </head>
 
 <body>
 
   <div class="shell">
+
+    <!-- Logo GT Jiu (bode de kimono, por ex.) -->
+    <div class="logo-gtjiu">
+      <img src="./img/logo-gtjiu-aurevix.png" alt="GT Jiu - Aurevix">
+    </div>
+
     <h1>GT Jiu • Plataforma</h1>
     <p>Escolha como deseja acessar</p>
 
@@ -91,11 +125,12 @@
     <button class="btn btn-aluno" onclick="irAluno()">Sou Aluno</button>
     <button class="btn btn-map" onclick="irAcademias()">Mapa de Academias</button>
 
-    <footer>
-      Projeto educacional — Aurevix Creation
-    </footer>
+    <!-- Rodapé Aurevix novo -->
+    <div class="assinatura-aurevix">
+      <img src="./img/logo-aurevix-avx.png" alt="Aurevix Tech">
+      <span>Aurevix Creation</span>
+    </div>
   </div>
-
 
   <script>
     function irProfessor() {

@@ -44,3 +44,55 @@ h1 {
 .btn:hover {
   background: #ff5555;
 }
+
+/* ============================= */
+/* Branding Aurevix / GT Jiu     */
+/* ============================= */
+
+.logo-gtjiu {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+.logo-gtjiu img {
+  width: 96px;
+  max-width: 40vw;
+  height: auto;
+}
+
+.assinatura-aurevix {
+  margin-top: 24px;
+  font-size: 12px;
+  color: #888;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  opacity: 0.9;
+}
+
+.assinatura-aurevix img {
+  width: 42px;
+  height: auto;
+}
+
+/* Ajuste do rodapé Aurevix na Home */
+.rodape-aurevix {
+  margin-top: 25px;
+  text-align: center;
+  opacity: 0.85;
+}
+
+.rodape-aurevix img {
+  width: 52px;  /* reduz o tamanho do logo */
+  height: auto;
+  display: block;
+  margin: 0 auto 6px;
+}
+
+.rodape-aurevix span {
+  display: block;
+  font-size: 12px;
+  color: #aaa;
+}

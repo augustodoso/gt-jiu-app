@@ -3,7 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>Login do Professor - GT Jiu</title>
+
+  <!-- CSS global -->
   <link rel="stylesheet" href="../css/style.css">
+
+  <!-- FAVICON -->
+  <link rel="icon" type="image/png" href="../img/logo-aurevix.png">
+
   <style>
     body {
       margin: 0;
@@ -28,6 +34,17 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 30px;
+    }
+
+    .topo-identidade {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-topo {
+      width: 40px;
+      height: auto;
     }
 
     .topo-titulos h1 {
@@ -149,15 +166,35 @@
       font-size: 12px;
       opacity: 0.85;
     }
+
+    /* Rodapé Aurevix */
+    .assinatura-aurevix {
+      margin-top: 18px;
+      font-size: 12px;
+      color: #888;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      opacity: 0.9;
+    }
+
+    .assinatura-aurevix img {
+      width: 32px;
+      height: auto;
+    }
   </style>
 </head>
 <body>
 
 <div class="shell">
   <div class="topo">
-    <div class="topo-titulos">
-      <h1>GT Jiu</h1>
-      <p>Painel do Professor • Acesso restrito</p>
+    <div class="topo-identidade">
+      <!-- Logo GT Jiu no topo -->
+      <img src="../img/logo-gtjiu-aurevix.png" alt="GT Jiu" class="logo-topo">
+      <div class="topo-titulos">
+        <h1>GT Jiu</h1>
+        <p>Painel do Professor • Acesso restrito</p>
+      </div>
     </div>
     <button class="btn-voltar" onclick="voltarInicio()">Voltar</button>
   </div>
@@ -213,76 +250,88 @@
       </div>
     </form>
   </div>
+
+  <!-- Rodapé Aurevix -->
+  <div class="assinatura-aurevix">
+    <img src="../img/logo-aurevix-avx.png" alt="Aurevix Tech">
+    <span>Desenvolvido por Aurevix • </span>
+  </div>
 </div>
 
 <script>
-  const KEY_PROFESSORES = 'gtjiu_professores_cadastrados';
-  const KEY_LOGADO      = 'gtjiu_professor_logado';
+  const API_BASE_URL = "https://gt-jiu-app.onrender.com"; 
+  const TOKEN_KEY  = "gtjiu_professor_token";
+  const NOME_KEY   = "gtjiu_professor_nome";
+  const EMAIL_KEY  = "gtjiu_professor_email";
 
   function voltarInicio() {
-    window.location.href = '../index.html';
+    window.location.href = "../index.html";
   }
 
   function abrirTelaRegistroProfessor() {
-    window.location.href = './register_professor.html';
+    window.location.href = "./register_professor.html";
   }
 
-  // Se já tiver login salvo
+  // Só para mostrar o status no rodapé do card
   (function initStatus() {
-    const logadoStr = localStorage.getItem(KEY_LOGADO);
-    if (logadoStr) {
-      document.getElementById('statusProfessor').textContent = 'Já logado';
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (token) {
+      const span = document.getElementById("statusProfessor");
+      if (span) span.textContent = "Já logado";
     }
   })();
-
-  function carregarProfessores() {
-    const listaStr = localStorage.getItem(KEY_PROFESSORES);
-    if (!listaStr) return [];
-    try {
-      return JSON.parse(listaStr) || [];
-    } catch {
-      return [];
-    }
-  }
-
-  function salvarProfessorLogado(professor) {
-    localStorage.setItem(KEY_LOGADO, JSON.stringify(professor));
-  }
 
   async function handleLoginProfessor(event) {
     event.preventDefault();
 
-    const email = document.getElementById('emailProfessor').value.trim();
-    const senha = document.getElementById('senhaProfessor').value.trim();
-    const aceitouLgpd = document.getElementById('lgpdProfessor').checked;
-    const statusSpan = document.getElementById('statusProfessor');
+    const email = document.getElementById("emailProfessor").value.trim();
+    const senha = document.getElementById("senhaProfessor").value.trim();
+    const aceitouLgpd = document.getElementById("lgpdProfessor").checked;
+    const statusSpan = document.getElementById("statusProfessor");
 
     if (!aceitouLgpd) {
-      alert('Para continuar, é necessário aceitar a Política de Privacidade / LGPD.');
+      alert("Para continuar, é necessário aceitar a Política de Privacidade / LGPD.");
       return;
     }
 
     if (!email || !senha) {
-      alert('Preencha e-mail e senha.');
+      alert("Preencha e-mail e senha.");
       return;
     }
 
-    statusSpan.textContent = 'Verificando...';
+    statusSpan.textContent = "Verificando...";
 
-    const professores = carregarProfessores();
-    const professor = professores.find(
-      (p) => p.email === email && p.senha === senha
-    );
+    try {
+      const resp = await fetch(`${API_BASE_URL}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, senha })
+      });
 
-    if (!professor) {
-      alert('Erro ao fazer login. Verifique os dados ou crie uma conta.');
-      statusSpan.textContent = 'Erro no login';
-      return;
+      if (!resp.ok) {
+        const dataErro = await resp.json().catch(() => ({}));
+        const msg = dataErro.detail || "Erro ao fazer login. Verifique os dados.";
+        alert(msg);
+        statusSpan.textContent = "Erro no login";
+        return;
+      }
+
+      const data = await resp.json();
+
+      // 🔐 Salva token e dados no localStorage
+      localStorage.setItem(TOKEN_KEY, data.token);
+      localStorage.setItem(NOME_KEY, data.nome || "");
+      localStorage.setItem(EMAIL_KEY, email);
+
+      statusSpan.textContent = "Login realizado";
+
+      // Vai para o painel do professor
+      window.location.href = "./dashboard.html";
+    } catch (err) {
+      console.error(err);
+      alert("Não foi possível conectar ao servidor. Verifique sua conexão e tente novamente.");
+      statusSpan.textContent = "Erro de conexão";
     }
-
-    salvarProfessorLogado(professor);
-    statusSpan.textContent = 'Login realizado';
-    window.location.href = './dashboard.html';
   }
 </script>
 

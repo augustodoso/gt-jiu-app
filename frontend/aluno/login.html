@@ -3,7 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>Login do Aluno - GT Jiu</title>
+
+  <!-- CSS global -->
   <link rel="stylesheet" href="../css/style.css">
+
+  <!-- FAVICON AUREVIX -->
+  <link rel="icon" type="image/png" href="../img/logo-aurevix.png">
+
   <style>
     body {
       margin: 0;
@@ -28,6 +34,17 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 30px;
+    }
+
+    .topo-identidade {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-topo {
+      width: 40px;
+      height: auto;
     }
 
     .topo-titulos h1 {
@@ -131,7 +148,7 @@
     }
 
     .btn-primario {
-      background: #ff4444;
+      background: #1f7aff;
       border: none;
       color: #fff;
       padding: 10px 22px;
@@ -149,22 +166,42 @@
       font-size: 12px;
       opacity: 0.85;
     }
+
+    /* Rodapé Aurevix */
+    .assinatura-aurevix {
+      margin-top: 18px;
+      font-size: 12px;
+      color: #888;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      opacity: 0.9;
+    }
+
+    .assinatura-aurevix img {
+      width: 32px;
+      height: auto;
+    }
   </style>
 </head>
 <body>
 
 <div class="shell">
   <div class="topo">
-    <div class="topo-titulos">
-      <h1>GT Jiu</h1>
-      <p>Painel do Aluno • Acesso com código</p>
+    <div class="topo-identidade">
+      <!-- Logo GT Jiu -->
+      <img src="../img/logo-gtjiu-aurevix.png" alt="GT Jiu" class="logo-topo">
+      <div class="topo-titulos">
+        <h1>GT Jiu</h1>
+        <p>Painel do Aluno • Acesso com código</p>
+      </div>
     </div>
     <button class="btn-voltar" onclick="voltarInicio()">Voltar</button>
   </div>
 
   <div class="card-login">
     <h2>Entrar como aluno</h2>
-    <p>Informe o <strong>código de acesso</strong> fornecido pelo seu professor para entrar.</p>
+    <p>Use o código fornecido pela sua academia para acessar o painel.</p>
 
     <form id="formAluno" onsubmit="handleLoginAluno(event)">
       <div class="campo">
@@ -172,12 +209,11 @@
         <input
           type="text"
           id="codigoAluno"
-          placeholder="Ex: GT-ALUNO-1234"
+          placeholder="Ex: GTJ-00123"
           required
         >
       </div>
 
-      <!-- LGPD -->
       <div class="lgpd-termo">
         <label>
           <input type="checkbox" id="lgpdAluno">
@@ -194,22 +230,43 @@
       </div>
     </form>
   </div>
+
+  <!-- Rodapé Aurevix -->
+  <div class="assinatura-aurevix">
+    <img src="../img/logo-aurevix-avx.png" alt="Aurevix Tech">
+    <span>Desenvolvido por Aurevix • </span>
+  </div>
 </div>
 
 <script>
+  const KEY_ALUNOS       = 'gtjiu_alunos_cadastrados';
   const KEY_ALUNO_LOGADO = 'gtjiu_aluno_logado';
 
   function voltarInicio() {
     window.location.href = '../index.html';
   }
 
-  // Mostrar "Já logado" se já houver aluno salvo
+  // Se já tiver login salvo
   (function initStatus() {
-    const alunoStr = localStorage.getItem(KEY_ALUNO_LOGADO);
-    if (alunoStr) {
+    const logadoStr = localStorage.getItem(KEY_ALUNO_LOGADO);
+    if (logadoStr) {
       document.getElementById('statusAluno').textContent = 'Já logado';
     }
   })();
+
+  function carregarAlunos() {
+    const listaStr = localStorage.getItem(KEY_ALUNOS);
+    if (!listaStr) return [];
+    try {
+      return JSON.parse(listaStr) || [];
+    } catch {
+      return [];
+    }
+  }
+
+  function salvarAlunoLogado(aluno) {
+    localStorage.setItem(KEY_ALUNO_LOGADO, JSON.stringify(aluno));
+  }
 
   async function handleLoginAluno(event) {
     event.preventDefault();
@@ -224,19 +281,26 @@
     }
 
     if (!codigo) {
-      alert('Informe o código de acesso.');
+      alert('Preencha o código de acesso.');
       return;
     }
 
-    // Aqui você poderia validar o código em um backend no futuro.
-    // Por enquanto, para o MVP, qualquer código não vazio é aceito.
-    const aluno = { codigo };
-    localStorage.setItem(KEY_ALUNO_LOGADO, JSON.stringify(aluno));
+    statusSpan.textContent = 'Verificando...';
 
+    const alunos = carregarAlunos();
+    const aluno = alunos.find((a) => a.codigo === codigo);
+
+    if (!aluno) {
+      alert('Código não encontrado. Verifique com a sua academia.');
+      statusSpan.textContent = 'Erro no login';
+      return;
+    }
+
+    salvarAlunoLogado(aluno);
     statusSpan.textContent = 'Login realizado';
 
-    // 👇 Se o painel do aluno estiver em outro arquivo, troque "dashboard.html" aqui
-    window.location.href = './dashboard.html';
+    // Ajuste o caminho do dashboard do aluno se o seu arquivo tiver outro nome:
+    window.location.href = './dashboard_aluno.html';
   }
 </script>
 
