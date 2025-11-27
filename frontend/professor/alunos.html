@@ -108,53 +108,44 @@
 </div>
 
 <script>
+  const API_BASE_URL = "https://gt-jiu-app.onrender.com";
+
   // --------- CHAVES DO LOGIN NOVO ----------
   const TOKEN_KEY  = "gtjiu_professor_token";
   const NOME_KEY   = "gtjiu_professor_nome";
   const EMAIL_KEY  = "gtjiu_professor_email";
+  const ACADEMIA_ID_KEY = "gtjiu_academia_id"; // se você já salvar o id da academia
 
-  const boasVindas = document.getElementById('boasVindas');
+  const boasVindas = document.getElementById("boasVindas");
 
   // Guarda de rota – só entra aqui se tiver token
   const token = localStorage.getItem(TOKEN_KEY);
   if (!token) {
-    alert('Você precisa estar logado como professor.');
-    window.location.href = 'login.html';
+    alert("Você precisa estar logado como professor.");
+    window.location.href = "login.html";
   }
 
   // Dados do professor vindos do login
-  const professorNome  = localStorage.getItem(NOME_KEY)  || 'Professor';
-  const professorEmail = localStorage.getItem(EMAIL_KEY) || '';
+  const professorNome  = localStorage.getItem(NOME_KEY)  || "Professor";
+  const professorEmail = localStorage.getItem(EMAIL_KEY) || "";
 
   boasVindas.textContent = `Gerenciando alunos do professor: ${professorNome}`;
 
   // --------- HELPERS LOCALSTORAGE ----------
   function pegarAlunos() {
-    const lista = JSON.parse(localStorage.getItem('gtjiu_alunos') || '[]');
+    const lista = JSON.parse(localStorage.getItem("gtjiu_alunos") || "[]");
     // filtra só alunos desse professor (pelo e-mail salvo no login)
-    return lista.filter(al => al.professorEmail === professorEmail);
+    return lista.filter((al) => al.professorEmail === professorEmail);
   }
 
   function salvarAlunoListaCompleta(novaListaDoProfessor) {
-    const listaGlobal = JSON.parse(localStorage.getItem('gtjiu_alunos') || '[]');
+    const listaGlobal = JSON.parse(localStorage.getItem("gtjiu_alunos") || "[]");
     // remove alunos deste professor
-    const filtrada = listaGlobal.filter(al => al.professorEmail !== professorEmail);
+    const filtrada = listaGlobal.filter(
+      (al) => al.professorEmail !== professorEmail
+    );
     const final = filtrada.concat(novaListaDoProfessor);
-    localStorage.setItem('gtjiu_alunos', JSON.stringify(final));
-  }
-
-  // --------- GERAR CÓDIGO DE ALUNO ----------
-  function gerarCodigoAluno(alunosExistentes) {
-    let codigo;
-    let existe = true;
-
-    while (existe) {
-      const rand = Math.floor(100000 + Math.random() * 900000); // 6 dígitos
-      codigo = 'GTJ-' + rand;
-      existe = alunosExistentes.some(a => a.idAluno === codigo);
-    }
-
-    return codigo;
+    localStorage.setItem("gtjiu_alunos", JSON.stringify(final));
   }
 
   // --------- STATUS FINANCEIRO ----------
@@ -163,28 +154,80 @@
     const dia = hoje.getDate();
 
     if (dia > diaVencimento + 3) {
-      return { texto: 'Atrasado', classe: 'status-atrasado' };
+      return { texto: "Atrasado", classe: "status-atrasado" };
     } else if (dia >= diaVencimento - 3 && dia <= diaVencimento + 3) {
-      return { texto: 'Vence agora', classe: 'status-alerta' };
+      return { texto: "Vence agora", classe: "status-alerta" };
     } else {
-      return { texto: 'Em dia', classe: 'status-ok' };
+      return { texto: "Em dia", classe: "status-ok" };
     }
+  }
+
+  // --------- CHAMADA AO BACKEND PARA CRIAR ALUNO ----------
+  async function criarAlunoBackend(nome) {
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (!token) {
+      alert("Sessão expirada. Faça login novamente como professor.");
+      window.location.href = "login.html";
+      throw new Error("Sem token");
+    }
+
+    let academiaId = 1; // fallback
+    const acadStr = localStorage.getItem(ACADEMIA_ID_KEY);
+    if (acadStr) {
+      const parsed = parseInt(acadStr, 10);
+      if (!isNaN(parsed)) {
+        academiaId = parsed;
+      }
+    }
+
+    const resp = await fetch(`${API_BASE_URL}/alunos`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        nome: nome,
+        academia_id: academiaId,
+      }),
+    });
+
+    const text = await resp.text();
+    let data;
+    try {
+      data = text ? JSON.parse(text) : null;
+    } catch {
+      data = text;
+    }
+
+    if (!resp.ok) {
+      console.error("Erro ao criar aluno no backend:", data);
+      if (resp.status === 401 || resp.status === 403) {
+        alert("Sessão expirada ou não autorizada. Entre novamente como professor.");
+        window.location.href = "login.html";
+      } else {
+        alert("Não foi possível criar o aluno no servidor. Tente novamente.");
+      }
+      throw new Error("Erro ao criar aluno no backend");
+    }
+
+    return data; // {id, nome, academia_id, codigo}
   }
 
   // --------- RENDERIZAR TABELA ----------
   function renderTabela() {
-    const tbody = document.querySelector('#tabelaAlunos tbody');
-    tbody.innerHTML = '';
+    const tbody = document.querySelector("#tabelaAlunos tbody");
+    tbody.innerHTML = "";
 
     const alunos = pegarAlunos();
     alunos.forEach((aluno, idx) => {
       const status = calcularStatus(aluno.diaVencimento);
 
-      const tr = document.createElement('tr');
+      const tr = document.createElement("tr");
       tr.innerHTML = `
         <td>${aluno.nome}</td>
         <td>${aluno.idAluno}</td>
-        <td>${aluno.plano || '-'}</td>
+        <td>${aluno.plano || "-"}</td>
         <td>R$ ${Number(aluno.valor).toFixed(2)}</td>
         <td>Dia ${aluno.diaVencimento}</td>
         <td class="${status.classe}">${status.texto}</td>
@@ -208,43 +251,56 @@
   }
   window.removerAluno = removerAluno; // expõe para o onclick
 
-  // --------- CADASTRO DE ALUNO ----------
-  const form = document.getElementById('formAluno');
+  // --------- CADASTRO DE ALUNO (AGORA CHAMANDO BACKEND) ----------
+  const form = document.getElementById("formAluno");
 
-  form.addEventListener('submit', function(e) {
+  form.addEventListener("submit", async function (e) {
     e.preventDefault();
 
-    const nome = document.getElementById('nome').value.trim();
-    const plano = document.getElementById('plano').value.trim();
-    const valor = parseFloat(document.getElementById('valor').value);
-    const diaVencimento = parseInt(document.getElementById('diaVencimento').value, 10);
+    const nome = document.getElementById("nome").value.trim();
+    const plano = document.getElementById("plano").value.trim();
+    const valor = parseFloat(document.getElementById("valor").value);
+    const diaVencimento = parseInt(
+      document.getElementById("diaVencimento").value,
+      10
+    );
 
     if (!nome || isNaN(valor) || isNaN(diaVencimento)) {
-      alert('Preencha todos os campos obrigatórios.');
+      alert("Preencha todos os campos obrigatórios.");
       return;
     }
 
-    const alunos = pegarAlunos();
-    const codigo = gerarCodigoAluno(alunos);
+    try {
+      // 1) cria no backend, pega o código oficial
+      const alunoBackend = await criarAlunoBackend(nome);
+      const codigo = alunoBackend.codigo;
 
-    alunos.push({
-      professorEmail: professorEmail,
-      idAluno: codigo,
-      nome,
-      plano,
-      valor,
-      diaVencimento
-    });
+      // 2) salva dados financeiros + código localmente para o professor
+      const alunos = pegarAlunos();
+      alunos.push({
+        professorEmail: professorEmail,
+        idAluno: codigo, // este é o código de acesso do aluno
+        nome,
+        plano,
+        valor,
+        diaVencimento,
+      });
 
-    salvarAlunoListaCompleta(alunos);
-    form.reset();
-    renderTabela();
+      salvarAlunoListaCompleta(alunos);
+      form.reset();
+      renderTabela();
 
-    alert(`Aluno salvo com sucesso!\nCódigo de acesso do aluno: ${codigo}`);
+      alert(
+        `Aluno salvo com sucesso!\n\nNome: ${nome}\nCódigo de acesso do aluno: ${codigo}`
+      );
+    } catch (err) {
+      console.error(err);
+      // avisos já foram mostrados nas funções de erro
+    }
   });
 
   function voltarDashboard() {
-    window.location.href = 'dashboard.html';
+    window.location.href = "dashboard.html";
   }
 
   // inicializa tabela
