@@ -114,7 +114,8 @@
   const TOKEN_KEY  = "gtjiu_professor_token";
   const NOME_KEY   = "gtjiu_professor_nome";
   const EMAIL_KEY  = "gtjiu_professor_email";
-  const ACADEMIA_ID_KEY = "gtjiu_academia_id"; // se você já salvar o id da academia
+  // se um dia você salvar o ID da academia no login, podemos usar esta chave:
+  const ACADEMIA_ID_KEY = "gtjiu_academia_id";
 
   const boasVindas = document.getElementById("boasVindas");
 
@@ -171,7 +172,10 @@
       throw new Error("Sem token");
     }
 
-    let academiaId = 1; // fallback
+    // Por enquanto vamos fixar academia_id = 1,
+    // que é a mesma que você usou nos testes do Swagger.
+    // Se você já tiver salvo um ID no localStorage, podemos usar:
+    let academiaId = 1;
     const acadStr = localStorage.getItem(ACADEMIA_ID_KEY);
     if (acadStr) {
       const parsed = parseInt(acadStr, 10);
@@ -184,7 +188,7 @@
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        "Authorization": `Bearer ${token}`,
       },
       body: JSON.stringify({
         nome: nome,
@@ -201,7 +205,7 @@
     }
 
     if (!resp.ok) {
-      console.error("Erro ao criar aluno no backend:", data);
+      console.error("Erro ao criar aluno no backend:", resp.status, data);
       if (resp.status === 401 || resp.status === 403) {
         alert("Sessão expirada ou não autorizada. Entre novamente como professor.");
         window.location.href = "login.html";
@@ -211,7 +215,14 @@
       throw new Error("Erro ao criar aluno no backend");
     }
 
-    return data; // {id, nome, academia_id, codigo}
+    // Deve vir: {id, nome, academia_id, codigo}
+    if (!data || !data.codigo) {
+      console.error("Resposta inesperada ao criar aluno:", data);
+      alert("Erro inesperado ao criar aluno no servidor.");
+      throw new Error("Resposta sem código");
+    }
+
+    return data;
   }
 
   // --------- RENDERIZAR TABELA ----------
@@ -294,8 +305,8 @@
         `Aluno salvo com sucesso!\n\nNome: ${nome}\nCódigo de acesso do aluno: ${codigo}`
       );
     } catch (err) {
-      console.error(err);
-      // avisos já foram mostrados nas funções de erro
+      console.error("Erro no fluxo de cadastro de aluno:", err);
+      // os alerts de erro já foram disparados dentro das funções
     }
   });
 
