@@ -124,30 +124,52 @@ Inclui:
 
 ---
 
-# 🧩 Estrutura do Projeto
+🧩 Estrutura do Projeto
 
+```text
 gt-jiu-app/
-│
 ├── backend/
-│   ├── main.py
-│   ├── database.py
-│   ├── models.py
-│   ├── alunos_route.py      ← login por código
-│   └── ...
+│   ├── main.py              # FastAPI + rotas principais (professor, academias, medalhas, alunos)
+│   ├── alunos.py            # Rotas específicas de aluno (login por código GTJ-XXXXXX)
+│   ├── database.py          # Conexão e sessão com SQLite via SQLAlchemy
+│   ├── models.py            # Models SQLAlchemy + schemas Pydantic
+│   ├── __init__.py
+│   └── gtjiu.db             # Banco de dados (quando rodando local)
 │
 ├── frontend/
-│   ├── index.html
+│   ├── index.html           # Landing page com escolha Professor / Aluno
+│   │
 │   ├── professor/
+│   │   ├── login.html       # Login do professor (e-mail/senha)
+│   │   ├── register_professor.html  # Cadastro do professor
+│   │   ├── dashboard.html   # Painel geral do professor
+│   │   ├── academias.html   # Cadastro e listagem de academias
+│   │   ├── alunos.html      # Gestão de alunos + geração de código GTJ-XXXXXX
+│   │   ├── medalhas.html    # Cadastro e aprovação de medalhas
+│   │   ├── financeiro.html  # (MVP local) visão de mensalidades
+│   │   └── pendentes.html   # Lista de medalhas pendentes de validação
+│   │
 │   ├── aluno/
+│   │   ├── login.html       # Login do aluno via código GTJ-XXXXXX
+│   │   ├── dashboard.html   # Painel do aluno (mensalidade, medalhas, avisos)
+│   │   ├── medalhas.html    # Medalhas do próprio aluno
+│   │   ├── ranking.html     # Ranking da cidade / academias
+│   │   └── categoria.html   # Calculadora de categoria CBJJ/IBJJF
+│   │
+│   ├── conteudo/
+│   │   ├── regras.html      # Regras e pontuação do Jiu-Jitsu
+│   │   └── faixas.html      # Faixas, hierarquia e variações
+│   │
+│   ├── termos/
+│   │   └── lgpd.html        # Política de Privacidade / LGPD
+│   │
 │   ├── css/
-│   ├── img/
-│   └── js/
+│   │   └── style.css        # Tema dark Aurevix compartilhado
+│   │
+│   └── img/                 # Logos GT Jiu + Aurevix
 │
-├── requirements.txt
-└── README.md
-
-
----
+├── requirements.txt         # Dependências do backend
+└── README.md                # Documentação do projeto
 
 # 🧪 Como Rodar Localmente
 
