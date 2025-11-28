@@ -251,12 +251,14 @@
   document.getElementById("tituloAluno").textContent =
     `Painel do Aluno - ${alunoSessao.nome}`;
 
+  // AGORA usamos diretamente o idAluno salvo no login (que já vem como GTJ-XXXXXX)
   document.getElementById("subtituloAluno").textContent =
-    `Código de acesso: GTJ-${alunoSessao.idAluno}`;
+    `Código de acesso: ${alunoSessao.idAluno}`;
 
   // ---- BUSCAR DADOS COMPLETOS ----
   function buscarAlunoCompleto() {
     const todos = JSON.parse(localStorage.getItem('gtjiu_alunos') || '[]');
+    // tenta achar pelo idAluno; se não achar, volta só com os dados básicos da sessão
     return todos.find(a => a.idAluno === alunoSessao.idAluno) || alunoSessao;
   }
 

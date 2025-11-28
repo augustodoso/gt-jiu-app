@@ -299,13 +299,14 @@
         id: data.id,
         nome: data.nome,
         academia_id: data.academia_id,
-        codigo: data.codigo,
+        codigo: data.codigo,     // código vindo do backend
+        idAluno: data.codigo     // mesma info, nome compatível com o resto do app
       };
 
       localStorage.setItem(KEY_ALUNO_LOGADO, JSON.stringify(alunoInfo));
       statusSpan.textContent = "Login realizado";
 
-      // Ajuste aqui o nome do dashboard do aluno
+      // Redireciona para o dashboard do aluno
       window.location.href = "./dashboard.html";
     } catch (err) {
       console.error(err);
@@ -314,7 +315,6 @@
     }
   }
 </script>
-
 
 </body>
 </html>
