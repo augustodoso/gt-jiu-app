@@ -248,18 +248,35 @@
 
   const alunoSessao = JSON.parse(alunoStr);
 
+  // Código do aluno pode vir como idAluno (quando criado pelo professor)
+  // ou como codigo (quando veio do backend)
+  const CODIGO_ALUNO = alunoSessao.idAluno || alunoSessao.codigo || "—";
+
+  // Título com nome
   document.getElementById("tituloAluno").textContent =
     `Painel do Aluno - ${alunoSessao.nome}`;
 
-  // AGORA usamos diretamente o idAluno salvo no login (que já vem como GTJ-XXXXXX)
+  // Subtítulo com o código certo
   document.getElementById("subtituloAluno").textContent =
-    `Código de acesso: ${alunoSessao.idAluno}`;
+    `Código de acesso: ${CODIGO_ALUNO}`;
 
   // ---- BUSCAR DADOS COMPLETOS ----
   function buscarAlunoCompleto() {
     const todos = JSON.parse(localStorage.getItem('gtjiu_alunos') || '[]');
-    // tenta achar pelo idAluno; se não achar, volta só com os dados básicos da sessão
-    return todos.find(a => a.idAluno === alunoSessao.idAluno) || alunoSessao;
+
+    // tenta achar na lista local (cadastrada pelo professor)
+    const encontrado = todos.find(a => a.idAluno === CODIGO_ALUNO);
+
+    if (encontrado) {
+      return encontrado;
+    }
+
+    // se não achar, devolve só o que veio da sessão
+    // garantindo que tenha idAluno preenchido
+    return {
+      ...alunoSessao,
+      idAluno: CODIGO_ALUNO,
+    };
   }
 
   const aluno = buscarAlunoCompleto();
@@ -296,7 +313,8 @@
   // ---- MEDALHAS ----
   function carregarMedalhasDoAluno() {
     const todas = JSON.parse(localStorage.getItem('gtjiu_medalhas') || '[]');
-    return todas.filter(m => m.idAluno === aluno.idAluno || m.idAluno === alunoSessao.idAluno);
+    // agora sempre filtra pelo código unificado
+    return todas.filter(m => m.idAluno === CODIGO_ALUNO);
   }
 
   const medalhas = carregarMedalhasDoAluno();
@@ -345,7 +363,7 @@
       .map(id => ({ idAluno: id, total: rankingMap[id].total }))
       .sort((a, b) => b.total - a.total);
 
-    const idx = entradas.findIndex(e => e.idAluno === aluno.idAluno || e.idAluno === alunoSessao.idAluno);
+    const idx = entradas.findIndex(e => e.idAluno === CODIGO_ALUNO);
 
     if (idx === -1) {
       alvo.textContent = 'Você ainda não aparece no ranking (é preciso ter medalhas aprovadas).';
