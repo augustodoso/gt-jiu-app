@@ -1,189 +1,210 @@
-# 🥋 GT Jiu — Aurevix  
-### Ranking da Cidade do Jiu • Academias • Categorias • Medalhas • Regras • Hierarquia
+# 🥋 GT Jiu — Aurevix Tech  
+### Plataforma completa para academias, professores e alunos de Jiu-Jitsu
 
-O **GT Jiu — Aurevix** é um sistema completo para atletas e academias de Jiu-Jitsu organizarem **categorias**, **ranking por medalhas**, **registro de conquistas**, **pesquisa de regras**, **faixas e hierarquia** — tudo em uma plataforma moderna, leve e prática.
+> **Ranking • Academias • Medalhas • Categorias • Regras • Faixas • Painel do Professor • Painel do Aluno**
 
-Este projeto nasceu para trazer **organização profissional** ao Jiu-Jitsu local, permitindo que qualquer cidade tenha seu próprio **Ranking da Cidade do Jiu**.
-
----
-
-## 🚀 Funcionalidades
-
-### 🥇 Ranking da Cidade do Jiu
-- Ranking oficial das academias da cidade baseado em:
-  - 🥇 Ouro  
-  - 🥈 Prata  
-  - 🥉 Bronze  
-- Totalização automática das medalhas cadastradas.
-- Ideal para criar um clima de competição saudável entre academias.
+O **GT Jiu** é um MVP funcional desenvolvido para organizar o Jiu-Jitsu de forma profissional e moderna.  
+Ele centraliza categorias, medalhas, ranking, academias, mensalidades, avisos e módulos educativos – tudo em um sistema rápido e intuitivo.
 
 ---
 
-### 🥋 Classificação de Categoria (CBJJ-inspired)
-O sistema calcula automaticamente:
-- Faixa etária
-- Categoria de peso (médio, leve, pesado, meio-pesado, etc.)
-- Masculino / Feminino
+# 🚀 Deploys Oficiais
 
-Baseado na estrutura CBJJ e ajustado para uso prático dentro do app.
-
----
-
-### 🏫 Cadastro de Academias
-Cada academia pode cadastrar:
-- Nome  
-- Mestre responsável  
-- Cidade & bairro  
-- Telefone e e-mail  
-- Endereço completo  
-
----
-
-### 🏅 Registro de Medalhas
-Para cada atleta:
-- Academia
-- Faixa
-- Sexo
-- Categoria de peso
-- Tipo de medalha (ouro, prata, bronze)
-- Campeonato
-- Cidade do evento
-- Data da competição
-- Comprovante (link/descrição de ata, documento ou foto)
-
----
-
-### 📚 Regras e Pontuações do Jiu-Jitsu
-Inclui:
-- Quedas  
-- Raspagens  
-- Passagem de guarda  
-- Montada  
-- Pegada de costas  
-- Vantagens e punições  
-- Critérios de encerramento da luta  
-- Sistema de busca em tempo real  
-
-Excelente para alunos tirarem dúvidas rapidamente.
-
----
-
-### 🟦 Faixas, Hierarquia e Variações
-Inclui:
-- Sistema tradicional adulto (Branca → Azul → Roxa → Marrom → Preta)
-- Sistema alternativo da **Federação Mineira** incluindo **faixa amarela para adultos**
-- Explicações de conduta, respeito e postura dentro do tatame
-
----
-
-## 🧠 Tecnologias Utilizadas
-
-### **Backend**
-- FastAPI
-- SQLite + SQLAlchemy
-- JWT Authentication
-- CORS
-- Deploy no **Render**
-
-### **Frontend**
-- HTML5, CSS3, JavaScript puro
-- Consumo da API pública
-- GitHub Pages
-
----
-
-## 🌐 Deploys
-
-### 🔌 API Backend (Render)
+🔌 **API (FastAPI + Render)**  
 https://gt-jiu-app.onrender.com
 
-### 🖥️ Frontend (GitHub Pages)
+🖥️ **Frontend (GitHub Pages)**  
 https://augustodoso.github.io/gt-jiu-app/
 
 ---
 
-## 📦 Como rodar localmente
+# 📌 Visão Geral
 
-### 1. Clone o repositório
-```bash
-git clone https://github.com/augustodoso/gt-jiu-app.git
-cd gt-jiu-app
-```
+O GT Jiu nasceu para resolver um problema real:
 
-### 2. Crie ambiente virtual
-```bash
-python -m venv venv
-```
+✔ Organizar academias da cidade  
+✔ Registrar medalhas e gerar ranking automaticamente  
+✔ Facilitar o acesso do aluno via código  
+✔ Criar um espaço educacional com regras, faixas e categoria IBJJF  
+✔ Dar autonomia ao professor para gerenciar seus alunos  
 
-### 3. Ative o ambiente  
-**Windows:**
-```bash
-venv\Scripts\activate
-```
-
-### 4. Instale as dependências
-```bash
-pip install -r requirements.txt
-```
-
-### 5. Rode o backend
-```bash
-uvicorn backend.main:app --reload
-```
-
-Acesse:  
-📍 http://127.0.0.1:8000/docs
-
-### 6. Rode o frontend
-Abra o arquivo:
-```
-index.html
-```
+É um **MVP pronto para se transformar em produto final**.
 
 ---
 
-## 🏛️ Arquitetura da Aplicação
+# 🧠 Funcionalidades
 
-```
+## 🥇 Ranking da Cidade do Jiu
+- Cálculo automático baseado em:
+  - 🥇 Ouro
+  - 🥈 Prata
+  - 🥉 Bronze  
+- Atualização dinâmica conforme medalhas válidas  
+- Ranking interno por academia e ranking geral  
+
+---
+
+## 🏅 Medalhas (com validação)
+- Cadastro de medalhas pelo aluno  
+- Validação pelo professor  
+- Status:
+  - **Aprovada**
+  - **Pendente**
+  - **Rejeitada**
+- Computação automática no ranking  
+
+---
+
+## 🏫 Cadastro de Academias
+Cada academia possui:
+- Nome  
+- Mestre responsável  
+- Cidade e bairro  
+- Endereço completo  
+- Telefone  
+- Observações  
+
+---
+
+## 🔐 Acesso do Aluno via Código
+Cada aluno recebe um código único:
+GTJ-XXXXXX
+
+
+Esse código dá acesso ao painel com:
+- Mensalidade  
+- Ranking  
+- Medalhas  
+- Regras  
+- Faixas  
+- Conteúdos educativos  
+
+---
+
+## 🧮 Calculadora de Categoria (CBJJ)
+Baseada em idade, peso e sexo:
+
+- Faixa etária automática  
+- Categoria IBJJF aproximada  
+- Observações oficiais  
+
+---
+
+## 📚 Módulos Educativos
+Inclui:
+- Regras do Jiu-Jitsu (CBJJ/IBJJF-inspired)  
+- Pontuações  
+- Condutas  
+- Hierarquia e faixas oficiais  
+- Sistema alternativo com faixa amarela adulto (Federação Mineira)  
+
+---
+
+# 🛠️ Tecnologias Utilizadas
+
+## **Backend**
+- FastAPI  
+- SQLAlchemy + SQLite  
+- Python 3.11  
+- Tokens de autenticação (MVP)  
+- CORS liberado  
+- Deploy no Render  
+
+## **Frontend**
+- HTML5  
+- CSS3  
+- JavaScript Puro  
+- GitHub Pages  
+
+## **Arquitetura**
+- API REST  
+- Páginas separadas por papéis (professor/aluno)  
+- Login persistido no navegador  
+- LGPD implementada com aceite obrigatório  
+
+---
+
+# 🧩 Estrutura do Projeto
+
 gt-jiu-app/
 │
 ├── backend/
 │   ├── main.py
-│   ├── models.py
 │   ├── database.py
-│   └── __init__.py
+│   ├── models.py
+│   ├── alunos_route.py      ← login por código
+│   └── ...
 │
 ├── frontend/
-│   └── index.html
+│   ├── index.html
+│   ├── professor/
+│   ├── aluno/
+│   ├── css/
+│   ├── img/
+│   └── js/
 │
 ├── requirements.txt
-├── README.md
-└── .gitignore
-```
+└── README.md
+
 
 ---
 
-## 🤝 Contribuição
+# 🧪 Como Rodar Localmente
 
-Contribuições são bem-vindas!  
-Abra uma issue ou pull request com sugestões, melhorias ou correções.
+## 1. Clone o repositório
+```bash
+git clone https://github.com/augustodoso/gt-jiu-app.git
+cd gt-jiu-app
 
----
+2. Crie o ambiente virtual
+python -m venv venv
 
-## ✨ Criado por Aurevix
-Um sistema desenvolvido com foco em:
-- respeito ao Jiu-Jitsu  
-- organização  
-- ferramentas educacionais  
-- incentivo às academias  
+3. Ative
 
----
+Windows:
+venv\Scripts\activate
 
-## 🥋 OSS 
+4. Instale as dependências
+pip install -r requirements.txt
 
----
+5. Rode o backend
+uvicorn backend.main:app --reload
 
-## 🚀 Contato
-Para dúvidas, sugestões ou parcerias, fale comigo no LinkedIn:
+Acesse:
+http://127.0.0.1:8000/docs
 
-🔗 https://www.linkedin.com/in/augusto-cezar-de-macedo-doso-38b83537  
+6. Rode o frontend
+Abra:
+frontend/index.html
+
+🔐 LGPD
+
+O projeto inclui:
+
+Termo de aceite obrigatório
+
+Política de privacidade
+
+Armazenamento mínimo
+
+Dados não compartilhados
+
+Somente uso educacional
+
+🧔 Desenvolvido por
+Augusto Cezar — Aurevix Tech
+
+Backend • IA • Cloud • Data • Frontend • Jiu-Jitsu Practitioner
+
+🔗 LinkedIn:
+https://www.linkedin.com/in/augusto-cezar-de-macedo-doso-38b83537
+
+🔥 GitHub:
+https://github.com/augustodoso
+
+🤝 Contribuição
+
+Contribuições são bem-vindas!
+Sinta-se à vontade para abrir issues e PRs.
+
+
